@@ -11,23 +11,23 @@
   },
   {
     "file": "01 Паспорт/Паспорт проекта.pdf",
-    "bytes": 96452,
-    "sha256": "a2406cad46d6f69889ff4683fcc4e91794f0b6b02e80c4b79a5bc351fead35d3"
+    "bytes": 94960,
+    "sha256": "552fbc38dd9a751a090ec157a865ca4f433c6113bc3648aa3228798a6367d7e8"
   },
   {
     "file": "01 Паспорт/Паспорт — текст для правок.md",
-    "bytes": 7245,
-    "sha256": "8256c2697405f20ddbdfab88793fcad4bd7a63875c3896b82e7ef83bc2dafca1"
+    "bytes": 8482,
+    "sha256": "83ce68b644e09b17da45c38ba3a9ffbf73ecdcf8e874336f7017730d7033a310"
   },
   {
     "file": "02 Защита/Защита.pptx",
-    "bytes": 47332,
-    "sha256": "0fea5ac358dd3f35557caed5d6c85110bcb7bfb4e69c2c71f69946b4ee213f0b"
+    "bytes": 47359,
+    "sha256": "30e4c246b25b65ad2ab0260f843014ed9527e4de8a33844db05b0107182a0e53"
   },
   {
     "file": "02 Защита/Сценарий защиты.md",
-    "bytes": 5300,
-    "sha256": "b410a977ae6ba1d8d90f67629cdac1bfc980fff3fe8c2cb59ebff9f37cd9de49"
+    "bytes": 5154,
+    "sha256": "a7d56d4264e9bd11dd80b027ad7c5c134854e3695bad0df9e6774228b22c1777"
   },
   {
     "file": "03 Инструмент/asop-verified.csv",
@@ -386,8 +386,8 @@
   },
   {
     "file": "04 Проверка/План до финала.md",
-    "bytes": 4181,
-    "sha256": "cf72f6e6b48b10476d71755328644808bd1b3c7714572036c45b32b534814849"
+    "bytes": 2974,
+    "sha256": "0cbf4f33c533619a856458800ac603f1ef1cd0f5e3cd78b1864ee27282936f98"
   },
   {
     "file": "04 Проверка/Проверка качества.md",
@@ -395,8 +395,13 @@
     "sha256": "90ec7ce554236ca12f5cf55f52c7c745316f38355357a65d8eb438cd5f18ab69"
   },
   {
+    "file": "04 Проверка/Сдача 10 ноября.md",
+    "bytes": 1869,
+    "sha256": "be2d39a0a2fd0e3f85b6920545043e9052b3e55c0b60b137495c3030a51368d0"
+  },
+  {
     "file": "README.md",
-    "bytes": 4864,
-    "sha256": "0b47202bd868cba9ae247a402e9a9e3a3e910e7be8fa73a71888889be51159f0"
+    "bytes": 5693,
+    "sha256": "6cf04d1819df2a7cc7cbc5947d6dfa20746928a48ced872b3ae1c493a4a53fb6"
   }
 ]
