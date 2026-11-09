@@ -1,0 +1,9 @@
+﻿scenario,quarter,assumed_open_quarter,project_annual_nameplate_Mt,assumed_ramp,modeled_compatible_addition_Mt,hypothetical_node_load_Mt,modeled_available_Mt,reserve_needed_Mt,source_for_annual_nameplate_only
+assumed_on_time,2027-Q1,2,24.3,0,0.0,4.6,4.3,0.3,https://www.rosmorport.ru/filials/spb_developmentofports/
+assumed_on_time,2027-Q2,2,24.3,0.25,1.06312,5.2,5.36313,0,https://www.rosmorport.ru/filials/spb_developmentofports/
+assumed_on_time,2027-Q3,2,24.3,0.5,2.12625,5.4,6.42625,0,https://www.rosmorport.ru/filials/spb_developmentofports/
+assumed_on_time,2027-Q4,2,24.3,0.75,3.18937,5.1,7.48937,0,https://www.rosmorport.ru/filials/spb_developmentofports/
+assumed_delayed,2027-Q1,4,24.3,0,0.0,4.6,4.3,0.3,https://www.rosmorport.ru/filials/spb_developmentofports/
+assumed_delayed,2027-Q2,4,24.3,0,0.0,5.2,4.3,0.9,https://www.rosmorport.ru/filials/spb_developmentofports/
+assumed_delayed,2027-Q3,4,24.3,0,0.0,5.4,4.3,1.1,https://www.rosmorport.ru/filials/spb_developmentofports/
+assumed_delayed,2027-Q4,4,24.3,0.25,1.06312,5.1,5.36313,0,https://www.rosmorport.ru/filials/spb_developmentofports/

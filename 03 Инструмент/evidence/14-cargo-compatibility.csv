@@ -1,0 +1,5 @@
+﻿basin,period,observed_dry_Mt,observed_liquid_Mt,assumed_dry_limit_Mt,assumed_liquid_limit_Mt,dry_gap_Mt,liquid_gap_Mt,segmented_gap_Mt,aggregate_gap_Mt,source
+baltic,2025-Q1,31.7,36.4,30,40,1.7,0,1.7,0,https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-pervyy-kvartal-2025-goda
+baltic,2025-Q2,31.9,35.8,30,40,1.9,0,1.9,0,https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2025-goda
+azov,2025-Q1,25.8,36.8,30,40,0,0,0,0,https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-pervyy-kvartal-2025-goda
+azov,2025-Q2,24.1,36.8,30,40,0,0,0,0,https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2025-goda

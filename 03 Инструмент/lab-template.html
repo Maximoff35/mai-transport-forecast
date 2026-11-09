@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>20 расширений портового прогноза · it plow</title>
+<style>
+* { box-sizing: border-box; } body { margin:0; color:#1a2b35; background:#f6f8f8; font:16px/1.5 system-ui,sans-serif; }
+header, main { max-width:1180px; margin:auto; padding:30px clamp(18px,4vw,50px); }
+h1 { font-size:clamp(32px,5vw,50px); line-height:1.1; letter-spacing:-.035em; max-width:850px; }
+h2 { font-size:26px; } p { max-width:90ch; } a { color:#065c64; }
+label { font-weight:650; } input { font:inherit; padding:9px; margin:6px 0 20px; width:100%; border:1px solid #a4b9bc; border-radius:5px; }
+nav { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:8px 24px; }
+section { margin-top:22px; padding-top:8px; border-top:1px solid #cddddd; scroll-margin-top:20px; }
+.muted { color:#4c626a; } .small { font-size:14px; }
+.scroll { width:100%; overflow:auto; margin:16px 0; }
+table { width:100%; border-collapse:collapse; font:14px/1.4 system-ui,sans-serif; font-variant-numeric:tabular-nums; }
+td,th { padding:7px 9px; border-bottom:1px solid #d4e1e2; text-align:left; max-width:360px; overflow-wrap:anywhere; }
+th { background:#e5efef; min-width:120px; font-size:13px; } tr:nth-child(even) { background:#edf3f3; }
+summary { cursor:pointer; color:#065c64; font-weight:650; padding:8px 0; }
+.links { display:flex; flex-wrap:wrap; gap:10px 24px; } .caption { margin-bottom:0; }
+</style>
+</head>
+<body>
+<header>
+<p><a href="Демо.html">Вернуться к интерактивному сравнению</a></p>
+<h1>Двадцать расширений портового прогноза</h1>
+<p>Результаты, условия и исходные таблицы. Операционные мощности и сроки заданы для демонстрации. В каждом разделе указано, что проверено и какие сведения нужны для практического решения.</p>
+<label for="search">Найти тему<input id="search" type="search" placeholder="Например, ремонты или груз"></label>
+<nav id="nav"></nav>
+</header>
+<main id="main"></main>
+<script id="snapshot" type="application/json">__EVIDENCE__</script>
+<script>
+const model = JSON.parse(document.getElementById("snapshot").textContent);
+const fmt = new Intl.NumberFormat("ru-RU", {maximumFractionDigits:3});
+const words = {
+  basin:"Бассейн", scenario:"Сценарий", action:"Действие", quarter:"Квартал", period:"Период",
+  baltic:"Балтийский", azov:"Азово-Черноморский", far_east:"Дальневосточный", reference:"Базовый сценарий",
+  base:"Исходный план", reserve:"Резерв", move:"Перенос", previous_year:"Квартал прошлого года",
+  previous_quarter:"Предыдущий квартал", same_quarter_mean_2y:"Среднее двух одноимённых кварталов",
+  reserve_available:"Резерв доступен", move_available:"Перенос доступен", best_within_calendar:"Лучшее доступное",
+  gap_Mt:"Превышение, млн т", origin:"Срез", issued_on:"Дата выпуска прогноза", first_target:"Первый целевой квартал",
+  last_target:"Второй целевой квартал", decision:"Выбранная мера", lead_quarters:"Горизонт в кварталах",
+  MAE_Mt:"MAE, млн т", WAPE_percent:"WAPE, %", bias_Mt:"Среднее факт минус прогноз, млн т",
+  actual_under_base_Mt:"Превышение по факту при исходном плане", actual_under_selected_Mt:"Превышение выбранной меры",
+  hindsight_best_Mt:"Лучший результат задним числом", regret_Mt:"Отставание от лучшего, млн т",
+  reference_gap_Mt:"Превышение в базовом сценарии", worst_gap_Mt:"Превышение в худшем сценарии",
+  source:"Источник", source_url:"Источник", True:"Да", False:"Нет", true:"Да", false:"Нет",
+  central_choice:"Выбор по центральному сценарию", minimax_choice:"Выбор по худшему сценарию",
+  window_passed:"Окно закрыто", within_window:"В срок", disallowed:"Недоступно",
+  assumed_decision_date:"Заданная дата решения", decision_date:"Дата решения", quarter_start:"Начало квартала",
+  affected_quarter:"Квартал действия", latest_decision_date:"Последняя дата решения",
+  assumed_lead_calendar_days:"Заданный срок согласования, дней", days_left:"Дней до дедлайна",
+  job_start_quarters:"Старты работ", annual_gap_Mt:"Годовое превышение, млн т",
+  peak_gap_Mt:"Максимум за квартал, млн т", selected:"Выбранный календарь", baseline:"Исходный",
+  status:"Статус", scope_requires_confirmation:"Охват требует подтверждения",
+  synthetic_fixture_only:"Синтетический пример", data_origin:"Происхождение",
+  available_Q1_Mt:"Доступно в I кв., млн т", available_Q2_Mt:"Доступно во II кв., млн т",
+  available_Q3_Mt:"Доступно в III кв., млн т", available_Q4_Mt:"Доступно в IV кв., млн т",
+  load_Q1_Mt:"Нагрузка I кв., млн т", load_Q2_Mt:"Нагрузка II кв., млн т",
+  capacity_Mt_per_quarter:"Мощность, млн т/кв.", load_change_percent:"Изменение нагрузки, %",
+  base_gap_Mt:"Исходное превышение, млн т", reserve_gap_Mt:"С резервом, млн т", move_gap_Mt:"С переносом, млн т",
+  best_gap_action:"Минимальное превышение", reserve_slot_fixed:"Зафиксированный квартал резерва",
+  actual_under_reserve_Mt:"По факту с резервом", actual_under_move_Mt:"По факту с переносом",
+  observed_dry_Mt:"Сухие грузы по АСОП, млн т", observed_liquid_Mt:"Наливные по АСОП, млн т",
+  assumed_dry_limit_Mt:"Заданный лимит сухих, млн т", assumed_liquid_limit_Mt:"Заданный лимит наливных, млн т",
+  dry_gap_Mt:"Превышение сухих, млн т", liquid_gap_Mt:"Превышение наливных, млн т",
+  segmented_gap_Mt:"Сумма отдельных превышений, млн т", aggregate_gap_Mt:"Превышение общего объёма, млн т",
+  assumed_load_Mt:"Заданная нагрузка, млн т", berth_Mt:"Причал, млн т", yard_Mt:"Склад, млн т", rail_Mt:"Подвоз по ЖД, млн т",
+  limiting_links:"Ограничивающее звено", effective_capacity_Mt:"Эффективная мощность, млн т",
+  gap_tonnes:"Превышение, т", unit:"Единица", assumed_tonnes_per_unit:"Заданная производительность",
+  minimum_units_if_compatible:"Число единиц для совместимого груза", train:"Поезд", shift:"Смена",
+  reference_arrivals_Mt:"Модельный поток, млн т", opening_backlog_Mt:"Остаток на начало, млн т",
+  handled_Mt:"Обработано, млн т", closing_backlog_Mt:"Остаток на конец, млн т", available_Mt:"Доступная мощность, млн т",
+  peak_closing_backlog_Mt:"Максимальный остаток, млн т", quarters_with_closing_backlog:"Кварталов с остатком",
+  recovery_after_last_nonempty_quarter:"Восстановление", year_end_backlog_Mt:"Остаток в конце года, млн т",
+  not_recovered_within_2027:"Остаток на конец 2027", no_backlog:"Накопления нет",
+  assumed_open_quarter:"Условный квартал ввода", project_annual_nameplate_Mt:"Проектная мощность, млн т/год",
+  assumed_ramp:"Заданный коэффициент разгона", modeled_compatible_addition_Mt:"Добавка совместимой мощности, млн т",
+  hypothetical_node_load_Mt:"Условная нагрузка узла, млн т", modeled_available_Mt:"Мощность модели, млн т",
+  reserve_needed_Mt:"Требуемый резерв, млн т", source_for_annual_nameplate_only:"Источник годовой мощности",
+  assumed_on_time:"Условный ввод по графику", assumed_delayed:"Условная задержка",
+  reserve_only_Q1_Mt:"Резерв без переноса в I кв.", reserve_only_Q2_Mt:"Резерв без переноса во II кв.",
+  after_move_Q1_Mt:"Резерв после переноса в I кв.", after_move_Q2_Mt:"Резерв после переноса во II кв.",
+  reserve_only_total_Mt:"Общий резерв без переноса", hybrid_total_Mt:"Резерв после переноса",
+  saving_Mt:"Снижение потребности в резерве", assumed_procurement_limit_Mt:"Заданный лимит резерва",
+  hybrid_gap_at_limit_Mt:"Остаток при лимите резерва",
+  extra_berth:"Расширить причал", extra_rail:"Усилить подвоз", extra_rail_and_yard:"Усилить подвоз и склад",
+  berth:"Причал", yard:"Склад", rail:"ЖД",
+  frozen_from_publication_date:"Дата выпуска исходного среза", target:"Целевой квартал",
+  seasonal_prediction_Mt:"Восстановленный прогноз, млн т", secondary_ytd_Mt:"Вторичный накопленный итог, млн т",
+  primary_prior_ytd_Mt:"Предыдущий первичный итог, млн т", provisional_quarter_Mt:"Предварительный квартал, млн т",
+  provisional_actual_minus_prediction_Mt:"Предварительное отклонение, млн т",
+  evidence_status:"Статус подтверждения", source_a:"Вторичный источник 1", source_b:"Вторичный источник 2",
+  evaluation_role:"Роль в оценке", transfer_without_refit:"Проверка без перенастройки",
+  comparable_public_value_not_verified:"Сопоставимый факт не подтверждён",
+  retrospective_secondary_cross_check_scope_unconfirmed:"Ретроспективная вторичная сверка с неподтверждённым охватом",
+  quarter_end:"Конец периода", asop_publication:"Дата выпуска АСОП", lag_days:"Лаг публикации, дней",
+  old_release:"Старый период", new_release:"Сравниваемый выпуск", old_published_ytd_Mt:"Старый уровень в новости",
+  new_published_ytd_Mt:"Новый уровень в новости", derived_yoy_percent:"Изменение по уровням, %",
+  reported_yoy_percent:"Опубликованный темп, %", implied_old_ytd_Mt:"Обратный расчёт из темпа",
+  verified_pdf_comparator_Mt:"Проверенный уровень из PDF", comparator_pdf_source:"PDF-компаратор",
+  old_source:"Старый выпуск", new_source:"Новый выпуск", published_MAE_Mt:"MAE по новостному ряду",
+  pdf_comparator_stress_MAE_Mt:"MAE с PDF-компараторами", delta_Mt:"Изменение MAE, млн т",
+  worst_scenario:"Худший сценарий", minimax_worst_case_improvement_Mt:"Снижение худшего превышения",
+  minimax_reference_cost_Mt:"Цена устойчивости в базовом сценарии",
+};
+function value(text) {
+  if (text === "") return "—";
+  if (words[text]) return words[text];
+  if (/^-?\d+(\.\d+)?$/.test(text)) return fmt.format(Number(text));
+  return text;
+}
+function heading(key) {
+  return words[key] || key.replaceAll("_", " ").replace(/Mt\b/g, "млн т").replace(/percent\b/g,"%");
+}
+function element(tag, text, cls) {
+  const node = document.createElement(tag);
+  if (text !== undefined) node.textContent = text;
+  if (cls) node.className = cls;
+  return node;
+}
+function dataTable(name) {
+  const rows = model.tables[name] ?? [];
+  const wrap = element("div", undefined, "scroll");
+  if (!rows.length) { wrap.textContent="Форма журнала готова к заполнению. Пример и инструкция доступны в папке evidence."; return wrap; }
+  const table = element("table");
+  const keys = Object.keys(rows[0]);
+  const head = table.createTHead().insertRow();
+  for (const key of keys) {
+    const th = element("th", heading(key)); th.scope="col"; th.title=key; head.append(th);
+  }
+  const body = table.createTBody();
+  for (const record of rows) {
+    const tr = body.insertRow();
+    for (const key of keys) {
+      const td=tr.insertCell();
+      if (record[key].startsWith("https://")) {
+        const a=element("a","Источник"); a.href=record[key]; a.target="_blank"; a.rel="noopener"; td.append(a);
+      } else td.textContent=value(record[key]);
+    }
+  }
+  wrap.append(table);
+  return wrap;
+}
+const nav=document.getElementById("nav"), main=document.getElementById("main");
+const extras={7:["evidence/07-publication-lags.csv","evidence/07-revision-stress.csv"],
+  13:["evidence/13-calendar-qualified-actions.csv"],17:["evidence/17-backlog-recovery.csv"]};
+for (const entry of model.entries) {
+  const title=String(entry.id).padStart(2,"0")+" "+entry.title;
+  const link=element("a",title); link.href="#item-"+entry.id; nav.append(link);
+  const section=element("section"); section.id="item-"+entry.id;
+  section.append(element("h2",title),element("p",entry.result),element("p",entry.limitation,"muted"));
+  const links=element("p",undefined,"links");
+  for(const [file,label] of [[entry.entrypoint,"Инструмент"],[entry.evidence,"Подтверждающий файл"]]) {
+    const a=element("a",label); a.href=file; links.append(a);
+  }
+  section.append(links);
+  for(const name of [entry.evidence,...(extras[entry.id]??[])].filter(x=>x.endsWith(".csv"))) {
+    const details=element("details"); details.append(element("summary","Таблица · "+name),dataTable(name));section.append(details);
+  }
+  main.append(section);
+}
+document.getElementById("search").addEventListener("input",event=>{
+  const text=event.target.value.toLocaleLowerCase("ru");
+  for(let i=0;i<model.entries.length;i++){
+    const entry=model.entries[i], show=(entry.title+" "+entry.result+" "+entry.limitation).toLocaleLowerCase("ru").includes(text);
+    main.children[i].hidden=!show;nav.children[i].hidden=!show;
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "phase": "shadow",
+  "n": 12,
+  "baseline_WAPE_percent": 8.02315963606286,
+  "model_WAPE_percent": 2.8949545078577335,
+  "baseline_false_alerts": 6,
+  "model_false_alerts": 0,
+  "non_overload_weeks": 6,
+  "overload_weeks": 6,
+  "baseline_missed_overloads": 1,
+  "model_missed_overloads": 0,
+  "relative_WAPE_improvement": 0.6391752577319587,
+  "relative_false_alert_reduction": 1.0,
+  "status": "synthetic_fixture_only",
+  "illustrative_status": "review_for_controlled_trial"
+}

@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Планирование портовой нагрузки — it plow</title>
+<style>
+:root { color-scheme: light; --ink: #162632; --muted: #485c66; --line: #d8e1e3; --water: #075b62; }
+* { box-sizing: border-box; }
+body { margin: 0; font: 16px/1.5 system-ui, sans-serif; color: var(--ink); background: #f6f8f8; }
+header, main { max-width: 1150px; padding: 26px clamp(16px, 4vw, 50px); margin: auto; }
+header { padding-top: 38px; padding-bottom: 8px; }
+h1 { font-size: clamp(32px, 5vw, 52px); line-height: 1.08; margin: 10px 0; letter-spacing: -.04em; }
+h2 { font-size: 24px; margin-bottom: 8px; }
+p { max-width: 88ch; }
+.label { color: var(--water); font-weight: 700; font-size: 14px; }
+.muted { color: var(--muted); }
+.inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(185px, 1fr)); gap: 14px; }
+label { font-weight: 650; }
+input:not([type=checkbox]), select { display: block; width: 100%; font: inherit; padding: 7px 9px; margin-top: 5px;
+  border: 1px solid #a0b4b9; border-radius: 5px; background: white; color: var(--ink); }
+button { font: inherit; color: inherit; cursor: pointer; }
+.action { border: 0; border-radius: 5px; background: var(--water); color: white; padding: 9px 14px; }
+.toggle { margin: 14px 0 6px; display: inline-block; }
+section { border-top: 1px solid var(--line); margin-top: 24px; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 7px 10px; }
+th { background: #e8eeee; }
+td strong { color: var(--water); }
+.scroll { overflow: auto; }
+.map th, .map td { text-align: center; padding: 3px; white-space: nowrap; }
+.map button { width: 100%; min-width: 43px; min-height: 31px; padding: 1px 3px; border: 1px solid transparent; border-radius: 4px; }
+.map button[aria-pressed=true] { border: 2px solid var(--ink); }
+.map button:focus-visible, .action:focus-visible { outline: 3px solid #045c85; outline-offset: 1px; }
+.b0 { background: #e1e9ea; }.h1 { background: #c3e7dd; }.h2 { background: #f5dca9; }
+.tie { background: #ddd8ef; }.check { background: #f3d6d4; }
+.error { font-weight: 700; color: #9a2727; }
+footer { color: var(--muted); margin-top: 28px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="label">it plow · МАИ 1 · Рабочая демонстрация</div>
+  <h1>Планирование портовой нагрузки</h1>
+  <p>Сравните резерв мощности и перенос плановых работ. Все мощности и изменения нагрузки в этом примере задаёт пользователь.</p>
+</header>
+<main>
+  <form id="controls" autocomplete="off">
+    <div class="inputs">
+      <label>Бассейн<select id="basin"><option value="baltic">Балтийский</option><option value="azov">Азово-Черноморский</option><option value="far_east">Дальневосточный</option></select></label>
+      <label>Мощность, млн т / кв.<input type="number" id="capacity" value="68" min="0.1" max="1000" step="0.1" required></label>
+      <label>Изменение нагрузки, %<input type="number" id="shock" value="0" min="-100" max="100" step="1" required></label>
+      <label>Потеря на ремонт, млн т<input type="number" id="repair" value="4" min="0" max="1000" step="0.1" required></label>
+      <label>Резерв, млн т<input type="number" id="reserve" value="3" min="0" max="1000" step="0.1" required></label>
+      <label>Проверка нагрузки ±, п. п.<input type="number" id="band" value="5" min="0" max="25" step="1" required></label>
+      <label>Дата решения<input type="date" id="asof" value="2026-11-09" min="2020-01-01" max="2100-12-31" required></label>
+      <label>Согласование резерва, дней<input type="number" id="reserve-lead" value="45" min="0" max="730" step="1" required></label>
+      <label>Согласование переноса, дней<input type="number" id="repair-lead" value="90" min="0" max="730" step="1" required></label>
+    </div>
+    <label class="toggle"><input type="checkbox" id="movable" checked> Ремонт можно перенести во входном сценарии</label>
+    <label class="toggle"><input type="checkbox" id="calendar" checked> Учитывать сроки согласования</label>
+    <p class="muted">Мощности, допустимость переноса и сроки согласования — вводные для сценария. Дата и сроки определяют, какие действия ещё доступны.</p>
+    <p class="error" id="error" role="alert" hidden></p>
+  </form>
+  <div id="outputs">
+    <section aria-live="polite">
+      <h2 id="headline">Сравнение мер</h2>
+      <p id="context" class="muted"></p>
+      <p id="deadlines" class="muted"></p>
+      <div class="scroll">
+        <table>
+          <thead><tr><th scope="col">Действие</th><th scope="col">Мощность по кварталам, млн т</th><th scope="col">Нагрузка сверх плана, млн т</th></tr></thead>
+          <tbody id="actions"></tbody>
+        </table>
+      </div>
+      <p id="stress"></p>
+      <p id="cost" class="muted"></p>
+      <button class="action" type="button" id="export">Скачать записку о сценарии</button>
+    </section>
+    <section>
+      <h2>Где меняется выбор</h2>
+      <p class="muted">Строки меняют общий уровень нагрузки. Столбцы меняют доступную мощность на квартал. Выберите ячейку, чтобы пересчитать сценарий.</p>
+      <div class="scroll"><table id="map" class="map" aria-label="Матрица выбора действия"></table></div>
+      <p class="muted">База — мощности хватает. Р — резерв. П — перенос. ≈ — равный результат. ? — в заданном наборе действий остаётся дефицит без улучшения или параметры ячейки неприменимы.</p>
+    </section>
+  </div>
+  <p><a href="Лаборатория.html">Открыть все 20 расширений, исходные условия и таблицы проверки</a></p>
+  <footer>Источник прогноза — АСОП. Сезонный ориентир по тому же кварталу прошлого года. Срез заканчивается II кварталом 2026 года. Варианты по нагрузке — стресс-сценарии без присвоенных вероятностей.</footer>
+</main>
+<script id="model-data" type="application/json">{"baltic": {"label": "Балтийский бассейн", "last": "2026-Q2", "periods": ["2027-Q1", "2027-Q2"], "loads": [64.3, 66.0]}, "azov": {"label": "Азово-Черноморский бассейн", "last": "2026-Q2", "periods": ["2027-Q1", "2027-Q2"], "loads": [59.3, 72.7]}, "far_east": {"label": "Дальневосточный бассейн", "last": "2026-Q2", "periods": ["2027-Q1", "2027-Q2"], "loads": [60.2, 72.5]}}</script>
+<script id="scenario-engine">
+function compareScenario(load, capacity, shock, repair, reserve, movable, reserveAllowed = true) {
+  const demand = load.map(value => value * (1 + shock / 100));
+  const base = [capacity, capacity - repair];
+  const peak = demand[0] - base[0] >= demand[1] - base[1] ? 0 : 1;
+  const withReserve = base.slice();
+  withReserve[peak] += reserve;
+  const options = [{id: "b0", name: "Исходный план", available: base}];
+  if (reserveAllowed) options.push({id: "h1", name: `Резерв в квартале ${peak + 1}`, available: withReserve});
+  if (movable) options.push({id: "h2", name: "Перенос ремонта в первый квартал", available: [capacity - repair, capacity]});
+  for (const option of options) {
+    option.gap = demand.reduce((sum, value, i) => sum + Math.max(value - option.available[i], 0), 0);
+  }
+  const epsilon = 1e-8;
+  const minimum = Math.min(...options.map(option => option.gap));
+  const best = options.filter(option => Math.abs(option.gap - minimum) < epsilon);
+  const code = options[0].gap < epsilon ? "b0" : best[0].id === "b0" ? "check" : best.length > 1 ? "tie" : best[0].id;
+  return {demand, options, code};
+}
+
+function decisionDeadline(period, days) {
+  const [year, quarter] = period.split("-Q").map(Number);
+  const value = new Date(Date.UTC(year, (quarter - 1) * 3, 1));
+  value.setUTCDate(value.getUTCDate() - days);
+  return value.toISOString().slice(0, 10);
+}
+
+function permissions(periods, loads, capacity, shock, repair, date, reserveLead, repairLead, useCalendar) {
+  const demand = loads.map(value => value * (1 + shock / 100));
+  const peak = demand[0] - capacity >= demand[1] - (capacity - repair) ? 0 : 1;
+  const reserveDeadline = decisionDeadline(periods[peak], reserveLead);
+  const repairDeadline = decisionDeadline(periods[0], repairLead);
+  return {
+    reserveDeadline, repairDeadline,
+    reserveAllowed: !useCalendar || date <= reserveDeadline,
+    moveAllowed: !useCalendar || date <= repairDeadline,
+  };
+}
+</script>
+<script>
+const get = id => document.getElementById(id);
+const data = JSON.parse(get("model-data").textContent);
+const format = new Intl.NumberFormat("ru-RU", {minimumFractionDigits: 1, maximumFractionDigits: 2});
+const num = value => format.format(value);
+const cells = {b0: ["База", "Хватает базовой мощности"], h1: ["Р", "Резервирование"],
+  h2: ["П", "Перенос ремонта"], tie: ["≈", "Одинаковый эффект"], check: ["?", "Нужно уточнение"]};
+let memo = "";
+
+function render() {
+  const key = get("basin").value;
+  const model = data[key];
+  const capacity = get("capacity").valueAsNumber;
+  const shock = get("shock").valueAsNumber;
+  const repair = get("repair").valueAsNumber;
+  const reserve = get("reserve").valueAsNumber;
+  const band = get("band").valueAsNumber;
+  const movable = get("movable").checked;
+  const asof = get("asof").value;
+  const reserveLead = get("reserve-lead").valueAsNumber;
+  const repairLead = get("repair-lead").valueAsNumber;
+  const useCalendar = get("calendar").checked;
+  const valid = [...get("controls").querySelectorAll("input")].every(input => input.validity.valid)
+    && repair <= capacity && Number.isFinite(Date.parse(asof));
+  get("error").hidden = valid;
+  get("error").textContent = valid ? "" : "Проверьте значения. Потеря на ремонт не может превышать плановую мощность.";
+  get("outputs").hidden = !valid;
+  if (!valid) return;
+  const calculate = (cap, shift) => {
+    const rules = permissions(model.periods, model.loads, cap, shift, repair, asof, reserveLead, repairLead, useCalendar);
+    return compareScenario(model.loads, cap, shift, repair, reserve, movable && rules.moveAllowed, rules.reserveAllowed);
+  };
+  const result = calculate(capacity, shock);
+  const rules = permissions(model.periods, model.loads, capacity, shock, repair, asof, reserveLead, repairLead, useCalendar);
+  get("headline").textContent = cells[result.code][1];
+  get("context").textContent = `${model.label}, ${model.periods.join(" / ")}. Нагрузка ${result.demand.map(num).join(" / ")} млн т.`;
+  get("deadlines").textContent = useCalendar
+    ? `Предельные даты решения: резерв ${rules.reserveDeadline}, перенос ${rules.repairDeadline}. ${rules.moveAllowed && movable ? "Перенос доступен." : "Перенос исключён."} ${rules.reserveAllowed ? "Резерв доступен." : "Резерв исключён."}`
+    : "Сравнение при заранее согласованных действиях. Календарные сроки отключены.";
+  get("actions").replaceChildren(...result.options.map(option => {
+    const row = document.createElement("tr");
+    for (const value of [option.name, option.available.map(num).join(" / "), num(option.gap)]) {
+      row.insertCell().textContent = value;
+    }
+    return row;
+  }));
+  const offsets = [...new Set([-band, -band / 2, 0, band / 2, band].map(delta => Math.min(100, Math.max(-100, shock + delta))))];
+  const outcomes = offsets.map(shift => calculate(capacity, shift).code);
+  const status = new Set(outcomes).size === 1
+    ? "В проверенных точках вывод совпадает."
+    : "В проверенных точках меняется предпочтительное действие. Уточните прогноз или условия эксплуатации.";
+  get("stress").textContent = `Проверка нагрузки от ${num(offsets[0])}% до ${num(offsets.at(-1))}%. ${status}`;
+
+  const ranked = [...result.options].sort((a, b) => a.gap - b.gap);
+  const benefit = ranked.length > 1 ? ranked[1].gap - ranked[0].gap : 0;
+  get("cost").textContent = result.code === "b0" ? "Базовый план закрывает прогнозную нагрузку."
+    : ranked.length < 2 ? "При заданных сроках нет доступной дополнительной меры. Требуется согласовать новый план."
+    : benefit < 1e-8 ? "По этой метрике преимущество мер отсутствует."
+    : `Граница дополнительной стоимости более результативной меры: ${num(benefit)} млн т × ценность одной тонны снижения превышения. Тариф и стоимость мер вводит оператор вне демонстрации.`;
+
+  const cols = [58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78];
+  const shifts = [10, 8, 6, 4, 2, 0, -2, -4, -6, -8, -10];
+  const matrix = get("map");
+  matrix.replaceChildren();
+  const header = matrix.createTHead().insertRow();
+  for (const value of ["Нагрузка / мощность", ...cols]) {
+    const cell = document.createElement("th");
+    cell.scope = "col";
+    cell.textContent = value;
+    header.append(cell);
+  }
+  const body = matrix.createTBody();
+  for (const shift of shifts) {
+    const row = body.insertRow();
+    const label = document.createElement("th");
+    label.scope = "row";
+    label.textContent = `${shift > 0 ? "+" : ""}${shift}%`;
+    row.append(label);
+    for (const cap of cols) {
+      const code = cap < repair ? "check" : calculate(cap, shift).code;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = code;
+      button.textContent = cells[code][0];
+      button.title = `${shift}%, ${cap} млн т. ${cells[code][1]}`;
+      button.setAttribute("aria-label", button.title);
+      button.setAttribute("aria-pressed", String(cap === capacity && shift === shock));
+      button.disabled = cap < repair;
+      button.onclick = () => {
+        get("capacity").value = cap;
+        get("shock").value = shift;
+        render();
+        get("map").querySelector("[aria-pressed=true]")?.focus();
+      };
+      row.insertCell().append(button);
+    }
+  }
+  memo = [
+    "it plow — оценка сценария МАИ 1", get("context").textContent,
+    get("deadlines").textContent,
+    `Срез данных ${model.last}. Базовая мощность ${num(capacity)} млн т/кв., потеря на ремонт ${num(repair)} млн т, резерв ${num(reserve)} млн т, нагрузка ${num(shock)}%.`,
+    ...result.options.map(option => `${option.name} — сверх плана ${num(option.gap)} млн т`),
+    get("headline").textContent, get("stress").textContent, get("cost").textContent,
+    "Мощности и стресс-сценарии заданы пользователем. Источник прогноза: публикации АСОП. Данные и формулы в пакете проекта.",
+  ].join("\n");
+}
+get("controls").addEventListener("submit", event => event.preventDefault());
+get("controls").addEventListener("input", render);
+get("export").addEventListener("click", () => {
+  const url = URL.createObjectURL(new Blob(["\uFEFF", memo], {type: "text/plain;charset=utf-8"}));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "it-plow-scenario.txt";
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+render();
+</script>
+</body>
+</html>

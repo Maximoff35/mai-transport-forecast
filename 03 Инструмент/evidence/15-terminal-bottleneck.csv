@@ -1,0 +1,5 @@
+﻿action,assumed_load_Mt,berth_Mt,yard_Mt,rail_Mt,limiting_links,effective_capacity_Mt,gap_Mt
+base,5.2,6.0,4.8,4.3,rail,4.3,0.9
+extra_berth,5.2,7.0,4.8,4.3,rail,4.3,0.9
+extra_rail,5.2,6.0,4.8,5.3,yard,4.8,0.4
+extra_rail_and_yard,5.2,6.0,5.8,5.3,rail,5.3,0

@@ -1,0 +1,402 @@
+[
+  {
+    "file": ".gitattributes",
+    "bytes": 38,
+    "sha256": "b830955625dc09f0c2f7532a54ed02861b753902c15a72828f2e14d93f854401"
+  },
+  {
+    "file": ".gitignore",
+    "bytes": 154,
+    "sha256": "b8e6ca3bd92b944c7e636b9fd41a356729cb9890ab03f21a8fdd97e27e776673"
+  },
+  {
+    "file": "01 Паспорт/Паспорт проекта.pdf",
+    "bytes": 96452,
+    "sha256": "a2406cad46d6f69889ff4683fcc4e91794f0b6b02e80c4b79a5bc351fead35d3"
+  },
+  {
+    "file": "01 Паспорт/Паспорт — текст для правок.md",
+    "bytes": 7245,
+    "sha256": "8256c2697405f20ddbdfab88793fcad4bd7a63875c3896b82e7ef83bc2dafca1"
+  },
+  {
+    "file": "02 Защита/Защита.pptx",
+    "bytes": 47332,
+    "sha256": "0fea5ac358dd3f35557caed5d6c85110bcb7bfb4e69c2c71f69946b4ee213f0b"
+  },
+  {
+    "file": "02 Защита/Сценарий защиты.md",
+    "bytes": 5300,
+    "sha256": "b410a977ae6ba1d8d90f67629cdac1bfc980fff3fe8c2cb59ebff9f37cd9de49"
+  },
+  {
+    "file": "03 Инструмент/asop-verified.csv",
+    "bytes": 2439,
+    "sha256": "b4cc52a78af5c10138691de42af819cfd75f664c860c3a65f35379e4a640f5f8"
+  },
+  {
+    "file": "03 Инструмент/backtest.csv",
+    "bytes": 1800,
+    "sha256": "e8d3bdf3bc7096596d12560a4cf8428eed20ccb0bf985853eb580d7750110ebe"
+  },
+  {
+    "file": "03 Инструмент/checks.py",
+    "bytes": 6980,
+    "sha256": "31f44ea1eb57d75027fc173bb3dd1ac0bb95bfc171317f56b102b149bb68f39c"
+  },
+  {
+    "file": "03 Инструмент/decision-replay.csv",
+    "bytes": 1229,
+    "sha256": "11359c667db2fbe83ee89fb2d89ba91707301f83486b52ac74a10c5e4bbd8264"
+  },
+  {
+    "file": "03 Инструмент/demo-template.html",
+    "bytes": 16386,
+    "sha256": "83d451f3e8e04226afffa8a13e28544ebd50fd420d0ba1c30b0fedc8c7574710"
+  },
+  {
+    "file": "03 Инструмент/evidence/06-memo-example.txt",
+    "bytes": 1330,
+    "sha256": "19406cc45a9781875e37f6499ea69a158d0f0169d54531e28d70329e2089535f"
+  },
+  {
+    "file": "03 Инструмент/evidence/07-publication-lags.csv",
+    "bytes": 2337,
+    "sha256": "3c8ccf70ee02fdace77557ea64df32aba9fb5a1a3c8b6796f162f48ce1700ec1"
+  },
+  {
+    "file": "03 Инструмент/evidence/07-release-discrepancies.csv",
+    "bytes": 1479,
+    "sha256": "1d53ed257b2587f5b35b99b76e1e1d49875d10b67d68e8db52b329848e9e5197"
+  },
+  {
+    "file": "03 Инструмент/evidence/07-revision-stress.csv",
+    "bytes": 1756,
+    "sha256": "75b8088be542052ffbf4fae0b292371b04adbb28a02181d7e8f095dc95e4f93c"
+  },
+  {
+    "file": "03 Инструмент/evidence/08-frozen-holdout.csv",
+    "bytes": 575,
+    "sha256": "a95e413737f4e7458f20a0d1a464cd83dc503c0c789aa68128832fdb1ef8037c"
+  },
+  {
+    "file": "03 Инструмент/evidence/09-geographic-transfer.csv",
+    "bytes": 1238,
+    "sha256": "cc9a5f5132615b6795e3377fb1918d889489a72d87b2f43c1dee6509fa488a99"
+  },
+  {
+    "file": "03 Инструмент/evidence/10-asymmetric-stress.csv",
+    "bytes": 3886,
+    "sha256": "8362e0a2abc2f988f86492ac74e112840ae0a7fa31e12ae57ae0498a5d4715ed"
+  },
+  {
+    "file": "03 Инструмент/evidence/11-minimax.csv",
+    "bytes": 838,
+    "sha256": "5422549b5c786c8828a32bee88dd6a5b4ae1ea68d71e0fe7d98ea22c21660217"
+  },
+  {
+    "file": "03 Инструмент/evidence/12-minimum-hybrid-reserve.csv",
+    "bytes": 1553,
+    "sha256": "8db69a5de0f2eb14be761f7843e4541c11bebf5c9cf138ccfde911a768f29656"
+  },
+  {
+    "file": "03 Инструмент/evidence/13-calendar-qualified-actions.csv",
+    "bytes": 366,
+    "sha256": "581856d5a2ba22de2bdcf250ecdab13bbb9aaca55038b0b6e9ed5b3f09ef1559"
+  },
+  {
+    "file": "03 Инструмент/evidence/13-decision-calendar.csv",
+    "bytes": 591,
+    "sha256": "e1b23d1ed75576336d62532b8fc75efdbff441553b1ce6704d216f03aed7306a"
+  },
+  {
+    "file": "03 Инструмент/evidence/14-cargo-compatibility.csv",
+    "bytes": 701,
+    "sha256": "9cd96e86008f7ac1b451da46b8f70bd84ca31e08d9de821a03e90b68941bc228"
+  },
+  {
+    "file": "03 Инструмент/evidence/15-terminal-bottleneck.csv",
+    "bytes": 262,
+    "sha256": "dd38c216863022bbbecaffc98be16aab68e68e285441314c5741b8d3dc9756b5"
+  },
+  {
+    "file": "03 Инструмент/evidence/16-resource-conversion.csv",
+    "bytes": 347,
+    "sha256": "f7dac8a4b56f15f6c678bf38be5e71e74941c9f8d93b421ac849c3f7dbbae58c"
+  },
+  {
+    "file": "03 Инструмент/evidence/17-backlog-flow.csv",
+    "bytes": 1596,
+    "sha256": "f443d457c61e1d8d2ff324b6b72bb0ac1e28f8f86849cc86034e044ef6c6e91a"
+  },
+  {
+    "file": "03 Инструмент/evidence/17-backlog-recovery.csv",
+    "bytes": 548,
+    "sha256": "1dd9ff98a302d72da892a8d821a620d4d33e79a72752d06616bee3004aba9a62"
+  },
+  {
+    "file": "03 Инструмент/evidence/18-maintenance-schedules.csv",
+    "bytes": 584,
+    "sha256": "c4caf34b8d2ce33e4ec4ec551fcc6a30c8e950485b5dcc9ef655a02705c8fae2"
+  },
+  {
+    "file": "03 Инструмент/evidence/19-lugaport-timing.csv",
+    "bytes": 1111,
+    "sha256": "7f1f9d960648bacf8ec1a2fe6e0401ee184b00193b5c4f444dea18f48ce89955"
+  },
+  {
+    "file": "03 Инструмент/evidence/20-pilot-example-result.json",
+    "bytes": 498,
+    "sha256": "3dd9a43c732a42da4504d24d07f69d66e49887711cf1a84737a7367d05889d48"
+  },
+  {
+    "file": "03 Инструмент/evidence/20-pilot-log-template.csv",
+    "bytes": 166,
+    "sha256": "1b39922436b6492ac441f94ef71869f7c140db9fcf34e76cd68b86f26a7a2140"
+  },
+  {
+    "file": "03 Инструмент/evidence/20-pilot-synthetic-example.csv",
+    "bytes": 934,
+    "sha256": "cb35b15b9fa75266dcfbb4b8a4032c4de4824c99474b08a6e422b06d26893ad2"
+  },
+  {
+    "file": "03 Инструмент/evidence/manifest-20.json",
+    "bytes": 14141,
+    "sha256": "19fd3f9fed173d519e7e647938d7ebdf70e06ffacac6fdba305ca5ca72140399"
+  },
+  {
+    "file": "03 Инструмент/evidence/verification.json",
+    "bytes": 537,
+    "sha256": "4eb949ac86e9f65677cb0b3c648999b50529d6b1c4ea95df49b6db8147e06eb5"
+  },
+  {
+    "file": "03 Инструмент/fetch_sources.py",
+    "bytes": 2372,
+    "sha256": "3e3e4f334d3458f3179e16f1394a1dc84123c12befd016673c7997b3fe5940a0"
+  },
+  {
+    "file": "03 Инструмент/forecast.py",
+    "bytes": 6626,
+    "sha256": "197addb70d8a4697f538880fbf8f2985b68e62872ca288a4303dab298b4210e0"
+  },
+  {
+    "file": "03 Инструмент/holdout.py",
+    "bytes": 2074,
+    "sha256": "c89d35cbfade0b5f21c97d15177a042d975872f814d611e18152a9f29d43c660"
+  },
+  {
+    "file": "03 Инструмент/lab-template.html",
+    "bytes": 15245,
+    "sha256": "ad8d8b203087706f47dfca28f8b6d10b2d5ea9019a3707975c0e76666c0b266b"
+  },
+  {
+    "file": "03 Инструмент/pilot.py",
+    "bytes": 6265,
+    "sha256": "66d23f5c7b6ed63e0b02e214e1bcb092caf9647d6b835c8e1b46b5e4de90693b"
+  },
+  {
+    "file": "03 Инструмент/planning-inputs.json",
+    "bytes": 2658,
+    "sha256": "c6f7b7f77d634557390a78bf04d21dabf500a7a855a362c3922ff10396d339d7"
+  },
+  {
+    "file": "03 Инструмент/planning.py",
+    "bytes": 17208,
+    "sha256": "08578937191194af68eae150a8c20a81b1fc6a7030b40f35fb815052ccba5e79"
+  },
+  {
+    "file": "03 Инструмент/prepare.py",
+    "bytes": 4517,
+    "sha256": "7b0687d3947e9cdbbc0fe0ea1a664a15c16668399fbdf823c445a78aadd7319c"
+  },
+  {
+    "file": "03 Инструмент/README.md",
+    "bytes": 6290,
+    "sha256": "3543834ba115b4be290fe855cbb7e86c6f4216cb2036550e11be36619609b1af"
+  },
+  {
+    "file": "03 Инструмент/rebuild.py",
+    "bytes": 344,
+    "sha256": "4febc5ec53e8f79fae618f9702ccc1d67dcbf4668f5d95668a5e8a7fe56cffd8"
+  },
+  {
+    "file": "03 Инструмент/reports.py",
+    "bytes": 15184,
+    "sha256": "c2a18344eb1aa8ae1b4e8d3d1c6d38d12de103d03b4cf4d66f1cbc61ef0cbba7"
+  },
+  {
+    "file": "03 Инструмент/results.txt",
+    "bytes": 12089,
+    "sha256": "8af8c3515730dce5ddc7545c9e642b51e1929167b477cb3cffb7d97502244fa1"
+  },
+  {
+    "file": "03 Инструмент/scenario-grid.csv",
+    "bytes": 13536,
+    "sha256": "7fdf058751f6014831b40661bf1bd671ea351dcc7853b269ca77416ef1cc6894"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2022-Q1.html",
+    "bytes": 67796,
+    "sha256": "55c46a48eb047d5404f880425714f30896c12f70dd503ad5a4b36906c4bbd237"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2022-Q2.html",
+    "bytes": 67323,
+    "sha256": "8681b663c481914424d9e54631bad3db3a0151d2df2aea3190911eea79963d62"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2022-Q3.html",
+    "bytes": 67644,
+    "sha256": "5cbd0b965e98a4a0d579deca332d3b828d799c34f2a3e51663c511bd2d486cd1"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2022-Q4.html",
+    "bytes": 67894,
+    "sha256": "d229550f69b6cb088cf391e709794cf313885ac4ffe4c2c97ea518b92d4bc2cc"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2023-Q1.html",
+    "bytes": 67844,
+    "sha256": "6c85419b9b3a35deb3be625e512ea22cdce23f0a432420046b34366f85ebc15e"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2023-Q2.html",
+    "bytes": 67869,
+    "sha256": "8e33692c0d300eb05448bdae5f521b5e106afb5bcced9b9427099632590b80f3"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2023-Q3.html",
+    "bytes": 67733,
+    "sha256": "a0adc05be3a4faa24f0814424776c956e65f87b5fc6941c3a9ba60d04b2d4dd4"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2023-Q4.html",
+    "bytes": 67895,
+    "sha256": "cbe642b55e092afee6f3f41ca50bd5b782a9e7b9bb5502fed6d59d27f515b5c6"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2024-H1-comparators.pdf",
+    "bytes": 57360,
+    "sha256": "fe2f0b9f0ba27a62e3b79399613736ccded5155dc329d2695eff82831e018633"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2024-Q1.html",
+    "bytes": 67891,
+    "sha256": "afb75db2498fb14ec4222d34719dac5fd751e73515c16939c05f7b8305303e58"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2024-Q2.html",
+    "bytes": 66600,
+    "sha256": "01031d57381060985ac7e6e8ce17dc7186ccef2a93565496d54b33828cbd6fda"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2024-Q3.html",
+    "bytes": 66599,
+    "sha256": "16fa102884ff8b1cc326f4f0a376c59fa9c12511de255ce9ec0a15ffaab3dca8"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2024-Q4.html",
+    "bytes": 66665,
+    "sha256": "300c3b958bae39e3c80a07d48ac6fff419fc1b6de3ad2a3476190aae98f88bf4"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2024-Y-comparators.pdf",
+    "bytes": 48921,
+    "sha256": "c993b2ce48d406a5f593f1ef364324765db7950ecc9aca2693552528037417bc"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2025-Q1.html",
+    "bytes": 66572,
+    "sha256": "e6fa492bdd2e6e58dcd94cfd2efc8fb816c1c1cea5f6b63ee2b0ac455cd3daee"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2025-Q2.html",
+    "bytes": 66559,
+    "sha256": "222bd2212aaacb872e847e2eebca6b6602d10d650ec8969aff20ecdd9c4ef671"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2025-Q3.html",
+    "bytes": 66608,
+    "sha256": "816c9eb28904d79dfd7356d1f0878937b463eecfab6a1c61eb33e661d7fc6631"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2025-Q4.html",
+    "bytes": 66381,
+    "sha256": "1ee2011d3fca6a4a985664d49cfc2a237a66d6451f56de14f5dc1ffa3e67faae"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2026-Q1.html",
+    "bytes": 66508,
+    "sha256": "09ff5f0fe35b1a5171a87f9c047eeac65d04efdcf9918d5c46634ca40b6ee1ac"
+  },
+  {
+    "file": "03 Инструмент/sources/asop-2026-Q2.html",
+    "bytes": 63766,
+    "sha256": "2b544bff32148bd084cdbbfaf14f9788221d304ec7a17f00da8669018264b3fa"
+  },
+  {
+    "file": "03 Инструмент/sources/manifest.json",
+    "bytes": 10631,
+    "sha256": "7e51be68ca2bbd7209794d17cf18d7692c60ca966394e6e2df30ef24f4166826"
+  },
+  {
+    "file": "03 Инструмент/sources/rosmorport-ustluga-development.html",
+    "bytes": 461123,
+    "sha256": "340e0264f1a3279e4034afdadfb69434cf5856c0fca9986db23d253ba4a27732"
+  },
+  {
+    "file": "03 Инструмент/verify-demo.cjs",
+    "bytes": 1688,
+    "sha256": "90dc0ee2815f3153d61eaada37d78dd8913e3b6731e8a391db6c4fba25efc9a4"
+  },
+  {
+    "file": "03 Инструмент/verify.py",
+    "bytes": 4265,
+    "sha256": "d49033c1d2007320e272a8dd5891218a561b8c451e0ea50d39e80dcf1127af60"
+  },
+  {
+    "file": "03 Инструмент/Демо.html",
+    "bytes": 17057,
+    "sha256": "04da74b70159f15be4bdf0e2789489cd0c35c7256261267c324dd84a9c8655f6"
+  },
+  {
+    "file": "03 Инструмент/Лаборатория.html",
+    "bytes": 161008,
+    "sha256": "52409b0ca8f93eeb3135e62715e9ab3d408ab57511f6e999a5af9a530a8cccc5"
+  },
+  {
+    "file": "03 Инструмент/Пилот и критерии перехода.md",
+    "bytes": 4189,
+    "sha256": "def13daaa2090946e60dbd2cde4813d6c2d3dca55ddaf9017520e45842975205"
+  },
+  {
+    "file": "03 Инструмент/Применение ИИ.md",
+    "bytes": 999,
+    "sha256": "4994408df1fff5c9b18ed5a90f47815c2f5816905111790884b9a9c72a1181eb"
+  },
+  {
+    "file": "03 Инструмент/Проверка данных и расчёта.md",
+    "bytes": 4324,
+    "sha256": "240d4a0e8358509c9e4dfcd26f80c1b4e410444ea3a6333edd659f42a0c8ae22"
+  },
+  {
+    "file": "03 Инструмент/Результаты 20 расширений.md",
+    "bytes": 13659,
+    "sha256": "6a1b9a1fe9126ffe11f210c2fef63ee8b06bffe3d67c373e7889c37fc79c721a"
+  },
+  {
+    "file": "04 Проверка/План до финала.md",
+    "bytes": 4181,
+    "sha256": "cf72f6e6b48b10476d71755328644808bd1b3c7714572036c45b32b534814849"
+  },
+  {
+    "file": "04 Проверка/Проверка качества.md",
+    "bytes": 2973,
+    "sha256": "90ec7ce554236ca12f5cf55f52c7c745316f38355357a65d8eb438cd5f18ab69"
+  },
+  {
+    "file": "README.md",
+    "bytes": 4864,
+    "sha256": "0b47202bd868cba9ae247a402e9a9e3a3e910e7be8fa73a71888889be51159f0"
+  }
+]

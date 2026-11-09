@@ -1,0 +1,7 @@
+﻿basin,action,assumed_decision_date,affected_quarter,quarter_start,assumed_lead_calendar_days,latest_decision_date,days_left,status
+baltic,reserve,2026-11-09,2027-Q2,2027-04-01,45,2027-02-15,98,within_window
+baltic,move,2026-11-09,2027-Q1,2027-01-01,90,2026-10-03,-37,window_passed
+azov,reserve,2026-11-09,2027-Q2,2027-04-01,45,2027-02-15,98,within_window
+azov,move,2026-11-09,2027-Q1,2027-01-01,90,2026-10-03,-37,window_passed
+far_east,reserve,2026-11-09,2027-Q2,2027-04-01,45,2027-02-15,98,within_window
+far_east,move,2026-11-09,2027-Q1,2027-01-01,90,2026-10-03,-37,window_passed

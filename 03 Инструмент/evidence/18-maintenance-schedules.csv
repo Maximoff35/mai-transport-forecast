@@ -1,0 +1,10 @@
+﻿basin,job_start_quarters,available_Q1_Mt,available_Q2_Mt,available_Q3_Mt,available_Q4_Mt,annual_gap_Mt,peak_gap_Mt,baseline,selected
+baltic,A:Q1/B:Q3,64,68,66,66,3.8,2.1,False,True
+baltic,A:Q2/B:Q3,68,64,66,66,5.5,2.1,True,False
+baltic,A:Q3/B:Q1,66,66,64,68,4.1,4.1,False,False
+azov,A:Q1/B:Q3,64,68,66,66,14.6,6.2,False,True
+azov,A:Q2/B:Q3,68,64,66,66,18.6,8.7,True,False
+azov,A:Q3/B:Q1,66,66,64,68,16.6,6.7,False,False
+far_east,A:Q1/B:Q3,64,68,66,66,5.9,4.5,False,True
+far_east,A:Q2/B:Q3,68,64,66,66,9.9,8.5,True,False
+far_east,A:Q3/B:Q1,66,66,64,68,9.3,6.5,False,False

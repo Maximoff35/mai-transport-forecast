@@ -1,0 +1,10 @@
+﻿basin,action,reference_gap_Mt,worst_gap_Mt,worst_scenario,central_choice,minimax_choice,minimax_worst_case_improvement_Mt,minimax_reference_cost_Mt
+baltic,base,2.0,12.76,Q2_load_grows_and_capacity_falls,False,False,0.7,0.3
+baltic,reserve,0,9.76,Q2_load_grows_and_capacity_falls,True,False,0.7,0.3
+baltic,move,0.3,9.06,Q2_load_grows_and_capacity_falls,False,True,0.7,0.3
+azov,base,8.7,19.862,Q2_load_grows_and_capacity_falls,False,False,0.0,0.0
+azov,reserve,5.7,16.862,Q2_load_grows_and_capacity_falls,False,False,0.0,0.0
+azov,move,4.7,15.862,Q2_load_grows_and_capacity_falls,True,True,0.0,0.0
+far_east,base,8.5,19.65,Q2_load_grows_and_capacity_falls,False,False,0.0,0.0
+far_east,reserve,5.5,16.65,Q2_load_grows_and_capacity_falls,False,False,0.0,0.0
+far_east,move,4.5,15.65,Q2_load_grows_and_capacity_falls,True,True,0.0,0.0

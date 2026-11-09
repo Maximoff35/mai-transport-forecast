@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "checks": [
+    "216 forecast comparisons against a truncated history.",
+    "15 replay windows start after the release of all forecast inputs.",
+    "Editable planning inputs reject incompatible values.",
+    "36 backlog rows preserve flow balance and available capacity.",
+    "Hybrid reserves equal the two-quarter shortfalls.",
+    "Pilot rejects missed-overload regression, broken coverage and unlabeled synthetic use.",
+    "21 saved primary-source files match their SHA-256 manifests."
+  ]
+}

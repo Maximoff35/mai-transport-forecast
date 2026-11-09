@@ -1,0 +1,60 @@
+{
+  "as_of": "2026-11-09",
+  "scope": "Иллюстративные входы. Годовая проектная мощность LUGAPORT взята из Росморпорта. Фактическая доступная мощность, календарь ввода, все сроки согласований и ограничения оператора требуют отдельной проверки.",
+  "basin_demo": {
+    "capacity_Mt_per_quarter": 68,
+    "repair_loss_Mt": 4,
+    "reserve_Mt": 3,
+    "allow_move": true
+  },
+  "stress": [
+    {"scenario": "reference", "load_factor": [1, 1], "capacity_factor": [1, 1]},
+    {"scenario": "load_minus_5_percent", "load_factor": [0.95, 0.95], "capacity_factor": [1, 1]},
+    {"scenario": "load_plus_5_percent", "load_factor": [1.05, 1.05], "capacity_factor": [1, 1]},
+    {"scenario": "peak_moves_to_Q1", "load_factor": [1.08, 0.94], "capacity_factor": [1, 1]},
+    {"scenario": "peak_moves_to_Q2", "load_factor": [0.94, 1.08], "capacity_factor": [1, 1]},
+    {"scenario": "Q2_load_grows_and_capacity_falls", "load_factor": [1, 1.06], "capacity_factor": [1, 0.90]},
+    {"scenario": "Q1_rail_capacity_falls", "load_factor": [1, 1], "capacity_factor": [0.92, 1]}
+  ],
+  "calendar": {
+    "reserve_lead_calendar_days": 45,
+    "repair_move_lead_calendar_days": 90
+  },
+  "cargo": {
+    "dry_capacity_Mt_per_quarter": 30,
+    "liquid_capacity_Mt_per_quarter": 40
+  },
+  "terminal": {
+    "load_Mt_per_quarter": 5.2,
+    "capacity_Mt_per_quarter": {"berth": 6.0, "yard": 4.8, "rail": 4.3},
+    "capacity_boost_Mt": 1.0,
+    "tonnes_per_shift": 2800,
+    "tonnes_per_train": 3900
+  },
+  "maintenance": {
+    "max_concurrent_jobs": 1,
+    "quarter_capacity_Mt": [68, 68, 68, 68],
+    "jobs": [
+      {"id": "A", "duration_quarters": 1, "loss_Mt_per_quarter": 4, "allowed_start_quarters": [1, 2, 3], "baseline_start_quarter": 2},
+      {"id": "B", "duration_quarters": 2, "loss_Mt_per_quarter": 2, "allowed_start_quarters": [1, 3], "baseline_start_quarter": 3}
+    ]
+  },
+  "lugaport": {
+    "annual_nameplate_Mt": 24.3,
+    "base_node_capacity_Mt_per_quarter": 4.3,
+    "compatible_share": 0.7,
+    "ramp_after_opening": [0.25, 0.50, 0.75, 1],
+    "assumed_open_quarter": 2,
+    "assumed_delayed_quarter": 4,
+    "hypothetical_node_load_Mt": [4.6, 5.2, 5.4, 5.1],
+    "nameplate_source": "https://www.rosmorport.ru/filials/spb_developmentofports/"
+  },
+  "pilot": {
+    "minimum_eligible_weeks": 12,
+    "minimum_overload_weeks": 3,
+    "minimum_non_overload_weeks": 3,
+    "target_relative_wape_improvement": 0.10,
+    "target_relative_false_alert_reduction": 0.15,
+    "maximum_sla_drop_pp": 0
+  }
+}

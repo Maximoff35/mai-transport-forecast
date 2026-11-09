@@ -1,0 +1,9 @@
+﻿scenario,gap_tonnes,unit,assumed_tonnes_per_unit,minimum_units_if_compatible
+base,900000,shift,2800,322
+base,900000,train,3900,231
+extra_berth,900000,shift,2800,322
+extra_berth,900000,train,3900,231
+extra_rail,400000,shift,2800,143
+extra_rail,400000,train,3900,103
+extra_rail_and_yard,0,shift,2800,0
+extra_rail_and_yard,0,train,3900,0
