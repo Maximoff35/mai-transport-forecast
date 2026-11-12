@@ -22,10 +22,23 @@
     "verify.py passed: 216 truncated-history comparisons, 15 future decision windows, 36 balance rows, 21 source hashes",
     "verify-demo.cjs passed: 363 scenarios, calendar constraints, scenario date equals demo date",
     "passport has two A4 pages; deck has eight slides and four native tables",
-    "updated passport and presentation rendered and visually inspected"
+    "updated passport and presentation rendered and visually inspected",
+    "Two changed-configuration integration cases passed, with maintenance transfer enabled and disabled",
+    "12 basin/horizon combinations and main scenario controls verified in the in-app browser",
+    "Forecast and scenario memo downloaded and inspected"
   ],
   "unresolved": [
-    "expert effective capacities, cargo compatibility, maintenance windows and actual lead times",
-    "additional improvements require team approval"
-  ]
+    "expert effective capacities, cargo compatibility, maintenance windows and actual lead times"
+  ],
+  "additional_work": {
+    "approved": [
+      1,
+      2,
+      3
+    ],
+    "status": "completed",
+    "shared_configuration": "CLI, demo defaults, generated tables and report text",
+    "forecast_explorer": "18 historical quarters, four horizons, source traceability",
+    "defense_guide": "02 Защита/Карточка защиты.md"
+  }
 }

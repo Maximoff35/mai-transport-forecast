@@ -25,9 +25,14 @@
     "sha256": "d22dda485bfc81dcffad4afda51f5bcbba48f95b12d1e7298e8998957bdec9bb"
   },
   {
+    "file": "02 Защита/Карточка защиты.md",
+    "bytes": 14298,
+    "sha256": "ce2959ad8bc901be7b2631e712d601e22179c74c4138a9c2eb81bc967d47277d"
+  },
+  {
     "file": "02 Защита/Сценарий защиты.md",
-    "bytes": 5370,
-    "sha256": "4648079d8346f65bcfce9bffaf9c41c1a0fb3ecfd046bbe7684429337f5cbe0f"
+    "bytes": 5731,
+    "sha256": "eec92e1d20ca3a8f134eab2fdbd928181506aff87e4b1187f0aa0768d335e63e"
   },
   {
     "file": "03 Инструмент/asop-verified.csv",
@@ -401,18 +406,18 @@
   },
   {
     "file": "04 Проверка/Пересчёт 12 ноября.json",
-    "bytes": 1142,
-    "sha256": "3388122d1b8775cdc2370985b0a4982e4b5cf74e8df9c5bd6bd1c720fa3998d5"
+    "bytes": 1698,
+    "sha256": "669542ff440106ec88e84fd06d65eb9e2052465701130ed652a0c764501a2d84"
   },
   {
     "file": "04 Проверка/План до финала.md",
-    "bytes": 3711,
-    "sha256": "6dc8bad94a62924ad82d284d91a336dfbca53b21bf344cb886bc642dfa618808"
+    "bytes": 3873,
+    "sha256": "018634eda31beea41ceddaee33cd22d45cdd93279bfc48091e160546ed17b547"
   },
   {
     "file": "04 Проверка/Предложения на согласование.md",
-    "bytes": 3232,
-    "sha256": "9bd59a6c3b951bab81246ff47b035a95ea24698ad1d0abff6963cee5f4d693eb"
+    "bytes": 3514,
+    "sha256": "9980e4bc46c31206af339bd0599c61d1cdefd899acb5c1005b1615d634eb91ff"
   },
   {
     "file": "04 Проверка/Проверка качества.md",
@@ -421,8 +426,8 @@
   },
   {
     "file": "04 Проверка/Рабочий план 12 ноября.md",
-    "bytes": 6862,
-    "sha256": "cb96f2b5d9cc6349c92832eeeb8826b3e1be55873125e2e66630355be1221e7f"
+    "bytes": 7040,
+    "sha256": "e4d367b1d674700f97aa1f5ffbe03e72c89368962517503eaa1a5a6d3f8e8b00"
   },
   {
     "file": "04 Проверка/Сдача 10 ноября.md",
@@ -431,7 +436,7 @@
   },
   {
     "file": "README.md",
-    "bytes": 6394,
-    "sha256": "d7d7625a4025d855e798a21b3511175a1dcfc30aab64fbfdd6f9aa04dcba38f9"
+    "bytes": 6552,
+    "sha256": "60a860d8fbed62385d8301c924e8427947d0b1489ae066f07b89b142592133fb"
   }
 ]
