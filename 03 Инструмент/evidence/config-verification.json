@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "changed_configuration_cases": [
+    {
+      "allow_move": true,
+      "status": "passed"
+    },
+    {
+      "allow_move": false,
+      "status": "passed"
+    }
+  ],
+  "invalid_horizon_rejected": true
+}

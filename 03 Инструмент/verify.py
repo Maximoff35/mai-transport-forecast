@@ -9,7 +9,7 @@ from datetime import date, timedelta
 from checks import HERE, quarter_start
 from forecast import DATA, FIELDS, METHODS, forecast, read_history
 from pilot import COLS, fixture, score
-from planning import INPUTS, validate_config
+from config import INPUTS, validate_config
 
 
 def read(name):

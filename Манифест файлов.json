@@ -6,8 +6,8 @@
   },
   {
     "file": ".gitignore",
-    "bytes": 154,
-    "sha256": "b8e6ca3bd92b944c7e636b9fd41a356729cb9890ab03f21a8fdd97e27e776673"
+    "bytes": 171,
+    "sha256": "58e2532f39be5920fff9fef6bd139d488445e8a74a05442d20472aca0db9db8d"
   },
   {
     "file": "01 Паспорт/Паспорт проекта.pdf",
@@ -45,19 +45,24 @@
     "sha256": "31f44ea1eb57d75027fc173bb3dd1ac0bb95bfc171317f56b102b149bb68f39c"
   },
   {
+    "file": "03 Инструмент/config.py",
+    "bytes": 4040,
+    "sha256": "66b889fa8e4f116f2c2d47651d2af9155ba7b6797a5510665677cb6939090d86"
+  },
+  {
     "file": "03 Инструмент/decision-replay.csv",
     "bytes": 1229,
     "sha256": "11359c667db2fbe83ee89fb2d89ba91707301f83486b52ac74a10c5e4bbd8264"
   },
   {
     "file": "03 Инструмент/demo-template.html",
-    "bytes": 16386,
-    "sha256": "c9503d1812ebab0b7c8c739900f6259c392f8fbfa669889d1c5e848b3c62ba09"
+    "bytes": 24579,
+    "sha256": "bf642963187e2bc697e46b5fdeb1bbe2f95666ede29ae655602a7451b4eae803"
   },
   {
     "file": "03 Инструмент/evidence/06-memo-example.txt",
-    "bytes": 1330,
-    "sha256": "19406cc45a9781875e37f6499ea69a158d0f0169d54531e28d70329e2089535f"
+    "bytes": 2304,
+    "sha256": "04f7e3bbf95374c6680ad73794dd367bc7865978fee13b2fb2f5e1cfa07a041a"
   },
   {
     "file": "03 Инструмент/evidence/07-publication-lags.csv",
@@ -160,9 +165,14 @@
     "sha256": "cb35b15b9fa75266dcfbb4b8a4032c4de4824c99474b08a6e422b06d26893ad2"
   },
   {
+    "file": "03 Инструмент/evidence/config-verification.json",
+    "bytes": 229,
+    "sha256": "d29f5ba1abc3095550fc3db767b2420f43d1237f8e73aa343a2c876d54e702f7"
+  },
+  {
     "file": "03 Инструмент/evidence/manifest-20.json",
-    "bytes": 14141,
-    "sha256": "1844b811dcb2efec51a2e3f1e3b593a2412e4a46b47b60e99470d60889edf2b4"
+    "bytes": 13412,
+    "sha256": "19f2098a1ba820bb8345304a960bc5827025b4a5859d1e39b5dd598431bcf67f"
   },
   {
     "file": "03 Инструмент/evidence/verification.json",
@@ -176,8 +186,8 @@
   },
   {
     "file": "03 Инструмент/forecast.py",
-    "bytes": 6626,
-    "sha256": "197addb70d8a4697f538880fbf8f2985b68e62872ca288a4303dab298b4210e0"
+    "bytes": 7272,
+    "sha256": "ba31451651d5a3f40b3793f20a92a3447092a488f3e32282c1f49c61fa82de86"
   },
   {
     "file": "03 Инструмент/holdout.py",
@@ -191,43 +201,43 @@
   },
   {
     "file": "03 Инструмент/pilot.py",
-    "bytes": 6265,
-    "sha256": "66d23f5c7b6ed63e0b02e214e1bcb092caf9647d6b835c8e1b46b5e4de90693b"
+    "bytes": 6263,
+    "sha256": "024bd4ba03cbeeeca90166b7470427fb6e5424eb4b0bc52acda368593e5259aa"
   },
   {
     "file": "03 Инструмент/planning-inputs.json",
-    "bytes": 2658,
-    "sha256": "d7c7f7fade2e42fc458da3bb6bb6b78a79b3557ed4b13f4c0b4675134b8b671a"
+    "bytes": 2697,
+    "sha256": "262dfcd41d9d38bad1bca2ece820ed62d57052747bcb056919d03c5602fb3ced"
   },
   {
     "file": "03 Инструмент/planning.py",
-    "bytes": 17208,
-    "sha256": "08578937191194af68eae150a8c20a81b1fc6a7030b40f35fb815052ccba5e79"
+    "bytes": 13682,
+    "sha256": "0023b05757bc3f66103a8d60483d040f64dffab082e3c7268ab72a8d1e00559c"
   },
   {
     "file": "03 Инструмент/prepare.py",
-    "bytes": 4517,
-    "sha256": "7b0687d3947e9cdbbc0fe0ea1a664a15c16668399fbdf823c445a78aadd7319c"
+    "bytes": 7254,
+    "sha256": "b9675ce60f19930bc79ca9a9cc909624e4009563b07d195dbf0a1f73789c262f"
   },
   {
     "file": "03 Инструмент/README.md",
-    "bytes": 6290,
-    "sha256": "e8d7a131fc9a9c9eac29dc5e27a080512e01867826075fe200c69a6f8ac411dc"
+    "bytes": 8723,
+    "sha256": "b3e2cafa57e3a60e05ff2295303bc43f793000f6f5c310d98487527715327667"
   },
   {
     "file": "03 Инструмент/rebuild.py",
-    "bytes": 344,
-    "sha256": "4febc5ec53e8f79fae618f9702ccc1d67dcbf4668f5d95668a5e8a7fe56cffd8"
+    "bytes": 964,
+    "sha256": "f4f5058a829879a99dba566a0b99213ba8754603dbc1c7b92895d71fa3915fd0"
   },
   {
     "file": "03 Инструмент/reports.py",
-    "bytes": 15318,
-    "sha256": "183977adc333b45c250d6a15337567d30c75cac1b2adfa3f6fa17960b5e82156"
+    "bytes": 17246,
+    "sha256": "ccdd0e905a6165fb0e22f251030e69511834d09c9e0ce96960490b8b4fb5cd5d"
   },
   {
     "file": "03 Инструмент/results.txt",
-    "bytes": 12089,
-    "sha256": "8af8c3515730dce5ddc7545c9e642b51e1929167b477cb3cffb7d97502244fa1"
+    "bytes": 12087,
+    "sha256": "17487b9f4c2173b7ffe00dfc78787e041ec06f71f064914bcf994816f4a8bf0f"
   },
   {
     "file": "03 Инструмент/scenario-grid.csv",
@@ -345,24 +355,29 @@
     "sha256": "340e0264f1a3279e4034afdadfb69434cf5856c0fca9986db23d253ba4a27732"
   },
   {
+    "file": "03 Инструмент/verify-config.py",
+    "bytes": 4446,
+    "sha256": "bbc0066e5bca363c89c85f70d2336af903f0b3e168a0e91465d2470e28bf61e8"
+  },
+  {
     "file": "03 Инструмент/verify-demo.cjs",
-    "bytes": 1853,
-    "sha256": "d3254931c93caa58e7975e84ae0997bfd17c147ca52eb7a2dce8110c6f52e972"
+    "bytes": 3913,
+    "sha256": "f3c366239cdcc1f95138cfa8f86ad95aa23bf4cffdbaf39586fb168cb48a8cc7"
   },
   {
     "file": "03 Инструмент/verify.py",
-    "bytes": 4265,
-    "sha256": "d49033c1d2007320e272a8dd5891218a561b8c451e0ea50d39e80dcf1127af60"
+    "bytes": 4263,
+    "sha256": "cfeb4964affdf6b6faf118522e3ce915267149f6bf77d6a8e65d9a9fae5db99c"
   },
   {
     "file": "03 Инструмент/Демо.html",
-    "bytes": 17057,
-    "sha256": "67eb19b52b266e478f14b58359bd7a110ab6195c365a0ce239e278456b3c2375"
+    "bytes": 39504,
+    "sha256": "47017d12d929e7c81c0729839ea94f0fb57eaa9a85f51819b3a20489e330ea0c"
   },
   {
     "file": "03 Инструмент/Лаборатория.html",
-    "bytes": 161008,
-    "sha256": "16251ad186dc17434f5207e7d3de0e867f9b7ec355771840440c28251ad9fe02"
+    "bytes": 160279,
+    "sha256": "21ec35739ec63d33b7e6e8f9dcb57bf152153ad125edf7cbbfe1cfad77e5f861"
   },
   {
     "file": "03 Инструмент/Пилот и критерии перехода.md",
@@ -381,8 +396,8 @@
   },
   {
     "file": "03 Инструмент/Результаты 20 расширений.md",
-    "bytes": 13793,
-    "sha256": "ef80bc04f27627012a29eddb47afcaba4be4af592105545f04281cea11c51b7b"
+    "bytes": 13045,
+    "sha256": "51ea9f71717cb38b31a164619e953beca8de99da1cd1ead459a9098bb5c6828f"
   },
   {
     "file": "04 Проверка/Пересчёт 12 ноября.json",
@@ -401,8 +416,8 @@
   },
   {
     "file": "04 Проверка/Проверка качества.md",
-    "bytes": 3292,
-    "sha256": "ec44dfbd74ca03339ac448c8cb3bd3976be517648c2ee0287abc981201d2db56"
+    "bytes": 4666,
+    "sha256": "a95fa550e46b8f99a0bddec3aff1baee9d5c8549b9ff19efc1fc2b2e4ce9c233"
   },
   {
     "file": "04 Проверка/Рабочий план 12 ноября.md",
@@ -416,7 +431,7 @@
   },
   {
     "file": "README.md",
-    "bytes": 6035,
-    "sha256": "4ea484313f72b1709039df6fcae62cc3a1d6f292bf66933818694dd1345ea259"
+    "bytes": 6394,
+    "sha256": "d7d7625a4025d855e798a21b3511175a1dcfc30aab64fbfdd6f9aa04dcba38f9"
   }
 ]

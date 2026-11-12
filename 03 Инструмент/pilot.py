@@ -8,7 +8,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from checks import HERE, export
-from planning import INPUTS
+from config import INPUTS
 
 
 COLS = [

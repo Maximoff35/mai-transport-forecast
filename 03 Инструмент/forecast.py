@@ -6,6 +6,8 @@ import math
 from pathlib import Path
 from statistics import mean
 
+from config import load_config
+
 
 DATA = Path(__file__).with_name("asop-verified.csv")
 FIELDS = {"baltic": "baltic_ytd_million_tonnes",
@@ -90,15 +92,19 @@ def compare_actions(loads, capacity, repair_at, repair_loss, reserve):
 
 
 def main():
+    config = load_config()
+    common = config["basin_demo"]
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=DATA)
     parser.add_argument("--basin", choices=FIELDS, default="baltic")
-    parser.add_argument("--capacity", type=float, default=68)
-    parser.add_argument("--repair-loss", type=float, default=4)
-    parser.add_argument("--reserve", type=float, default=3)
+    parser.add_argument("--capacity", type=float, default=common["capacity_Mt_per_quarter"])
+    parser.add_argument("--repair-loss", type=float, default=common["repair_loss_Mt"])
+    parser.add_argument("--reserve", type=float, default=common["reserve_Mt"])
     parser.add_argument("--shock-percent", type=float, default=0)
     parser.add_argument("--repair-slot", type=int, choices=(1, 2), default=2,
                         help="Slot 1 or 2 in the two-quarter scenario window.")
+    parser.add_argument("--allow-move", action=argparse.BooleanOptionalAction, default=common["allow_move"])
+    parser.add_argument("--horizon", type=int, choices=(1, 2, 3, 4), default=config.get("forecast", {}).get("horizon_quarters", 4))
     args = parser.parse_args()
     inputs = (args.capacity, args.repair_loss, args.reserve, args.shock_percent)
     if (not all(map(math.isfinite, inputs)) or args.capacity <= 0
@@ -123,10 +129,14 @@ def main():
 
     # Keep the demo forecast rule fixed across both basins.
     future = {target: forecast(history, origin, target, "previous_year")
-              for target in range(origin + 1, origin + 5)}
+              for target in range(origin + 1, origin + args.horizon + 1)}
     print("Seasonal reference forecast (Mt)")
     for quarter, prediction in future.items():
         print(f"  {quarter_label(quarter)}   {prediction:.1f}")
+
+    if args.horizon < 4:
+        print("Planning comparison requires the four-quarter horizon (--horizon 4).")
+        return
 
     # The demo planning window uses the last two quarters of the forecast.
     loads = {quarter: value * (1 + args.shock_percent / 100)
@@ -139,7 +149,10 @@ def main():
           f"reserve={args.reserve:.1f} Mt, load shock={args.shock_percent:+.1f}%")
     print(f"  base gap={base:.2f} Mt (repair {quarter_label(repair_at)})")
     print(f"  reserve gap={reserve:.2f} Mt (reserve {quarter_label(peak)})")
-    print(f"  move repair gap={move:.2f} Mt (repair {quarter_label(destination)})")
+    if args.allow_move:
+        print(f"  move repair gap={move:.2f} Mt (repair {quarter_label(destination)})")
+    else:
+        print("  move repair excluded by scenario inputs")
 
 
 if __name__ == "__main__":

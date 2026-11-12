@@ -231,4 +231,3 @@ Illustrative scenario: 2027-Q1 to 2027-Q2
   base gap=4.88 Mt (repair 2027-Q2)
   reserve gap=1.88 Mt (reserve 2027-Q2)
   move repair gap=0.88 Mt (repair 2027-Q1)
-

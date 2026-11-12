@@ -35,6 +35,13 @@ td strong { color: var(--water); }
 .b0 { background: #e1e9ea; }.h1 { background: #c3e7dd; }.h2 { background: #f5dca9; }
 .tie { background: #ddd8ef; }.check { background: #f3d6d4; }
 .error { font-weight: 700; color: #9a2727; }
+fieldset { border:0; padding:0; margin:28px 0 0; min-width:0; }
+legend { font-size:24px; font-weight:700; margin-bottom:12px; }
+.metric { font-size:clamp(23px,4vw,34px); font-weight:700; margin:12px 0; }
+#forecast-chart svg { width:100%; min-width:600px; height:auto; display:block; }
+.selected-forecast { background:#e1f0eb; font-weight:700; }
+summary { cursor:pointer; font-weight:650; margin:18px 0 10px; }
+.notice { border-left:4px solid var(--water); padding-left:14px; }
 footer { color: var(--muted); margin-top: 28px; }
 </style>
 </head>
@@ -42,16 +49,37 @@ footer { color: var(--muted); margin-top: 28px; }
 <header>
   <div class="label">it plow · МАИ 1 · Рабочая демонстрация</div>
   <h1>Планирование портовой нагрузки</h1>
-  <p>Сравните резерв мощности и перенос плановых работ. Все мощности и изменения нагрузки в этом примере задаёт пользователь.</p>
+  <p>Посмотрите прогноз перевалки, затем сравните резерв мощности и перенос ремонта. Мощности и условия работы задаёт пользователь.</p>
 </header>
 <main>
   <form id="controls" autocomplete="off">
     <div class="inputs">
       <label>Бассейн<select id="basin"><option value="baltic">Балтийский</option><option value="azov">Азово-Черноморский</option><option value="far_east">Дальневосточный</option></select></label>
-      <label>Мощность, млн т / кв.<input type="number" id="capacity" value="68" min="0.1" max="1000" step="0.1" required></label>
+      <label>Горизонт от среза данных<select id="horizon"><option value="1">1 квартал</option><option value="2">2 квартала</option><option value="3">3 квартала</option><option value="4">4 квартала</option></select></label>
+    </div>
+    <section aria-labelledby="forecast-heading" aria-live="polite">
+      <h2 id="forecast-heading">Прогноз перевалки</h2>
+      <p id="forecast-context" class="muted"></p>
+      <p id="forecast-value" class="metric"></p>
+      <div id="forecast-chart" class="scroll"></div>
+      <p class="muted">Сплошная линия — наблюдаемая перевалка. Пунктир — сезонный прогноз. Единицы: млн тонн за квартал.</p>
+      <div class="scroll"><table aria-label="Прогноз и происхождение значений">
+        <thead><tr><th scope="col">Целевой квартал</th><th scope="col">Прогноз, млн т</th><th scope="col">Ориентир прошлого года</th><th scope="col">Публикация источника</th></tr></thead>
+        <tbody id="forecast-rows"></tbody>
+      </table></div>
+      <p id="forecast-accuracy" class="muted"></p>
+      <details><summary>История и источники: 18 кварталов</summary><div class="scroll"><table aria-label="История перевалки">
+        <thead><tr><th scope="col">Квартал</th><th scope="col">Перевалка, млн т</th><th scope="col">Источник</th></tr></thead>
+        <tbody id="history-rows"></tbody>
+      </table></div></details>
+    </section>
+    <p id="planning-note" class="notice" hidden>Для сравнения мер на I–II кварталы 2027 года выберите горизонт 4 квартала: он включает оба плановых периода.</p>
+    <fieldset id="planning-controls"><legend>Условия сравнения мер</legend>
+    <div class="inputs">
+      <label>Мощность, млн т / кв.<input type="number" id="capacity" value="68" min="0.1" step="0.1" required></label>
       <label>Изменение нагрузки, %<input type="number" id="shock" value="0" min="-100" max="100" step="1" required></label>
-      <label>Потеря на ремонт, млн т<input type="number" id="repair" value="4" min="0" max="1000" step="0.1" required></label>
-      <label>Резерв, млн т<input type="number" id="reserve" value="3" min="0" max="1000" step="0.1" required></label>
+      <label>Потеря на ремонт, млн т<input type="number" id="repair" value="4" min="0" step="0.1" required></label>
+      <label>Резерв, млн т<input type="number" id="reserve" value="3" min="0" step="0.1" required></label>
       <label>Проверка нагрузки ±, п. п.<input type="number" id="band" value="5" min="0" max="25" step="1" required></label>
       <label>Дата решения<input type="date" id="asof" value="2026-11-12" min="2020-01-01" max="2100-12-31" required></label>
       <label>Согласование резерва, дней<input type="number" id="reserve-lead" value="45" min="0" max="730" step="1" required></label>
@@ -61,6 +89,7 @@ footer { color: var(--muted); margin-top: 28px; }
     <label class="toggle"><input type="checkbox" id="calendar" checked> Учитывать сроки согласования</label>
     <p class="muted">Мощности, допустимость переноса и сроки согласования — вводные для сценария. Дата и сроки определяют, какие действия ещё доступны.</p>
     <p class="error" id="error" role="alert" hidden></p>
+    </fieldset>
   </form>
   <div id="outputs">
     <section aria-live="polite">
@@ -87,8 +116,17 @@ footer { color: var(--muted); margin-top: 28px; }
   <p><a href="Лаборатория.html">Открыть все 20 расширений, исходные условия и таблицы проверки</a></p>
   <footer>Источник прогноза — АСОП. Сезонный ориентир по тому же кварталу прошлого года. Срез заканчивается II кварталом 2026 года. Варианты по нагрузке — стресс-сценарии без присвоенных вероятностей.</footer>
 </main>
-<script id="model-data" type="application/json">{"baltic": {"label": "Балтийский бассейн", "last": "2026-Q2", "periods": ["2027-Q1", "2027-Q2"], "loads": [64.3, 66.0]}, "azov": {"label": "Азово-Черноморский бассейн", "last": "2026-Q2", "periods": ["2027-Q1", "2027-Q2"], "loads": [59.3, 72.7]}, "far_east": {"label": "Дальневосточный бассейн", "last": "2026-Q2", "periods": ["2027-Q1", "2027-Q2"], "loads": [60.2, 72.5]}}</script>
+<script id="model-data" type="application/json">{"baltic": {"label": "Балтийский бассейн", "last": "2026-Q2", "published_on": "2026-07-13", "periods": ["2027-Q1", "2027-Q2"], "loads": [64.3, 66.0], "history": [{"period": "2022-Q1", "value": 60.5, "published_on": "2022-04-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-1-kvartal-2022-g"}, {"period": "2022-Q2", "value": 62.8, "published_on": "2022-07-11", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-6-mesyacev-2022-g"}, {"period": "2022-Q3", "value": 58.7, "published_on": "2022-10-12", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-9-mesyacev-2022-g"}, {"period": "2022-Q4", "value": 63.5, "published_on": "2023-01-20", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-12-mesyacev-2022-g"}, {"period": "2023-Q1", "value": 64.8, "published_on": "2023-04-12", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-mart-2023-g"}, {"period": "2023-Q2", "value": 65.0, "published_on": "2023-07-12", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2023-g"}, {"period": "2023-Q3", "value": 58.8, "published_on": "2023-10-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-sentyabr-2023-g"}, {"period": "2023-Q4", "value": 60.0, "published_on": "2024-01-18", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-dekabr-2023-g"}, {"period": "2024-Q1", "value": 63.7, "published_on": "2024-04-17", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-1-kvartal-2024-g"}, {"period": "2024-Q2", "value": 76.6, "published_on": "2024-07-12", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-pervoe-polugodie-2024-goda"}, {"period": "2024-Q3", "value": 66.2, "published_on": "2024-10-14", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-sentyabr-2024-goda"}, {"period": "2024-Q4", "value": 66.5, "published_on": "2025-01-16", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-dekabr-2024-goda?height=auto&inline=true&width=550"}, {"period": "2025-Q1", "value": 68.1, "published_on": "2025-04-15", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-pervyy-kvartal-2025-goda"}, {"period": "2025-Q2", "value": 67.7, "published_on": "2025-07-11", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2025-goda"}, {"period": "2025-Q3", "value": 68.1, "published_on": "2025-10-10", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-sentyabr-2025-goda"}, {"period": "2025-Q4", "value": 67.4, "published_on": "2026-01-16", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-2025-god"}, {"period": "2026-Q1", "value": 64.3, "published_on": "2026-04-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-mart-2026-goda"}, {"period": "2026-Q2", "value": 66.0, "published_on": "2026-07-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2026-goda"}], "forecasts": [{"period": "2026-Q3", "lead": 1, "value": 68.1, "source_period": "2025-Q3", "source_value": 68.1, "published_on": "2025-10-10", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-sentyabr-2025-goda"}, {"period": "2026-Q4", "lead": 2, "value": 67.4, "source_period": "2025-Q4", "source_value": 67.4, "published_on": "2026-01-16", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-2025-god"}, {"period": "2027-Q1", "lead": 3, "value": 64.3, "source_period": "2026-Q1", "source_value": 64.3, "published_on": "2026-04-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-mart-2026-goda"}, {"period": "2027-Q2", "lead": 4, "value": 66.0, "source_period": "2026-Q2", "source_value": 66.0, "published_on": "2026-07-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2026-goda"}], "accuracy": [{"lead": 1, "n": 6, "mae": 3.5999999999999965, "wape": 5.378486055776888, "bias": -1.2000000000000004}, {"lead": 2, "n": 6, "mae": 3.5999999999999965, "wape": 5.378486055776888, "bias": -1.2000000000000004}, {"lead": 3, "n": 6, "mae": 3.5999999999999965, "wape": 5.378486055776888, "bias": -1.2000000000000004}, {"lead": 4, "n": 6, "mae": 3.5999999999999965, "wape": 5.378486055776888, "bias": -1.2000000000000004}]}, "azov": {"label": "Азово-Черноморский бассейн", "last": "2026-Q2", "published_on": "2026-07-13", "periods": ["2027-Q1", "2027-Q2"], "loads": [59.3, 72.7], "history": [{"period": "2022-Q1", "value": 61.0, "published_on": "2022-04-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-1-kvartal-2022-g"}, {"period": "2022-Q2", "value": 63.7, "published_on": "2022-07-11", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-6-mesyacev-2022-g"}, {"period": "2022-Q3", "value": 66.0, "published_on": "2022-10-12", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-9-mesyacev-2022-g"}, {"period": "2022-Q4", "value": 72.9, "published_on": "2023-01-20", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-12-mesyacev-2022-g"}, {"period": "2023-Q1", "value": 72.2, "published_on": "2023-04-12", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-mart-2023-g"}, {"period": "2023-Q2", "value": 79.0, "published_on": "2023-07-12", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2023-g"}, {"period": "2023-Q3", "value": 75.3, "published_on": "2023-10-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-sentyabr-2023-g"}, {"period": "2023-Q4", "value": 64.9, "published_on": "2024-01-18", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-dekabr-2023-g"}, {"period": "2024-Q1", "value": 70.6, "published_on": "2024-04-17", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-1-kvartal-2024-g"}, {"period": "2024-Q2", "value": 63.4, "published_on": "2024-07-12", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-pervoe-polugodie-2024-goda"}, {"period": "2024-Q3", "value": 75.4, "published_on": "2024-10-14", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-sentyabr-2024-goda"}, {"period": "2024-Q4", "value": 66.3, "published_on": "2025-01-16", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-dekabr-2024-goda?height=auto&inline=true&width=550"}, {"period": "2025-Q1", "value": 62.6, "published_on": "2025-04-15", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-pervyy-kvartal-2025-goda"}, {"period": "2025-Q2", "value": 60.9, "published_on": "2025-07-11", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2025-goda"}, {"period": "2025-Q3", "value": 69.7, "published_on": "2025-10-10", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-sentyabr-2025-goda"}, {"period": "2025-Q4", "value": 72.2, "published_on": "2026-01-16", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-2025-god"}, {"period": "2026-Q1", "value": 59.3, "published_on": "2026-04-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-mart-2026-goda"}, {"period": "2026-Q2", "value": 72.7, "published_on": "2026-07-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2026-goda"}], "forecasts": [{"period": "2026-Q3", "lead": 1, "value": 69.7, "source_period": "2025-Q3", "source_value": 69.7, "published_on": "2025-10-10", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-sentyabr-2025-goda"}, {"period": "2026-Q4", "lead": 2, "value": 72.2, "source_period": "2025-Q4", "source_value": 72.2, "published_on": "2026-01-16", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-2025-god"}, {"period": "2027-Q1", "lead": 3, "value": 59.3, "source_period": "2026-Q1", "source_value": 59.3, "published_on": "2026-04-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-mart-2026-goda"}, {"period": "2027-Q2", "lead": 4, "value": 72.7, "source_period": "2026-Q2", "source_value": 72.7, "published_on": "2026-07-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2026-goda"}], "accuracy": [{"lead": 1, "n": 6, "mae": 6.200000000000002, "wape": 9.360845495722197, "bias": -0.2999999999999983}, {"lead": 2, "n": 6, "mae": 6.200000000000002, "wape": 9.360845495722197, "bias": -0.2999999999999983}, {"lead": 3, "n": 6, "mae": 6.200000000000002, "wape": 9.360845495722197, "bias": -0.2999999999999983}, {"lead": 4, "n": 6, "mae": 6.200000000000002, "wape": 9.360845495722197, "bias": -0.2999999999999983}]}, "far_east": {"label": "Дальневосточный бассейн", "last": "2026-Q2", "published_on": "2026-07-13", "periods": ["2027-Q1", "2027-Q2"], "loads": [60.2, 72.5], "history": [{"period": "2022-Q1", "value": 53.5, "published_on": "2022-04-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-1-kvartal-2022-g"}, {"period": "2022-Q2", "value": 57.5, "published_on": "2022-07-11", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-6-mesyacev-2022-g"}, {"period": "2022-Q3", "value": 58.4, "published_on": "2022-10-12", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-9-mesyacev-2022-g"}, {"period": "2022-Q4", "value": 58.4, "published_on": "2023-01-20", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-12-mesyacev-2022-g"}, {"period": "2023-Q1", "value": 57.0, "published_on": "2023-04-12", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-mart-2023-g"}, {"period": "2023-Q2", "value": 62.2, "published_on": "2023-07-12", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2023-g"}, {"period": "2023-Q3", "value": 61.8, "published_on": "2023-10-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-sentyabr-2023-g"}, {"period": "2023-Q4", "value": 57.1, "published_on": "2024-01-18", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-dekabr-2023-g"}, {"period": "2024-Q1", "value": 54.3, "published_on": "2024-04-17", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-1-kvartal-2024-g"}, {"period": "2024-Q2", "value": 62.6, "published_on": "2024-07-12", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-pervoe-polugodie-2024-goda"}, {"period": "2024-Q3", "value": 59.0, "published_on": "2024-10-14", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-sentyabr-2024-goda"}, {"period": "2024-Q4", "value": 60.6, "published_on": "2025-01-16", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-dekabr-2024-goda?height=auto&inline=true&width=550"}, {"period": "2025-Q1", "value": 54.4, "published_on": "2025-04-15", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-pervyy-kvartal-2025-goda"}, {"period": "2025-Q2", "value": 64.3, "published_on": "2025-07-11", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2025-goda"}, {"period": "2025-Q3", "value": 66.8, "published_on": "2025-10-10", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-sentyabr-2025-goda"}, {"period": "2025-Q4", "value": 66.6, "published_on": "2026-01-16", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-2025-god"}, {"period": "2026-Q1", "value": 60.2, "published_on": "2026-04-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-mart-2026-goda"}, {"period": "2026-Q2", "value": 72.5, "published_on": "2026-07-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2026-goda"}], "forecasts": [{"period": "2026-Q3", "lead": 1, "value": 66.8, "source_period": "2025-Q3", "source_value": 66.8, "published_on": "2025-10-10", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-sentyabr-2025-goda"}, {"period": "2026-Q4", "lead": 2, "value": 66.6, "source_period": "2025-Q4", "source_value": 66.6, "published_on": "2026-01-16", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-2025-god"}, {"period": "2027-Q1", "lead": 3, "value": 60.2, "source_period": "2026-Q1", "source_value": 60.2, "published_on": "2026-04-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-mart-2026-goda"}, {"period": "2027-Q2", "lead": 4, "value": 72.5, "source_period": "2026-Q2", "source_value": 72.5, "published_on": "2026-07-13", "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2026-goda"}], "accuracy": [{"lead": 1, "n": 6, "mae": 4.933333333333333, "wape": 7.692307692307691, "bias": 4.933333333333333}, {"lead": 2, "n": 6, "mae": 4.933333333333333, "wape": 7.692307692307691, "bias": 4.933333333333333}, {"lead": 3, "n": 6, "mae": 4.933333333333333, "wape": 7.692307692307691, "bias": 4.933333333333333}, {"lead": 4, "n": 6, "mae": 4.933333333333333, "wape": 7.692307692307691, "bias": 4.933333333333333}]}}</script>
+<script id="planning-settings" type="application/json">{"as_of": "2026-11-12", "basin_demo": {"capacity_Mt_per_quarter": 68, "repair_loss_Mt": 4, "reserve_Mt": 3, "allow_move": true}, "calendar": {"reserve_lead_calendar_days": 45, "repair_move_lead_calendar_days": 90}, "horizon_quarters": 4, "grid_capacities": [58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78], "grid_shifts": [10, 8, 6, 4, 2, 0, -2, -4, -6, -8, -10]}</script>
 <script id="scenario-engine">
+function forecastWindow(model, horizon) {
+  if (!Number.isInteger(horizon) || horizon < 1 || horizon > 4) throw new Error("Горизонт должен быть от 1 до 4 кварталов.");
+  return model.forecasts.slice(0, horizon);
+}
+function planningCovered(model, horizon) {
+  const periods = forecastWindow(model, horizon).map(row => row.period);
+  return model.periods.every(period => periods.includes(period));
+}
 function compareScenario(load, capacity, shock, repair, reserve, movable, reserveAllowed = true) {
   const demand = load.map(value => value * (1 + shock / 100));
   const base = [capacity, capacity - repair];
@@ -130,15 +168,86 @@ function permissions(periods, loads, capacity, shock, repair, date, reserveLead,
 <script>
 const get = id => document.getElementById(id);
 const data = JSON.parse(get("model-data").textContent);
+const settings = JSON.parse(get("planning-settings").textContent);
+get("horizon").value = String(settings.horizon_quarters);
 const format = new Intl.NumberFormat("ru-RU", {minimumFractionDigits: 1, maximumFractionDigits: 2});
 const num = value => format.format(value);
 const cells = {b0: ["База", "Хватает базовой мощности"], h1: ["Р", "Резервирование"],
   h2: ["П", "Перенос ремонта"], tie: ["≈", "Одинаковый эффект"], check: ["?", "Нужно уточнение"]};
 let memo = "";
+const periodName = period => period.replace("-Q", " · кв. ");
+function sourceLink(row) {
+  const link = document.createElement("a");
+  link.href = row.source_url; link.textContent = row.published_on;
+  link.target = "_blank"; link.rel = "noopener noreferrer";
+  return link;
+}
+function renderForecast(model, horizon) {
+  const selected = forecastWindow(model, horizon);
+  const last = selected.at(-1);
+  get("forecast-context").textContent = `${model.label}. Срез ${periodName(model.last)}, опубликован ${model.published_on}. Горизонт отсчитывается от среза данных, а не от даты решения.`;
+  get("forecast-value").textContent = `${periodName(last.period)}: ${num(last.value)} млн тонн`;
+  get("forecast-rows").replaceChildren(...selected.map(row => {
+    const tr = document.createElement("tr");
+    if (row === last) tr.className = "selected-forecast";
+    for (const value of [periodName(row.period), num(row.value), `${periodName(row.source_period)}: ${num(row.source_value)}`]) tr.insertCell().textContent = value;
+    tr.insertCell().append(sourceLink(row)); return tr;
+  }));
+  get("history-rows").replaceChildren(...model.history.map(row => {
+    const tr = document.createElement("tr");
+    tr.insertCell().textContent = periodName(row.period); tr.insertCell().textContent = num(row.value);
+    tr.insertCell().append(sourceLink(row)); return tr;
+  }));
+  const accuracy = model.accuracy.find(row => row.lead === horizon);
+  get("forecast-accuracy").textContent = `Формула: значение того же квартала прошлого года. Ретропроверка на ${accuracy.n} целевых кварталах: MAE ${num(accuracy.mae)} млн т, WAPE ${num(accuracy.wape)}%. Небольшая выборка; эти ошибки не задают вероятностный интервал.`;
+  drawHistory(model.history, selected);
+}
+function drawHistory(history, projections) {
+  const ns = "http://www.w3.org/2000/svg";
+  const node = (tag, attrs, text) => {
+    const el = document.createElementNS(ns, tag);
+    for (const [key, value] of Object.entries(attrs)) el.setAttribute(key, value);
+    if (text !== undefined) el.textContent = text; return el;
+  };
+  const all = [...history, ...projections], w = 1000, h = 300;
+  const left = 55, right = 25, top = 20, bottom = 44;
+  const max = Math.ceil(Math.max(...all.map(row => row.value)) / 10) * 10;
+  const x = i => left + i * (w - left - right) / (all.length - 1);
+  const y = value => top + (max - value) * (h - top - bottom) / max;
+  const svg = node("svg", {viewBox:`0 0 ${w} ${h}`, role:"img", "aria-label":"История квартальной перевалки и сезонный прогноз, млн тонн"});
+  svg.append(node("title", {}, "Наблюдения АСОП и прогноз по тому же кварталу прошлого года"));
+  const boundary = x(history.length - 1);
+  svg.append(node("rect", {x:boundary, y:top, width:w-right-boundary, height:h-top-bottom, fill:"#e4f0ed"}));
+  for (let i = 0; i <= 4; i++) {
+    const value = max * i / 4;
+    svg.append(node("line", {x1:left, x2:w-right, y1:y(value), y2:y(value), stroke:"#d8e1e3"}));
+    svg.append(node("text", {x:left-10, y:y(value)+5, "text-anchor":"end", fill:"#485c66", "font-size":14}, num(value)));
+  }
+  const points = rows => rows.map(([row,i]) => `${x(i)},${y(row.value)}`).join(" ");
+  svg.append(node("polyline", {points:points(history.map((row,i)=>[row,i])),fill:"none",stroke:"#485c66","stroke-width":3}));
+  const future = [[history.at(-1),history.length-1], ...projections.map((row,i)=>[row,history.length+i])];
+  svg.append(node("polyline", {points:points(future),fill:"none",stroke:"#075b62","stroke-width":3,"stroke-dasharray":"7 5"}));
+  all.forEach((row,i) => {
+    const dot = node("circle", {cx:x(i),cy:y(row.value),r:i===all.length-1?6:3,fill:i>=history.length?"#075b62":"#485c66"});
+    dot.append(node("title",{},`${periodName(row.period)}: ${num(row.value)} млн т`)); svg.append(dot);
+    if (i === 0 || (row.period.endsWith("Q1") && i < history.length - 2) || i === all.length - 1) {
+      const label = i===all.length-1 ? periodName(row.period) : row.period.slice(0,4);
+      svg.append(node("text",{x:x(i),y:h-12,"text-anchor":i===all.length-1?"end":"middle",fill:"#485c66","font-size":14},label));
+    }
+  });
+  get("forecast-chart").replaceChildren(svg);
+}
 
 function render() {
   const key = get("basin").value;
   const model = data[key];
+  const horizon = Number(get("horizon").value);
+  renderForecast(model, horizon);
+  const covered = planningCovered(model, horizon);
+  get("planning-controls").hidden = !covered;
+  get("planning-note").hidden = covered;
+  get("outputs").hidden = !covered;
+  if (!covered) return;
   const capacity = get("capacity").valueAsNumber;
   const shock = get("shock").valueAsNumber;
   const repair = get("repair").valueAsNumber;
@@ -187,8 +296,8 @@ function render() {
     : benefit < 1e-8 ? "По этой метрике преимущество мер отсутствует."
     : `Граница дополнительной стоимости более результативной меры: ${num(benefit)} млн т × ценность одной тонны снижения превышения. Тариф и стоимость мер вводит оператор вне демонстрации.`;
 
-  const cols = [58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78];
-  const shifts = [10, 8, 6, 4, 2, 0, -2, -4, -6, -8, -10];
+  const cols = settings.grid_capacities;
+  const shifts = settings.grid_shifts;
   const matrix = get("map");
   matrix.replaceChildren();
   const header = matrix.createTHead().insertRow();
@@ -225,7 +334,10 @@ function render() {
     }
   }
   memo = [
-    "it plow — оценка сценария МАИ 1", get("context").textContent,
+    "it plow — прогноз и оценка сценария МАИ 1",
+    get("forecast-context").textContent,
+    ...forecastWindow(model, horizon).map(row => `${row.period}: ${num(row.value)} млн т, ориентир ${row.source_period}, публикация ${row.published_on}`),
+    get("forecast-accuracy").textContent, get("context").textContent,
     get("deadlines").textContent,
     `Срез данных ${model.last}. Базовая мощность ${num(capacity)} млн т/кв., потеря на ремонт ${num(repair)} млн т, резерв ${num(reserve)} млн т, нагрузка ${num(shock)}%.`,
     ...result.options.map(option => `${option.name} — сверх плана ${num(option.gap)} млн т`),
