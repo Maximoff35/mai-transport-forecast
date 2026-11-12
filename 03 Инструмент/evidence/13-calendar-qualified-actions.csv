@@ -1,7 +1,7 @@
 ﻿basin,decision_date,action,gap_Mt,best_within_calendar,reserve_available,move_available
-baltic,2026-11-09,base,2.0,False,True,False
-baltic,2026-11-09,reserve,0,True,True,False
-azov,2026-11-09,base,8.7,False,True,False
-azov,2026-11-09,reserve,5.7,True,True,False
-far_east,2026-11-09,base,8.5,False,True,False
-far_east,2026-11-09,reserve,5.5,True,True,False
+baltic,2026-11-12,base,2.0,False,True,False
+baltic,2026-11-12,reserve,0,True,True,False
+azov,2026-11-12,base,8.7,False,True,False
+azov,2026-11-12,reserve,5.7,True,True,False
+far_east,2026-11-12,base,8.5,False,True,False
+far_east,2026-11-12,reserve,5.5,True,True,False

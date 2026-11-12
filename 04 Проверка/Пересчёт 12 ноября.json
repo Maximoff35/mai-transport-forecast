@@ -1,0 +1,31 @@
+{
+  "checked_on": "2026-11-12",
+  "status": "passed",
+  "as_of": "2026-11-12",
+  "expert_inputs": "not_received_per_team_representative",
+  "historical_data_cutoff": "2026-Q2",
+  "operational_inputs": "scenario_assumptions",
+  "baseline_forecast_and_action_results": "unchanged",
+  "calendar": {
+    "repair_move_deadline": "2026-10-03",
+    "repair_move_overdue_days": 40,
+    "reserve_deadline": "2027-02-15",
+    "reserve_days_remaining": 95
+  },
+  "qualified_reserve_gaps_Mt": {
+    "baltic": 0,
+    "azov": 5.7,
+    "far_east": 5.5
+  },
+  "verification": [
+    "rebuild.py completed",
+    "verify.py passed: 216 truncated-history comparisons, 15 future decision windows, 36 balance rows, 21 source hashes",
+    "verify-demo.cjs passed: 363 scenarios, calendar constraints, scenario date equals demo date",
+    "passport has two A4 pages; deck has eight slides and four native tables",
+    "updated passport and presentation rendered and visually inspected"
+  ],
+  "unresolved": [
+    "expert effective capacities, cargo compatibility, maintenance windows and actual lead times",
+    "additional improvements require team approval"
+  ]
+}

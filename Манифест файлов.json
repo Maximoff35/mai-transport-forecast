@@ -11,23 +11,23 @@
   },
   {
     "file": "01 Паспорт/Паспорт проекта.pdf",
-    "bytes": 94960,
-    "sha256": "552fbc38dd9a751a090ec157a865ca4f433c6113bc3648aa3228798a6367d7e8"
+    "bytes": 94594,
+    "sha256": "237e36ed11b3d221411011f98e74996eb0867a6a833f2bea3a82b82824560bf8"
   },
   {
     "file": "01 Паспорт/Паспорт — текст для правок.md",
-    "bytes": 8482,
-    "sha256": "83ce68b644e09b17da45c38ba3a9ffbf73ecdcf8e874336f7017730d7033a310"
+    "bytes": 8845,
+    "sha256": "59a558d454377e427e39a88a459e3bf5bd7c05943638ce5466dcd04dd1736c4d"
   },
   {
     "file": "02 Защита/Защита.pptx",
-    "bytes": 47359,
-    "sha256": "30e4c246b25b65ad2ab0260f843014ed9527e4de8a33844db05b0107182a0e53"
+    "bytes": 47569,
+    "sha256": "d22dda485bfc81dcffad4afda51f5bcbba48f95b12d1e7298e8998957bdec9bb"
   },
   {
     "file": "02 Защита/Сценарий защиты.md",
-    "bytes": 5154,
-    "sha256": "a7d56d4264e9bd11dd80b027ad7c5c134854e3695bad0df9e6774228b22c1777"
+    "bytes": 5370,
+    "sha256": "4648079d8346f65bcfce9bffaf9c41c1a0fb3ecfd046bbe7684429337f5cbe0f"
   },
   {
     "file": "03 Инструмент/asop-verified.csv",
@@ -52,7 +52,7 @@
   {
     "file": "03 Инструмент/demo-template.html",
     "bytes": 16386,
-    "sha256": "83d451f3e8e04226afffa8a13e28544ebd50fd420d0ba1c30b0fedc8c7574710"
+    "sha256": "c9503d1812ebab0b7c8c739900f6259c392f8fbfa669889d1c5e848b3c62ba09"
   },
   {
     "file": "03 Инструмент/evidence/06-memo-example.txt",
@@ -102,12 +102,12 @@
   {
     "file": "03 Инструмент/evidence/13-calendar-qualified-actions.csv",
     "bytes": 366,
-    "sha256": "581856d5a2ba22de2bdcf250ecdab13bbb9aaca55038b0b6e9ed5b3f09ef1559"
+    "sha256": "f7961071d468c57be3617e4f9b113212ccd8624ad580ed00de5ff6186e5d9396"
   },
   {
     "file": "03 Инструмент/evidence/13-decision-calendar.csv",
     "bytes": 591,
-    "sha256": "e1b23d1ed75576336d62532b8fc75efdbff441553b1ce6704d216f03aed7306a"
+    "sha256": "a426afad5839cef84778e8df5280f70873f08cf326c76bf6690a1ce57bc43017"
   },
   {
     "file": "03 Инструмент/evidence/14-cargo-compatibility.csv",
@@ -162,7 +162,7 @@
   {
     "file": "03 Инструмент/evidence/manifest-20.json",
     "bytes": 14141,
-    "sha256": "19fd3f9fed173d519e7e647938d7ebdf70e06ffacac6fdba305ca5ca72140399"
+    "sha256": "1844b811dcb2efec51a2e3f1e3b593a2412e4a46b47b60e99470d60889edf2b4"
   },
   {
     "file": "03 Инструмент/evidence/verification.json",
@@ -197,7 +197,7 @@
   {
     "file": "03 Инструмент/planning-inputs.json",
     "bytes": 2658,
-    "sha256": "c6f7b7f77d634557390a78bf04d21dabf500a7a855a362c3922ff10396d339d7"
+    "sha256": "d7c7f7fade2e42fc458da3bb6bb6b78a79b3557ed4b13f4c0b4675134b8b671a"
   },
   {
     "file": "03 Инструмент/planning.py",
@@ -212,7 +212,7 @@
   {
     "file": "03 Инструмент/README.md",
     "bytes": 6290,
-    "sha256": "3543834ba115b4be290fe855cbb7e86c6f4216cb2036550e11be36619609b1af"
+    "sha256": "e8d7a131fc9a9c9eac29dc5e27a080512e01867826075fe200c69a6f8ac411dc"
   },
   {
     "file": "03 Инструмент/rebuild.py",
@@ -221,8 +221,8 @@
   },
   {
     "file": "03 Инструмент/reports.py",
-    "bytes": 15184,
-    "sha256": "c2a18344eb1aa8ae1b4e8d3d1c6d38d12de103d03b4cf4d66f1cbc61ef0cbba7"
+    "bytes": 15318,
+    "sha256": "183977adc333b45c250d6a15337567d30c75cac1b2adfa3f6fa17960b5e82156"
   },
   {
     "file": "03 Инструмент/results.txt",
@@ -346,8 +346,8 @@
   },
   {
     "file": "03 Инструмент/verify-demo.cjs",
-    "bytes": 1688,
-    "sha256": "90dc0ee2815f3153d61eaada37d78dd8913e3b6731e8a391db6c4fba25efc9a4"
+    "bytes": 1853,
+    "sha256": "d3254931c93caa58e7975e84ae0997bfd17c147ca52eb7a2dce8110c6f52e972"
   },
   {
     "file": "03 Инструмент/verify.py",
@@ -357,12 +357,12 @@
   {
     "file": "03 Инструмент/Демо.html",
     "bytes": 17057,
-    "sha256": "04da74b70159f15be4bdf0e2789489cd0c35c7256261267c324dd84a9c8655f6"
+    "sha256": "67eb19b52b266e478f14b58359bd7a110ab6195c365a0ce239e278456b3c2375"
   },
   {
     "file": "03 Инструмент/Лаборатория.html",
     "bytes": 161008,
-    "sha256": "52409b0ca8f93eeb3135e62715e9ab3d408ab57511f6e999a5af9a530a8cccc5"
+    "sha256": "16251ad186dc17434f5207e7d3de0e867f9b7ec355771840440c28251ad9fe02"
   },
   {
     "file": "03 Инструмент/Пилот и критерии перехода.md",
@@ -371,8 +371,8 @@
   },
   {
     "file": "03 Инструмент/Применение ИИ.md",
-    "bytes": 999,
-    "sha256": "4994408df1fff5c9b18ed5a90f47815c2f5816905111790884b9a9c72a1181eb"
+    "bytes": 2006,
+    "sha256": "d03114e2e3b559422b31a2ce1d77f5fc9ea18443aab1d85454a53973121a6774"
   },
   {
     "file": "03 Инструмент/Проверка данных и расчёта.md",
@@ -381,18 +381,33 @@
   },
   {
     "file": "03 Инструмент/Результаты 20 расширений.md",
-    "bytes": 13659,
-    "sha256": "6a1b9a1fe9126ffe11f210c2fef63ee8b06bffe3d67c373e7889c37fc79c721a"
+    "bytes": 13793,
+    "sha256": "ef80bc04f27627012a29eddb47afcaba4be4af592105545f04281cea11c51b7b"
+  },
+  {
+    "file": "04 Проверка/Пересчёт 12 ноября.json",
+    "bytes": 1142,
+    "sha256": "3388122d1b8775cdc2370985b0a4982e4b5cf74e8df9c5bd6bd1c720fa3998d5"
   },
   {
     "file": "04 Проверка/План до финала.md",
-    "bytes": 2974,
-    "sha256": "0cbf4f33c533619a856458800ac603f1ef1cd0f5e3cd78b1864ee27282936f98"
+    "bytes": 3711,
+    "sha256": "6dc8bad94a62924ad82d284d91a336dfbca53b21bf344cb886bc642dfa618808"
+  },
+  {
+    "file": "04 Проверка/Предложения на согласование.md",
+    "bytes": 3232,
+    "sha256": "9bd59a6c3b951bab81246ff47b035a95ea24698ad1d0abff6963cee5f4d693eb"
   },
   {
     "file": "04 Проверка/Проверка качества.md",
-    "bytes": 2973,
-    "sha256": "90ec7ce554236ca12f5cf55f52c7c745316f38355357a65d8eb438cd5f18ab69"
+    "bytes": 3292,
+    "sha256": "ec44dfbd74ca03339ac448c8cb3bd3976be517648c2ee0287abc981201d2db56"
+  },
+  {
+    "file": "04 Проверка/Рабочий план 12 ноября.md",
+    "bytes": 6862,
+    "sha256": "cb96f2b5d9cc6349c92832eeeb8826b3e1be55873125e2e66630355be1221e7f"
   },
   {
     "file": "04 Проверка/Сдача 10 ноября.md",
@@ -401,7 +416,7 @@
   },
   {
     "file": "README.md",
-    "bytes": 5693,
-    "sha256": "6cf04d1819df2a7cc7cbc5947d6dfa20746928a48ced872b3ae1c493a4a53fb6"
+    "bytes": 6035,
+    "sha256": "4ea484313f72b1709039df6fcae62cc3a1d6f292bf66933818694dd1345ea259"
   }
 ]

@@ -4,6 +4,8 @@ const vm = require("node:vm");
 const assert = require("node:assert/strict");
 const root = __dirname;
 const html = fs.readFileSync(path.join(root, "Демо.html"), "utf8");
+const config = JSON.parse(fs.readFileSync(path.join(root, "planning-inputs.json"), "utf8"));
+assert.equal(html.match(/id="asof" value="([^"]+)"/)[1], config.as_of);
 const data = JSON.parse(html.match(/<script id="model-data" type="application\/json">([^]*?)<\/script>/)[1]);
 const engine = html.match(/<script id="scenario-engine">([^]*?)<\/script>/)[1];
 const ctx = vm.createContext({});
@@ -16,7 +18,7 @@ for (const row of rows) {
   result.options.forEach((option, i) => assert.ok(Math.abs(option.gap - +expected[i]) < 1e-5, row));
 }
 assert.equal(ctx.decisionDeadline("2027-Q1", 90), "2026-10-03");
-const rules = ctx.permissions(data.azov.periods, data.azov.loads, 68, 0, 4, "2026-11-09", 45, 90, true);
+const rules = ctx.permissions(data.azov.periods, data.azov.loads, 68, 0, 4, config.as_of, 45, 90, true);
 assert.equal(rules.moveAllowed, false);
 assert.equal(rules.reserveAllowed, true);
 const qualified = ctx.compareScenario(data.azov.loads, 68, 0, 4, 3, rules.moveAllowed, rules.reserveAllowed);
