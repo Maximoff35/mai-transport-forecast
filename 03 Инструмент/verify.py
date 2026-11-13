@@ -46,6 +46,27 @@ for row in read("decision-replay.csv"):
     assert regret >= 0 and math.isclose(chosen - best, regret, abs_tol=1e-5)
 checks.append("15 replay windows start after the release of all forecast inputs.")
 
+expected_controls = {"baltic": (2.74, 1.74, 1.08), "azov": (5.70, 4.56, 4.16),
+                     "far_east": (2.84, 2.24, 1.10)}
+replay_rows = read("decision-replay.csv")
+for control in read("policy-comparison.csv"):
+    rows = [row for row in replay_rows if row["basin"] == control["basin"]]
+    assert len(rows) == int(control["windows"]) == 5
+    for control_field, replay_field in (("base_mean_gap_Mt", "actual_under_base_Mt"),
+                                         ("forecast_choice_mean_gap_Mt", "actual_under_selected_Mt"),
+                                         ("always_reserve_mean_gap_Mt", "actual_under_reserve_Mt")):
+        assert math.isclose(float(control[control_field]), sum(float(r[replay_field]) for r in rows) / len(rows), abs_tol=1e-5)
+    assert int(control["selected_reserve_assignments"]) == sum(r["decision"] == "reserve" for r in rows)
+    assert int(control["always_reserve_assignments"]) == len(rows)
+    assert control["reserve_placement_uses_forecast"] == control["actions_pre_agreed"] == "True"
+    # Frozen reference numbers apply only to the corresponding default inputs.
+    settings = json.loads(INPUTS.read_text(encoding="utf-8"))["basin_demo"]
+    if (settings["capacity_Mt_per_quarter"], settings["repair_loss_Mt"], settings["reserve_Mt"], settings["allow_move"]) == (68, 4, 3, True):
+        actual = tuple(float(control[field]) for field in
+                       ("base_mean_gap_Mt", "forecast_choice_mean_gap_Mt", "always_reserve_mean_gap_Mt"))
+        assert all(math.isclose(a, b, abs_tol=1e-5) for a, b in zip(actual, expected_controls[control["basin"]], strict=True))
+checks.append("Strong reserve control is derived from the same 15 replay windows; assignment counts and forecast placement are explicit.")
+
 config = json.loads(INPUTS.read_text(encoding="utf-8"))
 validate_config(config)
 broken = copy.deepcopy(config)

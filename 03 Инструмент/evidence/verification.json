@@ -3,6 +3,7 @@
   "checks": [
     "216 forecast comparisons against a truncated history.",
     "15 replay windows start after the release of all forecast inputs.",
+    "Strong reserve control is derived from the same 15 replay windows; assignment counts and forecast placement are explicit.",
     "Editable planning inputs reject incompatible values.",
     "36 backlog rows preserve flow balance and available capacity.",
     "Hybrid reserves equal the two-quarter shortfalls.",

@@ -28,6 +28,7 @@ def build():
     config = load_config()
     stamp = date.fromisoformat(config["as_of"]).strftime("%d.%m.%Y")
     replay = read("decision-replay.csv")
+    policy_control = read("policy-comparison.csv")
     calendar = [r for r in read("evidence/13-decision-calendar.csv") if r["basin"] == "baltic"]
     deadlines = {r["action"]: r for r in calendar}
     names = {"base": "исходный план", "reserve": "резерв", "move": "перенос"}
@@ -55,7 +56,10 @@ def build():
         rows = [r for r in replay if r["basin"] == basin]
         before = mean(float(r["actual_under_base_Mt"]) for r in rows)
         after = mean(float(r["actual_under_selected_Mt"]) for r in rows)
-        replay_summary.append(f"{title} {number(before)} → {number(after)} млн т")
+        control = next(r for r in policy_control if r["basin"] == basin)
+        replay_summary.append(f"{title}: исходный план {number(before)}, выбранная мера {number(after)}, "
+                              f"резерв во всех окнах {number(control['always_reserve_mean_gap_Mt'])} млн т; "
+                              f"назначений резерва {control['selected_reserve_assignments']} против {control['always_reserve_assignments']}")
 
     manifest = [
         (1, "Карта смены решения", "Демо.html", "scenario-grid.csv",
@@ -69,7 +73,10 @@ def build():
          "Расходы и стоимость тонны оценивает оператор. Сравнение в тоннах само по себе не определяет экономическую выгоду."),
         (4, "Ретропроверка выбора действий", "forecast.py", "decision-replay.csv",
          "Среднее превышение на двухквартальное окно. " + ". ".join(replay_summary) + ".",
-         "По пять перекрывающихся окон. Оба целевых квартала начинаются после даты публикации входных данных. Мощности условны, действия считаются заранее согласованными."),
+         "По пять перекрывающихся окон. Выбор по прогнозу уступает постоянному резерву по превышению. "
+         "Размещение резерва в обоих вариантах также использует прогноз. Объём резерва задан на один квартал; "
+         "число назначений не определяет денежные расходы. Мощности условны, действия считаются заранее согласованными. "
+         "Сильный контроль воспроизводится в policy-comparison.csv; экономическая оптимальность не доказана."),
         (5, "Допустимость действий", "Демо.html", "evidence/13-calendar-qualified-actions.csv",
          f"Флажок переноса и календарь меняют набор действий. На {stamp} статус переноса: {deadlines['move']['status']}; срок согласования {deadlines['move']['assumed_lead_calendar_days']} дней.",
          "При выключенном календаре сравниваются заранее согласованные варианты."),
@@ -140,7 +147,7 @@ def build():
 
     # This snapshot permits offline inspection without fetch() permissions.
     tables = dict(all_tables)
-    for additional in ("evidence/07-publication-lags.csv", "evidence/07-revision-stress.csv",
+    for additional in ("policy-comparison.csv", "evidence/07-publication-lags.csv", "evidence/07-revision-stress.csv",
                        "evidence/13-calendar-qualified-actions.csv", "evidence/17-backlog-recovery.csv"):
         tables[additional] = read(additional)
     snapshot = json.dumps({"entries": entries, "tables": tables}, ensure_ascii=False).replace("</", r"<\/")

@@ -127,3 +127,23 @@ with (HERE / "decision-replay.csv").open("w", newline="", encoding="utf-8-sig") 
             writer.writerow([basin, quarter_label(origin), publication_dates[quarter_label(origin)],
                              *(quarter_label(target) for target in targets), selected,
                              *(round(value, 5) if isinstance(value, (int, float)) else value for value in results)])
+
+# Derive a stronger control from the unchanged archived replay: reserve in every
+# window. Its quarter placement still uses the forecast, so this is not an
+# independent strategy without forecasting. Overlapping windows are not totals
+# for a real multi-year operating programme.
+with (HERE / "decision-replay.csv").open(encoding="utf-8-sig", newline="") as replay_file:
+    replay_rows = list(csv.DictReader(replay_file))
+with (HERE / "policy-comparison.csv").open("w", newline="", encoding="utf-8-sig") as control_file:
+    writer = csv.writer(control_file)
+    writer.writerow(["basin", "windows", "base_mean_gap_Mt", "forecast_choice_mean_gap_Mt",
+                     "always_reserve_mean_gap_Mt", "selected_reserve_assignments",
+                     "always_reserve_assignments", "reserve_Mt_per_assigned_quarter",
+                     "reserve_placement_uses_forecast", "actions_pre_agreed"])
+    for basin in FIELDS:
+        rows = [row for row in replay_rows if row["basin"] == basin]
+        means = [sum(float(row[field]) for row in rows) / len(rows) for field in
+                 ("actual_under_base_Mt", "actual_under_selected_Mt", "actual_under_reserve_Mt")]
+        writer.writerow([basin, len(rows), *(round(value, 5) for value in means),
+                         sum(row["decision"] == "reserve" for row in rows), len(rows),
+                         reserve, True, True])
