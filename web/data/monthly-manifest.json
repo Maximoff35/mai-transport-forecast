@@ -1,0 +1,38 @@
+[
+  {
+    "file": "ampt-2026-Q1.html",
+    "url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-mart-2026-goda",
+    "sha256": "09ff5f0fe35b1a5171a87f9c047eeac65d04efdcf9918d5c46634ca40b6ee1ac",
+    "bytes": 66508,
+    "fetchedAt": "2026-11-09T13:27:55.979870+00:00",
+    "period": "2026-03",
+    "publishedOn": "2026-04-13"
+  },
+  {
+    "file": "ampt-2026-04.html",
+    "url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-aprel-2026-goda",
+    "sha256": "43a36922b765c4da8a82ac2d12a9391dbce30c249d386779db048945f5c4e29a",
+    "bytes": 31935,
+    "fetchedAt": "2026-11-13T08:16:19.484805+00:00",
+    "period": "2026-04",
+    "publishedOn": "2026-05-14"
+  },
+  {
+    "file": "ampt-2026-05.html",
+    "url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-may-2026-goda",
+    "sha256": "419790a41eeeff3851a6ad984d14602ee613932f854a79cc3f492845b07444f4",
+    "bytes": 29095,
+    "fetchedAt": "2026-11-13T08:16:21.641688+00:00",
+    "period": "2026-05",
+    "publishedOn": "2026-06-10"
+  },
+  {
+    "file": "ampt-2026-Q2.html",
+    "url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2026-goda",
+    "sha256": "2b544bff32148bd084cdbbfaf14f9788221d304ec7a17f00da8669018264b3fa",
+    "bytes": 63766,
+    "fetchedAt": "2026-11-09T13:27:55.986513+00:00",
+    "period": "2026-06",
+    "publishedOn": "2026-07-13"
+  }
+]

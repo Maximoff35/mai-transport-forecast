@@ -1,0 +1,146 @@
+[
+  {
+    "quarter": "2022-Q1",
+    "baltic_ytd_million_tonnes": "60.5",
+    "azov_black_sea_ytd_million_tonnes": "61.0",
+    "far_east_ytd_million_tonnes": "53.5",
+    "published_on": "2022-04-13",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-1-kvartal-2022-g"
+  },
+  {
+    "quarter": "2022-Q2",
+    "baltic_ytd_million_tonnes": "123.3",
+    "azov_black_sea_ytd_million_tonnes": "124.7",
+    "far_east_ytd_million_tonnes": "111.0",
+    "published_on": "2022-07-11",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-6-mesyacev-2022-g"
+  },
+  {
+    "quarter": "2022-Q3",
+    "baltic_ytd_million_tonnes": "182.0",
+    "azov_black_sea_ytd_million_tonnes": "190.7",
+    "far_east_ytd_million_tonnes": "169.4",
+    "published_on": "2022-10-12",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-9-mesyacev-2022-g"
+  },
+  {
+    "quarter": "2022-Q4",
+    "baltic_ytd_million_tonnes": "245.5",
+    "azov_black_sea_ytd_million_tonnes": "263.6",
+    "far_east_ytd_million_tonnes": "227.8",
+    "published_on": "2023-01-20",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-12-mesyacev-2022-g"
+  },
+  {
+    "quarter": "2023-Q1",
+    "baltic_ytd_million_tonnes": "64.8",
+    "azov_black_sea_ytd_million_tonnes": "72.2",
+    "far_east_ytd_million_tonnes": "57.0",
+    "published_on": "2023-04-12",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-mart-2023-g"
+  },
+  {
+    "quarter": "2023-Q2",
+    "baltic_ytd_million_tonnes": "129.8",
+    "azov_black_sea_ytd_million_tonnes": "151.2",
+    "far_east_ytd_million_tonnes": "119.2",
+    "published_on": "2023-07-12",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2023-g"
+  },
+  {
+    "quarter": "2023-Q3",
+    "baltic_ytd_million_tonnes": "188.6",
+    "azov_black_sea_ytd_million_tonnes": "226.5",
+    "far_east_ytd_million_tonnes": "181.0",
+    "published_on": "2023-10-13",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-sentyabr-2023-g"
+  },
+  {
+    "quarter": "2023-Q4",
+    "baltic_ytd_million_tonnes": "248.6",
+    "azov_black_sea_ytd_million_tonnes": "291.4",
+    "far_east_ytd_million_tonnes": "238.1",
+    "published_on": "2024-01-18",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-dekabr-2023-g"
+  },
+  {
+    "quarter": "2024-Q1",
+    "baltic_ytd_million_tonnes": "63.7",
+    "azov_black_sea_ytd_million_tonnes": "70.6",
+    "far_east_ytd_million_tonnes": "54.3",
+    "published_on": "2024-04-17",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-1-kvartal-2024-g"
+  },
+  {
+    "quarter": "2024-Q2",
+    "baltic_ytd_million_tonnes": "140.3",
+    "azov_black_sea_ytd_million_tonnes": "134.0",
+    "far_east_ytd_million_tonnes": "116.9",
+    "published_on": "2024-07-12",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-pervoe-polugodie-2024-goda"
+  },
+  {
+    "quarter": "2024-Q3",
+    "baltic_ytd_million_tonnes": "206.5",
+    "azov_black_sea_ytd_million_tonnes": "209.4",
+    "far_east_ytd_million_tonnes": "175.9",
+    "published_on": "2024-10-14",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-sentyabr-2024-goda"
+  },
+  {
+    "quarter": "2024-Q4",
+    "baltic_ytd_million_tonnes": "273.0",
+    "azov_black_sea_ytd_million_tonnes": "275.7",
+    "far_east_ytd_million_tonnes": "236.5",
+    "published_on": "2025-01-16",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-dekabr-2024-goda?height=auto&inline=true&width=550"
+  },
+  {
+    "quarter": "2025-Q1",
+    "baltic_ytd_million_tonnes": "68.1",
+    "azov_black_sea_ytd_million_tonnes": "62.6",
+    "far_east_ytd_million_tonnes": "54.4",
+    "published_on": "2025-04-15",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-pervyy-kvartal-2025-goda"
+  },
+  {
+    "quarter": "2025-Q2",
+    "baltic_ytd_million_tonnes": "135.8",
+    "azov_black_sea_ytd_million_tonnes": "123.5",
+    "far_east_ytd_million_tonnes": "118.7",
+    "published_on": "2025-07-11",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2025-goda"
+  },
+  {
+    "quarter": "2025-Q3",
+    "baltic_ytd_million_tonnes": "203.9",
+    "azov_black_sea_ytd_million_tonnes": "193.2",
+    "far_east_ytd_million_tonnes": "185.5",
+    "published_on": "2025-10-10",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-sentyabr-2025-goda"
+  },
+  {
+    "quarter": "2025-Q4",
+    "baltic_ytd_million_tonnes": "271.3",
+    "azov_black_sea_ytd_million_tonnes": "265.4",
+    "far_east_ytd_million_tonnes": "252.1",
+    "published_on": "2026-01-16",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-2025-god"
+  },
+  {
+    "quarter": "2026-Q1",
+    "baltic_ytd_million_tonnes": "64.3",
+    "azov_black_sea_ytd_million_tonnes": "59.3",
+    "far_east_ytd_million_tonnes": "60.2",
+    "published_on": "2026-04-13",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-mart-2026-goda"
+  },
+  {
+    "quarter": "2026-Q2",
+    "baltic_ytd_million_tonnes": "130.3",
+    "azov_black_sea_ytd_million_tonnes": "132.0",
+    "far_east_ytd_million_tonnes": "132.7",
+    "published_on": "2026-07-13",
+    "source_url": "https://www.morport.com/rus/news/gruzooborot-morskih-portov-rossii-za-yanvar-iyun-2026-goda"
+  }
+]
