@@ -110,9 +110,15 @@ export function validateUploadedDataset(raw:unknown):HistoricalDataset {
     }).sort((a,b)=>a.period.localeCompare(b.period));
     for(const verified of VERIFIED_DATASET.basins[id]){
       const existing=safe.basins[id].find(row=>row.period===verified.period);
-      if(!existing||Math.abs(existing.value-verified.value)>1e-8)fail(`Проверенное наблюдение ${id}:${verified.period} отсутствует или изменено. Импорт добавляет историю без перезаписи проверенных фактов.`);
+      if (!existing) {
+        // A dataset saved before the archive was extended does not contain these rows.
+        if (verified.period < '2022-Q1') { safe.basins[id].push({...verified}); continue; }
+        fail(`Проверенное наблюдение ${id}:${verified.period} отсутствует.`);
+      }
+      if(Math.abs(existing.value-verified.value)>1e-8)fail(`Проверенное наблюдение ${id}:${verified.period} изменено. Импорт добавляет историю без перезаписи проверенных фактов.`);
       Object.assign(existing,verified);
     }
+    safe.basins[id].sort((a,b)=>a.period.localeCompare(b.period));
   }
   // Imported quarterly CSV cannot alter independently checked monthly observations.
   safe.monthly=structuredClone(VERIFIED_DATASET.monthly);

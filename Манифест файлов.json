@@ -566,8 +566,8 @@
   },
   {
     "file": "web/README.md",
-    "bytes": 4022,
-    "sha256": "8ee25f4dc037b0be10be3bb104e90567986f36f1863ec3f08ac08ceecd47f7c6"
+    "bytes": 6094,
+    "sha256": "23856697715a7565677a3fc4fc886a87ecb813ca3607897b5e4ea2c4a7c39800"
   },
   {
     "file": "web/app/api/catalog/route.ts",
@@ -590,6 +590,11 @@
     "sha256": "3afdba5cbbf395a5ca50f4f29d80bb995f55b935a6ec0e63af10680f79269e32"
   },
   {
+    "file": "web/app/api/replay/route.ts",
+    "bytes": 603,
+    "sha256": "2012567926ed3d50621f91956ad6fb7d113e25ecaede49dc5d712ac180e7e92e"
+  },
+  {
     "file": "web/app/api/scenario/route.ts",
     "bytes": 695,
     "sha256": "3d7a1a5eece36457f0a6870615c6cc82498e948370f8aea10b7a1d9732f0f333"
@@ -601,8 +606,8 @@
   },
   {
     "file": "web/app/globals.css",
-    "bytes": 19786,
-    "sha256": "b8c6273e49ded52b62406edbc99e0facffa611edc26be01fb9bc9f6cbca27dc9"
+    "bytes": 20903,
+    "sha256": "17a08b63fadcc2d6ae7b5d204728adab8f63723c3742ce1ec1d422ac41cde0e9"
   },
   {
     "file": "web/app/layout.tsx",
@@ -621,8 +626,13 @@
   },
   {
     "file": "web/components/port-planner/port-planner.tsx",
-    "bytes": 21230,
-    "sha256": "f36effc61cee392d981f6824af1f2a39bdca9afb8234cc4fca45a357a8f99819"
+    "bytes": 21439,
+    "sha256": "45b3b121ce7c9cd57815352e13205535f54cf82641d873888a81ff75e911c1ea"
+  },
+  {
+    "file": "web/components/port-planner/replay-panel.tsx",
+    "bytes": 17552,
+    "sha256": "a57911a7d0748d6a7074f59c8cd24dab3edd74d15853c37608e0e04e82a17cf0"
   },
   {
     "file": "web/components/port-planner/results.tsx",
@@ -636,8 +646,8 @@
   },
   {
     "file": "web/data/README.md",
-    "bytes": 3787,
-    "sha256": "11a59d3a34a54fb12c965858abb6055c89c72a7d553d80646faa8a268b82ed3e"
+    "bytes": 5861,
+    "sha256": "ff2c070bf7c9bf377ad2aaddba64b397f6e0f4458730489acf32d0d850b13c84"
   },
   {
     "file": "web/data/ampt-2026-04.html",
@@ -660,9 +670,19 @@
     "sha256": "2b544bff32148bd084cdbbfaf14f9788221d304ec7a17f00da8669018264b3fa"
   },
   {
+    "file": "web/data/historical-quarter-totals.json",
+    "bytes": 11500,
+    "sha256": "d4b07164dfe5f10f78cf7e4f647f3faff31d92f68dea2b7fb528443ee49a76fd"
+  },
+  {
     "file": "web/data/monthly-manifest.json",
     "bytes": 1481,
     "sha256": "5a379b784c1bbad1cbf7f009863af7085fb41cfb5930ab13d828390abbbe43ce"
+  },
+  {
+    "file": "web/data/national-annual.json",
+    "bytes": 5706,
+    "sha256": "f01166ef7c678f96b52767b587090498b03d6269359c154787c217b0fa0177c1"
   },
   {
     "file": "web/data/verified-quarters.json",
@@ -671,18 +691,18 @@
   },
   {
     "file": "web/lib/contracts.ts",
-    "bytes": 3990,
-    "sha256": "be93b68c936600ec50cbe26b6c65ecda885646e17f85e8d6b3a5c0b3c6864097"
+    "bytes": 4016,
+    "sha256": "7a6d30565a31416a5fa276aa423fd45f8513665fefa9c56913efdbee058decb5"
   },
   {
     "file": "web/lib/csv.ts",
-    "bytes": 16727,
-    "sha256": "7ac77fca8603edb2f0912d011043abfb83a66e01c39a95c93671b30e065e7b0e"
+    "bytes": 17074,
+    "sha256": "3fb3902feb0cce6a501efa91b976b32dadfa002c4f6ae5b7bc64a76c1c6e8e75"
   },
   {
     "file": "web/lib/engine.ts",
-    "bytes": 17838,
-    "sha256": "6832d88a278f7779df2c9dcf83bd4c557973315bd96c1136f73e2bc29afec2b4"
+    "bytes": 17852,
+    "sha256": "6d632089be54f3595c259cad87036accfda298e561064c29260699b7f7874978"
   },
   {
     "file": "web/lib/http.ts",
@@ -690,9 +710,14 @@
     "sha256": "cf8df8a427de228ad2581a982de756888c7bd37d65f0a93e7e7caf561d6ae4d0"
   },
   {
+    "file": "web/lib/replay.ts",
+    "bytes": 7583,
+    "sha256": "7376c00bf536306cc0c3dc64e1c5890f9fde2dce44c934cba8fa803748f61dfb"
+  },
+  {
     "file": "web/lib/seed.ts",
-    "bytes": 4382,
-    "sha256": "085048dc2ed7089eb2b1de08553348b579aebf464987631148bcef593e12c4be"
+    "bytes": 5387,
+    "sha256": "ecd2f09ba252847df968e538568b97f531878e4399935496fa2e8452e15a961b"
   },
   {
     "file": "web/lib/sources.ts",
@@ -732,7 +757,7 @@
   {
     "file": "web/tests/csv.test.ts",
     "bytes": 3418,
-    "sha256": "89faaf0be4d7bcd36061444c7c163ea368bc2cdf0396493fe7539dd98b2871fe"
+    "sha256": "2752595280fbc5b7b1cfaf8b613fc876e952f10bdf9c17875cb07b01c998073c"
   },
   {
     "file": "web/tests/engine.test.ts",
@@ -742,12 +767,17 @@
   {
     "file": "web/tests/http.test.ts",
     "bytes": 3937,
-    "sha256": "50f53466814e814c78f4e29c46e390ed932b9aff382c3a6b299810a950dae41e"
+    "sha256": "23331db3af559411d4fdebe5bd31dbd01779cc2c0bca6cc8952291add181f1ba"
+  },
+  {
+    "file": "web/tests/replay.test.ts",
+    "bytes": 3989,
+    "sha256": "59201bc4325015dfca3411ff895676623dc5dbb0bc7e90d157c87cb7e3eb0702"
   },
   {
     "file": "web/tests/sources.test.ts",
     "bytes": 2782,
-    "sha256": "20167a8809c3cfd1c9fa665347b3f13f43c4decefd8e8ae8dff0a41de7d17d96"
+    "sha256": "49a6e1d605ba0f1473fd1f8e16b517b45a8587088962fd93e89aba8cf1951240"
   },
   {
     "file": "web/tsconfig.json",

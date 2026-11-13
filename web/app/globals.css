@@ -288,3 +288,16 @@ footer { margin-top: 25px; padding: 15px 0; border-top: 1px solid var(--line); d
   html { scroll-behavior: auto; }
   .spin { animation-duration: 3s; }
 }
+.replay-section { margin: 2rem 0; scroll-margin-top: 1rem; }
+.replay-section > p, .replay-form p, .replay-output p { color: var(--muted); }
+.replay-form, .replay-output { padding: 1.25rem; margin-top: 1rem; }
+.replay-form fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.replay-fields { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); margin: .8rem 0; }
+.replay-fields label, .replay-window { display: grid; gap: .4rem; font-size: .88rem; font-weight: 600; }
+.replay-fields input:not([type=checkbox]), .replay-fields select, .replay-window select { padding: .6rem; border: 1px solid #c5d2d9; border-radius: 6px; background: #fff; color: var(--ink); }
+.replay-form details, .replay-output details { padding: .7rem 0; }
+.replay-form summary, .replay-output summary { cursor: pointer; font-weight: 650; }
+.replay-form .replay-check { display: flex; align-items: center; gap: .5rem; }
+.replay-window { max-width: 420px; }
+.replay-chart { width: 100%; min-width: 0; margin: .5rem 0 1rem; }
+.replay-output .table-scroll + .table-scroll { margin-top: 1rem; }

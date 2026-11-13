@@ -5,6 +5,8 @@ import {ArrowDownToLine, ArrowRight, CalendarDays, CircleHelp, Info, LoaderCircl
 import {BASINS, DEMO_INPUT, moscowDate, type ActionId, type ApiError, type BasinId, type HistoricalDataset, type ScenarioInput, type ScenarioResult} from '../../lib/contracts';
 import {Brand, DataPanel, dateLabel, download, number, periodLabel} from './data-panel';
 import {PlanChart, ScenarioDetails} from './results';
+import {ReplayPanel} from './replay-panel';
+import {validateUploadedDataset} from '../../lib/csv';
 
 const STORAGE_KEY = 'port-planner.dataset.v1';
 const actionNames: Record<ActionId, string> = {base: 'Исходный план', reserve: 'Добавить резерв', move: 'Перенести ремонт'};
@@ -21,7 +23,7 @@ function validate(input: ScenarioInput) {
   if (!(input.repairLoss >= 0 && input.repairLoss <= 1000) || input.repairLoss > input.capacity) errors.repairLoss = 'Потери должны быть от 0 до заданной мощности.';
   if (!(input.reserve >= 0 && input.reserve <= 1000)) errors.reserve = 'Укажите резерв от 0 до 1 000.';
   if (!(input.shockPercent >= -50 && input.shockPercent <= 50)) errors.shockPercent = 'Укажите поправку от −50 до +50%.';
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(input.asOf) || input.asOf < '2022-01-01' || input.asOf > '2100-12-31') errors.asOf = 'Укажите дату в пределах 2022–2100 гг.';
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(input.asOf) || input.asOf < '2012-01-01' || input.asOf > '2100-12-31') errors.asOf = 'Укажите дату в пределах 2012–2100 гг.';
   for (const key of ['reserveLeadDays', 'repairLeadDays'] as const) {
     if (!Number.isInteger(input[key]) || input[key] < 0 || input[key] > 3650) errors[key] = 'Укажите целое число дней от 0 до 3 650.';
   }
@@ -80,7 +82,7 @@ export default function PortPlanner() {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const saved = JSON.parse(stored) as HistoricalDataset;
-        if (saved?.basins?.baltic && saved?.snapshot?.version) setDataset(saved);
+        if (saved?.basins?.baltic && saved?.snapshot?.version) setDataset(validateUploadedDataset(saved));
       }
     } catch {
       // A blocked or stale browser store does not affect the bundled dataset.
@@ -174,7 +176,7 @@ export default function PortPlanner() {
     <header className="topbar">
       <div className="topbar-inner">
         <Brand/>
-        <nav aria-label="Разделы"><a href="#planner">Сценарий</a><a href="#history">История и прогноз</a><a href="#verification">Проверка</a><a href="#data">Данные</a></nav>
+        <nav aria-label="Разделы"><a href="#planner">Сценарий</a><a href="#history">История и прогноз</a><a href="#replay">Ретроспектива</a><a href="#data">Данные</a></nav>
         <details className="export-menu"><summary className="button" aria-disabled={!result}><ArrowDownToLine size={15}/> Экспорт</summary>
           <div><button disabled={!result} onClick={() => exportResult('memo')}>Записка с выводами</button><button disabled={!result} onClick={() => exportResult('csv')}>Таблица расчёта · CSV</button><button disabled={!result} onClick={() => exportResult('json')}>Полный расчёт · JSON</button></div>
         </details>
@@ -201,7 +203,7 @@ export default function PortPlanner() {
           <Slider id="reserve" label="Доступный резерв" unit="млн т" value={input.reserve} min={0} max={15} error={fieldError('reserve')} onChange={value => update('reserve', value)}/>
           <details className="advanced"><summary><CalendarDays size={15}/> Дата и сроки согласования</summary>
             <div className="advanced-body">
-              <label>Дата решения<input type="date" value={input.asOf} min="2022-01-01" max="2100-12-31" onChange={event => update('asOf', event.currentTarget.value)}/></label>
+              <label>Дата решения<input type="date" value={input.asOf} min="2012-01-01" max="2100-12-31" onChange={event => update('asOf', event.currentTarget.value)}/></label>
               <div className="lead-fields">{(['reserveLeadDays', 'repairLeadDays'] as const).map((field, index) => <label key={field}>{index === 0 ? 'Резерв, дней' : 'Перенос, дней'}<input type="number" min="0" max="3650" step="1" value={Number.isFinite(input[field]) ? input[field] : ''} onChange={event => update(field, event.currentTarget.valueAsNumber)}/></label>)}</div>
               <label className="check-label"><input type="checkbox" checked={input.allowMove} onChange={event => update('allowMove', event.currentTarget.checked)}/> Рассматривать перенос ремонта</label>
               <label className="check-label"><input type="checkbox" checked={!input.calendarEnabled} onChange={event => update('calendarEnabled', !event.currentTarget.checked)}/> Меры уже согласованы заранее</label>
@@ -245,6 +247,7 @@ export default function PortPlanner() {
       <DataPanel dataset={dataset} onApply={applyDataset} onReset={() => applyDataset(null)}/>
       {storageMessage && <p className="input-error" role="status">{storageMessage}</p>}
       <ScenarioDetails result={result ?? null} visibleHorizon={visibleHorizon} onVisibleHorizon={setVisibleHorizon}/>
+      <ReplayPanel key={dataset?.snapshot.version ?? 'seed'} dataset={dataset}/>
       <footer><Brand/><a href="#planner">К сценарию ↑</a></footer>
     </main>
   </>;

@@ -34,8 +34,8 @@ test('explicit YTD converts to quarter values and never bridges a missing predec
   assert.equal(preview.dataset.basins.baltic.at(-1)?.cumulative, 199.5);
   const backfill = structuredClone(VERIFIED_DATASET);
   delete backfill.basins.baltic.at(-1)?.cumulative;
-  const invalid = 'quarter,basin,ytd_value,published_on\n2021-Q2,baltic,100,2021-07-15';
-  await assert.rejects(parseCsv(invalid, backfill), {name: 'ValidationError', message: /baltic:2021-Q1/});
+  const invalid = 'quarter,basin,ytd_value,published_on\n2011-Q2,baltic,100,2011-07-15';
+  await assert.rejects(parseCsv(invalid, backfill), {name: 'ValidationError', message: /baltic:2011-Q1/});
 });
 
 test('CSV and server-side revalidation reject malformed rows and any verified-value replacement', async () => {

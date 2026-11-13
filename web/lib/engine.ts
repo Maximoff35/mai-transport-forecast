@@ -19,7 +19,7 @@ export function validateInput(raw:unknown):ScenarioInput {
   const r=raw as Record<string,unknown>;
   if(!['baltic','azov','far_east'].includes(r.basin as string))fields.basin='Выберите один из трёх бассейнов.';
   if(!['live','snapshot'].includes(r.dataMode as string))fields.dataMode='Режим данных: live или snapshot.';
-  if(typeof r.asOf!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(r.asOf)||!Number.isFinite(Date.parse(r.asOf+'T00:00:00Z'))||new Date(r.asOf+'T00:00:00Z').toISOString().slice(0,10)!==r.asOf||r.asOf<'2022-01-01'||r.asOf>'2100-12-31')fields.asOf='Укажите существующую дату в формате ГГГГ-ММ-ДД (2022–2100).';
+  if(typeof r.asOf!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(r.asOf)||!Number.isFinite(Date.parse(r.asOf+'T00:00:00Z'))||new Date(r.asOf+'T00:00:00Z').toISOString().slice(0,10)!==r.asOf||r.asOf<'2012-01-01'||r.asOf>'2100-12-31')fields.asOf='Укажите существующую дату в формате ГГГГ-ММ-ДД (2012–2100).';
   for(const [key,min,max,integer] of [['capacity',0.01,1000,false],['repairLoss',0,1000,false],['reserve',0,1000,false],['shockPercent',-50,50,false],['reserveLeadDays',0,3650,true],['repairLeadDays',0,3650,true],['horizon',1,4,true]] as const){
     const value=r[key];if(typeof value!=='number'||!Number.isFinite(value)||value<min||value>max||(integer&&!Number.isInteger(value)))fields[key]=`Параметр ${key}: ${integer?'целое ':''}число от ${min} до ${max}.`;
   }
@@ -84,7 +84,7 @@ function policies(dataset:HistoricalDataset,asOf:string,input:ScenarioInput):Pol
     return {basin,label:BASINS[basin],base:windows?round(baseTotal/windows):0,forecastChoice:windows?round(selectedTotal/windows):0,alwaysReserve:windows?round(reserveTotal/windows):0,windows,selectedReserveCount,alwaysReserveCount:windows,reservePlacementUsesForecast:true};
   });
 }
-function actionSet(loads:number[],periods:string[],input:ScenarioInput):ActionResult[]{
+export function actionSet(loads:number[],periods:string[],input:ScenarioInput):ActionResult[]{
   const caps=[input.capacity,input.capacity-input.repairLoss],peak=loads[1]-caps[1]>loads[0]-caps[0]?1:0;
   const reserveDeadline=minusDays(qdate(qi(periods[peak])),input.reserveLeadDays),moveDeadline=minusDays(qdate(qi(periods[0])),input.repairLeadDays);
   const reserveAvailable=!input.calendarEnabled||input.asOf<=reserveDeadline;
@@ -92,7 +92,7 @@ function actionSet(loads:number[],periods:string[],input:ScenarioInput):ActionRe
   const make=(id:ActionId,label:string,capacities:number[],available:boolean,deadline:string|null,reason:string|null):ActionResult=>{const gaps=gap(loads,capacities);return {id,label,capacities,gaps,totalGap:round(sum(gaps)),available,deadline,reason}};
   return [make('base','Исходный план',caps,true,null,null),{...make('reserve','Резерв в пиковом квартале',caps.map((c,i)=>round(c+(i===peak?input.reserve:0))),reserveAvailable,reserveDeadline,reserveAvailable?null:`Срок заказа резерва истёк ${reserveDeadline}.`),reservePeriod:periods[peak]},make('move','Перенос ремонта на первый квартал',[input.capacity-input.repairLoss,input.capacity],moveAvailable,moveDeadline,!input.allowMove?'Перенос ремонта отключён во входных условиях.':moveAvailable?null:`Срок согласования переноса истёк ${moveDeadline}.`)];
 }
-function choose(actions:ActionResult[]):ActionResult|undefined{return actions.filter(a=>a.available).reduce<ActionResult|undefined>((best,a)=>!best||a.totalGap<best.totalGap-1e-9?a:best,undefined)}
+export function choose(actions:ActionResult[]):ActionResult|undefined{return actions.filter(a=>a.available).reduce<ActionResult|undefined>((best,a)=>!best||a.totalGap<best.totalGap-1e-9?a:best,undefined)}
 
 export function calculateScenario(dataset:HistoricalDataset,raw:ScenarioInput):ScenarioResult {
   const input=validateInput(raw),history=observations(dataset.basins[input.basin],input.asOf);

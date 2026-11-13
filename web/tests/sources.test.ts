@@ -12,7 +12,7 @@ test('primary HTML proves basin coverage, date, cumulative figures and monthly s
     assert.deepEqual(actual.values,MONTHLY_PUBLICATIONS[i].values);
     assert.equal(actual.publishedOn,MONTHLY_PUBLICATIONS[i].publishedOn);
   }
-  assert.equal(VERIFIED_DATASET.basins.baltic.length,18);
+  assert.equal(VERIFIED_DATASET.basins.baltic.length,58);
   assert.equal(VERIFIED_DATASET.basins.baltic.at(-1)?.value,66);
   assert.deepEqual(VERIFIED_DATASET.monthly.baltic.map(row=>row.value),[21.6,22.5,21.9]);
   for (const basin of ['baltic','azov','far_east'] as const) {
@@ -39,7 +39,7 @@ test('dataset requests never fetch upstream and return an isolated snapshot', as
     assert.equal(snapshot.snapshot.status, 'snapshot');
     assert.match(snapshot.snapshot.message, /CSV/);
     snapshot.basins.baltic[0].value = 999;
-    assert.equal((await getDataset()).basins.baltic[0].value, 60.5);
+    assert.equal((await getDataset()).basins.baltic[0].value, 46.6);
   } finally {
     globalThis.fetch = fetch;
   }

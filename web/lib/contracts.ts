@@ -1,7 +1,7 @@
 export type BasinId = 'baltic' | 'azov' | 'far_east';
 export const BASINS: Record<BasinId, string> = {baltic:'Балтийский бассейн',azov:'Азово-Черноморский бассейн',far_east:'Дальневосточный бассейн'};
 export type DataMode = 'live' | 'snapshot';
-export interface Observation {period:string;value:number;publishedOn:string;sourceUrl:string;cumulative?:number}
+export interface Observation {period:string;value:number;publishedOn:string;sourceUrl:string;cumulative?:number;previousSourceUrl?:string}
 export interface SourceRecord {url:string;title:string;publishedOn:string;period:string;kind:'primary'|'secondary';verified:boolean}
 export interface DataMeta {version:string;status:'online'|'cached'|'snapshot';checkedAt:string;fetchedAt:string;lastPeriod:string;publicationDate:string;sourceLabel:string;sourceUrl:string;message:string}
 export interface HistoricalDataset {basins:Record<BasinId,Observation[]>;monthly:Record<BasinId,Observation[]>;snapshot:DataMeta;sources:SourceRecord[];warnings:string[]}

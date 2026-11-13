@@ -40,7 +40,7 @@ test('HTTP: data endpoint distinguishes snapshot and rejects unknown mode', asyn
   assert.equal(response.status, 200);
   const dataset = await response.json() as HistoricalDataset;
   assert.equal(dataset.snapshot.lastPeriod, '2026-Q2');
-  assert.equal(dataset.basins.baltic.length, 18);
+  assert.equal(dataset.basins.baltic.length, 58);
   assert.equal((await data(new Request('http://localhost/api/data?mode=wrong'))).status, 422);
 });
 
