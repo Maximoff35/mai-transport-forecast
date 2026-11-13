@@ -715,6 +715,11 @@
     "sha256": "18dff5b0ab365e880d61c7838ab9ccc807b2a54062174b0ff396c9b57c46ac4d"
   },
   {
+    "file": "web/postcss.config.mjs",
+    "bytes": 32,
+    "sha256": "8c75d88ff09471e429a84e1aa983152e00767f19a2b0746b59fc093e14c687a6"
+  },
+  {
     "file": "web/public/favicon.svg",
     "bytes": 345,
     "sha256": "ee862979727f857d0c268c73cfe98fd207a671ad31dc157bf244175a117d50cd"
