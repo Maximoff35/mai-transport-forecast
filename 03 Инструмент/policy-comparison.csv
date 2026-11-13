@@ -1,0 +1,4 @@
+﻿basin,windows,base_mean_gap_Mt,forecast_choice_mean_gap_Mt,always_reserve_mean_gap_Mt,selected_reserve_assignments,always_reserve_assignments,reserve_Mt_per_assigned_quarter,reserve_placement_uses_forecast,actions_pre_agreed
+baltic,5,2.74,1.74,1.08,4,5,3,True,True
+azov,5,5.7,4.56,4.16,2,5,3,True,True
+far_east,5,2.84,2.24,1.1,1,5,3,True,True

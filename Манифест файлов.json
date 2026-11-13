@@ -101,28 +101,43 @@
   },
   {
     "file": "01 Паспорт/Паспорт проекта.pdf",
-    "bytes": 94594,
-    "sha256": "237e36ed11b3d221411011f98e74996eb0867a6a833f2bea3a82b82824560bf8"
+    "bytes": 92904,
+    "sha256": "1696e93ec60f6736e975dff4b827b2afb23f38cf7dbc1ff0c97f90f416ad47a5"
   },
   {
     "file": "01 Паспорт/Паспорт — текст для правок.md",
-    "bytes": 8845,
-    "sha256": "59a558d454377e427e39a88a459e3bf5bd7c05943638ce5466dcd04dd1736c4d"
+    "bytes": 7007,
+    "sha256": "2e5c72e8640069fdf2c268e3ec718ab6f02b19e7e1a74a18db3df8eb1e0866f9"
+  },
+  {
+    "file": "02 Защита/Демо — базовый сценарий.jpg",
+    "bytes": 93249,
+    "sha256": "3b9a595d38b42523d73e114377c5b850ffe3dfb9240023bbde977e9c58d5e094"
+  },
+  {
+    "file": "02 Защита/Демо — нагрузка минус 5 процентов.jpg",
+    "bytes": 93469,
+    "sha256": "e6d7cd7b74a09dd83c0bd483462ad3f3586b1ddebe4bfe56373a6e7a51cd89b0"
+  },
+  {
+    "file": "02 Защита/Демо — нагрузка плюс 5 процентов.jpg",
+    "bytes": 94170,
+    "sha256": "698577f34be234199b3ffc0654bf871a919fe971b3f6aee96adf35c21a5fddbe"
   },
   {
     "file": "02 Защита/Защита.pptx",
-    "bytes": 47569,
-    "sha256": "d22dda485bfc81dcffad4afda51f5bcbba48f95b12d1e7298e8998957bdec9bb"
+    "bytes": 50794,
+    "sha256": "47f09bf590864919b5b022b6e06d5a68c45869178a051a4bdfa5a76a276c52ec"
   },
   {
     "file": "02 Защита/Карточка защиты.md",
-    "bytes": 14298,
-    "sha256": "ce2959ad8bc901be7b2631e712d601e22179c74c4138a9c2eb81bc967d47277d"
+    "bytes": 17955,
+    "sha256": "6d8d0e5be92057b035ebb1e1ac919d86737031c0b21b7fa8f85e78ddd3bd5593"
   },
   {
     "file": "02 Защита/Сценарий защиты.md",
-    "bytes": 43444,
-    "sha256": "37681bc9ef42aadbfb7b69720682fb27cf156fbcff6a23b56f0d7a0f76c90308"
+    "bytes": 15653,
+    "sha256": "8155625dfc9867c61876a0a7137b6b021b5bcdbadf4771373f9d07566b68f304"
   },
   {
     "file": "03 Инструмент/README.md",
@@ -315,6 +330,11 @@
     "sha256": "0023b05757bc3f66103a8d60483d040f64dffab082e3c7268ab72a8d1e00559c"
   },
   {
+    "file": "03 Инструмент/policy-comparison.csv",
+    "bytes": 350,
+    "sha256": "fbcf1606cf144feb33df93eab919d4dcfe3994323b6e26c8561a39f0ede9d4b4"
+  },
+  {
     "file": "03 Инструмент/prepare.py",
     "bytes": 8644,
     "sha256": "982103ea833a3ab0a178b6eef982cd57b57b94aa1af0ed2c77986191301db966"
@@ -481,13 +501,13 @@
   },
   {
     "file": "03 Инструмент/Применение ИИ.md",
-    "bytes": 2006,
-    "sha256": "d03114e2e3b559422b31a2ce1d77f5fc9ea18443aab1d85454a53973121a6774"
+    "bytes": 1993,
+    "sha256": "221e2143d046bbcabcbedc8a104b379748fe13b8485088ce94bb246450b5ee49"
   },
   {
     "file": "03 Инструмент/Проверка данных и расчёта.md",
-    "bytes": 4324,
-    "sha256": "240d4a0e8358509c9e4dfcd26f80c1b4e410444ea3a6333edd659f42a0c8ae22"
+    "bytes": 4848,
+    "sha256": "b5202bad0adb8ed8348bd07c32cea4a41586187cc069ab02a5f4a47ab4699dc2"
   },
   {
     "file": "03 Инструмент/Результаты 20 расширений.md",
@@ -510,6 +530,11 @@
     "sha256": "9980e4bc46c31206af339bd0599c61d1cdefd899acb5c1005b1615d634eb91ff"
   },
   {
+    "file": "04 Проверка/Проверка веб-приложения.md",
+    "bytes": 3688,
+    "sha256": "d95581939db66d8204206d0dc812221e3164a1dc33372a624744d1f76611c4ea"
+  },
+  {
     "file": "04 Проверка/Проверка качества.md",
     "bytes": 4666,
     "sha256": "a95fa550e46b8f99a0bddec3aff1baee9d5c8549b9ff19efc1fc2b2e4ce9c233"
@@ -526,8 +551,8 @@
   },
   {
     "file": "README.md",
-    "bytes": 9024,
-    "sha256": "e3481bf8f9b338e82713dbfc23a736078a85ec57ec32c84dfc6360ddef28946f"
+    "bytes": 9830,
+    "sha256": "418277c7b28db4f3a1305e03025ac7b681b731e5e1634abaaff63f75630601d8"
   },
   {
     "file": "web/.gitignore",
