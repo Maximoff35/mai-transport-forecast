@@ -165,9 +165,12 @@ export default function PortPlanner() {
     download(`${stem}.csv`, '\uFEFF' + rows.map(row => row.map(quote).join(';')).join('\r\n'), 'text/csv;charset=utf-8');
   }
 
-  const selected = result?.actions.find(item => item.id === (action?.key === key ? action.id : 'base'));
   const base = result?.actions.find(item => item.id === 'base');
   const recommended = result?.actions.find(item => item.id === result.recommendedId);
+  const selected = (action?.key === key ? result?.actions.find(item => item.id === action.id) : undefined) ?? recommended;
+  const blockedAlternative = recommended && result?.actions
+    .filter(item => !item.available && item.totalGap < recommended.totalGap)
+    .sort((a, b) => a.totalGap - b.totalGap)[0];
   const missingRecentFact = result && result.snapshot.lastPeriod < lastCompleteQuarter(result.input.asOf)
     ? lastCompleteQuarter(result.input.asOf) : null;
   const fieldError = (field: string) => errors[field] || current?.fields?.[field];
@@ -224,14 +227,18 @@ export default function PortPlanner() {
               <PlanChart result={result} selected={selected}/>
               <div className="outcome">
                 <div><span>Превышение без мер</span><strong>{number(base.totalGap)} <small>млн т</small></strong></div><ArrowRight size={22}/>
-                <div><span>После рекомендуемой меры</span><strong className={result.recommendation.residualGap > 0 ? 'warning-text' : 'teal'}>{number(result.recommendation.residualGap)} <small>млн т</small></strong></div>
+                <div><span>{input.calendarEnabled ? 'Минимум среди доступных' : 'Минимум при согласовании'}</span><strong className={result.recommendation.residualGap > 0 ? 'warning-text' : 'teal'}>{number(result.recommendation.residualGap)} <small>млн т</small></strong></div>
                 <p>{recommended.id === 'base' ? base.totalGap === 0 ? 'При этих условиях мощности хватает без дополнительных мер.' : 'Доступные меры не снижают превышение.' : `${actionNames[recommended.id]}: ${result.recommendation.fullyCovered ? 'расчётное превышение закрыто.' : 'нужен дополнительный ресурс или другой график.'}`}</p>
               </div>
-              <div className="action-cards" aria-label="Выбрать мощность на графике">{result.actions.map(item => <button key={item.id} className={item.available ? 'action-card' : 'action-card unavailable'} aria-pressed={selected.id === item.id} onClick={() => setAction({key, id: item.id})}>
-                <span className="action-title">{actionNames[item.id]}{item.id === result.recommendedId && <small>Выбор</small>}</span>
-                <strong>{number(item.totalGap)} <small>млн т превышения</small></strong>
-                <span className="action-caption">{!item.available ? !input.allowMove && item.id === 'move' ? 'Недоступно: отключено в условиях' : item.deadline ? `Недоступно: срок ${dateLabel(item.deadline)}` : 'Недоступно' : item.id === 'reserve' && item.reservePeriod ? `${periodLabel(item.reservePeriod)} · +${number(input.reserve)} млн т` : item.id === 'base' ? 'Ремонт во втором квартале' : 'Ремонт в первом квартале'}</span>
+              <div className="action-cards" aria-label="Сценарии для сравнения на графике">{result.actions.map(item => <button key={item.id} className={item.available ? 'action-card' : 'action-card unavailable'} aria-pressed={selected.id === item.id} onClick={() => setAction({key, id: item.id})}>
+                <span className="action-title">{actionNames[item.id]}{item.id === result.recommendedId && <small>{input.calendarEnabled ? 'Лучший из доступных' : 'Лучший при согласовании'}</small>}</span>
+                <strong>{number(item.totalGap)} <small>{item.available ? 'млн т превышения' : 'млн т, если выполнить'}</small></strong>
+                <span className="action-caption">{!item.available ? !input.allowMove && item.id === 'move' ? 'Недоступно: отключено в условиях' : item.deadline ? `Недоступно: срок истёк ${dateLabel(item.deadline)}` : 'Недоступно' : item.id === 'reserve' && item.reservePeriod ? `${periodLabel(item.reservePeriod)} · +${number(input.reserve)} млн т` : item.id === 'base' ? 'Ремонт во втором квартале' : 'Ремонт в первом квартале'}</span>
               </button>)}</div>
+              <p className="decision-note">Сравниваем суммарное превышение за два квартала. Нажмите на карточку, чтобы показать её сценарий на графике.</p>
+              {blockedAlternative && <p className="decision-note"><strong>Почему вариант с {number(blockedAlternative.totalGap)} млн т не рекомендован?</strong>{' '}
+                {blockedAlternative.reason?.replace(/\d{4}-\d{2}-\d{2}/g, dateLabel)}
+              </p>}
             </> : null}
         </section>
       </div>

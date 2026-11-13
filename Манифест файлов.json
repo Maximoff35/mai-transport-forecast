@@ -611,8 +611,8 @@
   },
   {
     "file": "web/app/globals.css",
-    "bytes": 20903,
-    "sha256": "17a08b63fadcc2d6ae7b5d204728adab8f63723c3742ce1ec1d422ac41cde0e9"
+    "bytes": 20994,
+    "sha256": "88e3e0d8d6b99ea2414fd8937d9c1c4be5b946761cd2a99245f6dbce37e9edd8"
   },
   {
     "file": "web/app/layout.tsx",
@@ -631,8 +631,8 @@
   },
   {
     "file": "web/components/port-planner/port-planner.tsx",
-    "bytes": 21439,
-    "sha256": "45b3b121ce7c9cd57815352e13205535f54cf82641d873888a81ff75e911c1ea"
+    "bytes": 22460,
+    "sha256": "6c6455dcadcb29b3c12ba41295fcc7b562dfe724f4f7e66e71475688cddbf762"
   },
   {
     "file": "web/components/port-planner/replay-panel.tsx",
