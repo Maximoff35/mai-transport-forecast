@@ -42,14 +42,17 @@ legend { font-size:24px; font-weight:700; margin-bottom:12px; }
 .selected-forecast { background:#e1f0eb; font-weight:700; }
 summary { cursor:pointer; font-weight:650; margin:18px 0 10px; }
 .notice { border-left:4px solid var(--water); padding-left:14px; }
+input[type=range] { padding:0; accent-color:var(--water); }
+.unavailable { color:#71818a; background:#eef1f2; }
+header {padding-top:12px;} h1 {font-size:32px;} header p {margin:6px 0;} header,main {padding-top:12px;padding-bottom:12px;} fieldset {margin-top:16px;} legend,h2 {font-size:21px;} .presets {margin-bottom:12px;}
 footer { color: var(--muted); margin-top: 28px; }
 </style>
 </head>
 <body>
 <header>
   <div class="label">it plow · МАИ 1 · Рабочая демонстрация</div>
-  <h1>Планирование портовой нагрузки</h1>
-  <p>Посмотрите прогноз перевалки, затем сравните резерв мощности и перенос ремонта. Мощности и условия работы задаёт пользователь.</p>
+  <h1>Хватит ли мощности для ожидаемого груза?</h1>
+  <p>Автономный резерв: исходный срез II кв. 2026. Сравните резерв и перенос ремонта при заданных условиях. Полный архив и опубликованные мощности доступны в веб-приложении.</p>
 </header>
 <main>
   <form id="controls" autocomplete="off">
@@ -57,24 +60,9 @@ footer { color: var(--muted); margin-top: 28px; }
       <label>Бассейн<select id="basin"><option value="baltic">Балтийский</option><option value="azov">Азово-Черноморский</option><option value="far_east">Дальневосточный</option></select></label>
       <label>Горизонт от среза данных<select id="horizon"><option value="1">1 квартал</option><option value="2">2 квартала</option><option value="3">3 квартала</option><option value="4">4 квартала</option></select></label>
     </div>
-    <section aria-labelledby="forecast-heading" aria-live="polite">
-      <h2 id="forecast-heading">Прогноз перевалки</h2>
-      <p id="forecast-context" class="muted"></p>
-      <p id="forecast-value" class="metric"></p>
-      <div id="forecast-chart" class="scroll"></div>
-      <p class="muted">Сплошная линия — наблюдаемая перевалка. Пунктир — сезонный прогноз. Единицы: млн тонн за квартал.</p>
-      <div class="scroll"><table aria-label="Прогноз и происхождение значений">
-        <thead><tr><th scope="col">Целевой квартал</th><th scope="col">Прогноз, млн т</th><th scope="col">Ориентир прошлого года</th><th scope="col">Публикация источника</th></tr></thead>
-        <tbody id="forecast-rows"></tbody>
-      </table></div>
-      <p id="forecast-accuracy" class="muted"></p>
-      <details><summary>История и источники: 18 кварталов</summary><div class="scroll"><table aria-label="История перевалки">
-        <thead><tr><th scope="col">Квартал</th><th scope="col">Перевалка, млн т</th><th scope="col">Источник</th></tr></thead>
-        <tbody id="history-rows"></tbody>
-      </table></div></details>
-    </section>
     <p id="planning-note" class="notice" hidden>Для сравнения мер на I–II кварталы 2027 года выберите горизонт 4 квартала: он включает оба плановых периода.</p>
     <fieldset id="planning-controls"><legend>Условия сравнения мер</legend>
+    <div class="presets"><button type="button" class="action" data-preset="-5">−5%</button> <button type="button" class="action" data-preset="0">Сбросить пример</button> <button type="button" class="action" data-preset="5">+5%</button></div>
     <div class="inputs">
       <label>Мощность, млн т / кв.<input type="number" id="capacity" value="68" min="0.1" step="0.1" required></label>
       <label>Изменение нагрузки, %<input type="number" id="shock" value="0" min="-100" max="100" step="1" required></label>
@@ -113,6 +101,22 @@ footer { color: var(--muted); margin-top: 28px; }
       <p class="muted">База — мощности хватает. Р — резерв. П — перенос. ≈ — равный результат. ? — в заданном наборе действий остаётся дефицит без улучшения или параметры ячейки неприменимы.</p>
     </section>
   </div>
+    <section aria-labelledby="forecast-heading" aria-live="polite">
+      <h2 id="forecast-heading">Прогноз перевалки</h2>
+      <p id="forecast-context" class="muted"></p>
+      <p id="forecast-value" class="metric"></p>
+      <div id="forecast-chart" class="scroll"></div>
+      <p class="muted">Сплошная линия — наблюдаемая перевалка. Серый пунктир — базовый прогноз. Зелёный пунктир — сценарная нагрузка. Единицы: млн тонн за квартал.</p>
+      <div class="scroll"><table aria-label="Прогноз и происхождение значений">
+        <thead><tr><th scope="col">Целевой квартал</th><th scope="col">Базовый прогноз, млн т</th><th scope="col">Сценарная нагрузка, млн т</th><th scope="col">Ориентир прошлого года</th><th scope="col">Публикация источника</th></tr></thead>
+        <tbody id="forecast-rows"></tbody>
+      </table></div>
+      <p id="forecast-accuracy" class="muted"></p>
+      <details><summary>История и источники: 18 кварталов</summary><div class="scroll"><table aria-label="История перевалки">
+        <thead><tr><th scope="col">Квартал</th><th scope="col">Перевалка, млн т</th><th scope="col">Источник</th></tr></thead>
+        <tbody id="history-rows"></tbody>
+      </table></div></details>
+    </section>
   <p><a href="Лаборатория.html">Открыть все 20 расширений, исходные условия и таблицы проверки</a></p>
   <footer>Источник прогноза — АСОП. Сезонный ориентир по тому же кварталу прошлого года. Срез заканчивается II кварталом 2026 года. Варианты по нагрузке — стресс-сценарии без присвоенных вероятностей.</footer>
 </main>
@@ -182,15 +186,15 @@ function sourceLink(row) {
   link.target = "_blank"; link.rel = "noopener noreferrer";
   return link;
 }
-function renderForecast(model, horizon) {
-  const selected = forecastWindow(model, horizon);
+function renderForecast(model, horizon, shock = 0) {
+  const selected = forecastWindow(model, horizon).map(row => ({...row, scenarioValue: row.value * (1 + shock / 100)}));
   const last = selected.at(-1);
-  get("forecast-context").textContent = `${model.label}. Срез ${periodName(model.last)}, опубликован ${model.published_on}. Горизонт отсчитывается от среза данных, а не от даты решения.`;
-  get("forecast-value").textContent = `${periodName(last.period)}: ${num(last.value)} млн тонн`;
+  get("forecast-context").textContent = `${model.label}. Срез ${periodName(model.last)}, опубликован ${model.published_on}. Прогноз из архивного среза, в том числе для уже наступивших кварталов. Горизонт графика не меняет план мер I–II кв. 2027.`;
+  get("forecast-value").textContent = `${periodName(last.period)}: базовый прогноз ${num(last.value)}, сценарная нагрузка ${num(last.scenarioValue)} млн тонн`;
   get("forecast-rows").replaceChildren(...selected.map(row => {
     const tr = document.createElement("tr");
     if (row === last) tr.className = "selected-forecast";
-    for (const value of [periodName(row.period), num(row.value), `${periodName(row.source_period)}: ${num(row.source_value)}`]) tr.insertCell().textContent = value;
+    for (const value of [periodName(row.period), num(row.value), num(row.scenarioValue), `${periodName(row.source_period)}: ${num(row.source_value)}`]) tr.insertCell().textContent = value;
     tr.insertCell().append(sourceLink(row)); return tr;
   }));
   get("history-rows").replaceChildren(...model.history.map(row => {
@@ -211,7 +215,7 @@ function drawHistory(history, projections) {
   };
   const all = [...history, ...projections], w = 1000, h = 300;
   const left = 55, right = 25, top = 20, bottom = 44;
-  const max = Math.ceil(Math.max(...all.map(row => row.value)) / 10) * 10;
+  const max = Math.ceil(Math.max(1, ...all.flatMap(row => [row.value, row.scenarioValue ?? row.value])) / 10) * 10;
   const x = i => left + i * (w - left - right) / (all.length - 1);
   const y = value => top + (max - value) * (h - top - bottom) / max;
   const svg = node("svg", {viewBox:`0 0 ${w} ${h}`, role:"img", "aria-label":"История квартальной перевалки и сезонный прогноз, млн тонн"});
@@ -226,7 +230,9 @@ function drawHistory(history, projections) {
   const points = rows => rows.map(([row,i]) => `${x(i)},${y(row.value)}`).join(" ");
   svg.append(node("polyline", {points:points(history.map((row,i)=>[row,i])),fill:"none",stroke:"#485c66","stroke-width":3}));
   const future = [[history.at(-1),history.length-1], ...projections.map((row,i)=>[row,history.length+i])];
-  svg.append(node("polyline", {points:points(future),fill:"none",stroke:"#075b62","stroke-width":3,"stroke-dasharray":"7 5"}));
+  svg.append(node("polyline", {points:points(future),fill:"none",stroke:"#889ba4","stroke-width":3,"stroke-dasharray":"7 5"}));
+  const scenarioFuture = [[history.at(-1),history.length-1], ...projections.map((row,i)=>[{...row,value:row.scenarioValue},history.length+i])];
+  svg.append(node("polyline", {points:points(scenarioFuture),fill:"none",stroke:"#075b62","stroke-width":3,"stroke-dasharray":"3 3"}));
   all.forEach((row,i) => {
     const dot = node("circle", {cx:x(i),cy:y(row.value),r:i===all.length-1?6:3,fill:i>=history.length?"#075b62":"#485c66"});
     dot.append(node("title",{},`${periodName(row.period)}: ${num(row.value)} млн т`)); svg.append(dot);
@@ -242,12 +248,8 @@ function render() {
   const key = get("basin").value;
   const model = data[key];
   const horizon = Number(get("horizon").value);
-  renderForecast(model, horizon);
-  const covered = planningCovered(model, horizon);
-  get("planning-controls").hidden = !covered;
-  get("planning-note").hidden = covered;
-  get("outputs").hidden = !covered;
-  if (!covered) return;
+  get("planning-controls").hidden = false;
+  get("planning-note").hidden = true;
   const capacity = get("capacity").valueAsNumber;
   const shock = get("shock").valueAsNumber;
   const repair = get("repair").valueAsNumber;
@@ -263,21 +265,33 @@ function render() {
   get("error").hidden = valid;
   get("error").textContent = valid ? "" : "Проверьте значения. Потеря на ремонт не может превышать плановую мощность.";
   get("outputs").hidden = !valid;
+  get("forecast-chart").hidden = !valid;
   if (!valid) return;
+  renderForecast(model, horizon, shock);
+  for (const id of ["capacity", "shock", "repair", "reserve"]) {
+    const field=get(id), range=get(id+"-range"), value=field.valueAsNumber;
+    range.min=Math.min(Number(range.min),value);range.max=Math.max(Number(range.max),value);range.value=value;
+  }
   const calculate = (cap, shift) => {
     const rules = permissions(model.periods, model.loads, cap, shift, repair, asof, reserveLead, repairLead, useCalendar);
     return compareScenario(model.loads, cap, shift, repair, reserve, movable && rules.moveAllowed, rules.reserveAllowed);
   };
   const result = calculate(capacity, shock);
   const rules = permissions(model.periods, model.loads, capacity, shock, repair, asof, reserveLead, repairLead, useCalendar);
-  get("headline").textContent = cells[result.code][1];
+  const baseGap = result.options.find(option => option.id === "b0").gap;
+  const bestGap = Math.min(...result.options.map(option => option.gap));
+  get("headline").textContent = `Превышение ${num(baseGap)} → ${num(bestGap)} млн т. ${bestGap > 0 ? "Нужен дополнительный план." : "При этих условиях превышение закрыто."}`;
   get("context").textContent = `${model.label}, ${model.periods.join(" / ")}. Нагрузка ${result.demand.map(num).join(" / ")} млн т.`;
   get("deadlines").textContent = useCalendar
     ? `Предельные даты решения: резерв ${rules.reserveDeadline}, перенос ${rules.repairDeadline}. ${rules.moveAllowed && movable ? "Перенос доступен." : "Перенос исключён."} ${rules.reserveAllowed ? "Резерв доступен." : "Резерв исключён."}`
     : "Сравнение при заранее согласованных действиях. Календарные сроки отключены.";
-  get("actions").replaceChildren(...result.options.map(option => {
+  const allOptions = compareScenario(model.loads, capacity, shock, repair, reserve, true, true).options;
+  get("actions").replaceChildren(...allOptions.map(option => {
     const row = document.createElement("tr");
-    for (const value of [option.name, option.available.map(num).join(" / "), num(option.gap)]) {
+    const available = result.options.some(candidate => candidate.id === option.id);
+    if (!available) row.className = "unavailable";
+    const suffix = available ? "" : ` · недоступно${option.id === "h2" && !movable ? ": отключено" : ": срок " + (option.id === "h2" ? rules.repairDeadline : rules.reserveDeadline)}`;
+    for (const value of [option.name + suffix, option.available.map(num).join(" / "), num(option.gap)]) {
       row.insertCell().textContent = value;
     }
     return row;
@@ -345,6 +359,15 @@ function render() {
     "Мощности и стресс-сценарии заданы пользователем. Источник прогноза: публикации АСОП. Данные и формулы в пакете проекта.",
   ].join("\n");
 }
+for (const [id,min,max,step] of [["capacity",20,100,.1],["shock",-15,15,.1],["repair",0,15,.1],["reserve",0,15,.1]]) {
+  const range=document.createElement("input"); range.type="range";range.id=id+"-range";range.min=min;range.max=max;range.step=step;range.value=get(id).value;range.setAttribute("aria-label",get(id).parentElement.textContent+" — ползунок");
+  range.addEventListener("input",()=>{get(id).value=range.value;});get(id).parentElement.append(range);
+}
+document.querySelectorAll("[data-preset]").forEach(button=>button.addEventListener("click",()=>{
+  get("basin").value="baltic";get("horizon").value=4;
+  get("capacity").value=settings.basin_demo.capacity_Mt_per_quarter;get("repair").value=settings.basin_demo.repair_loss_Mt;get("reserve").value=settings.basin_demo.reserve_Mt;get("shock").value=button.dataset.preset;
+  get("asof").value=settings.as_of;get("reserve-lead").value=settings.calendar.reserve_lead_calendar_days;get("repair-lead").value=settings.calendar.repair_move_lead_calendar_days;get("movable").checked=settings.basin_demo.allow_move;get("calendar").checked=true;render();
+}));
 get("controls").addEventListener("submit", event => event.preventDefault());
 get("controls").addEventListener("input", render);
 get("export").addEventListener("click", () => {
