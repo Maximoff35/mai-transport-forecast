@@ -651,8 +651,8 @@
   },
   {
     "file": "web/app/globals.css",
-    "bytes": 23456,
-    "sha256": "60f3413e4a74a7acf5a0d0b1840bde29589a7f0d3bb7ab539027a4e982c13b25"
+    "bytes": 38594,
+    "sha256": "5ab0ba66fee404d2611d1be118f1e8b6fb06f094bba61404b2d383cd08284dcc"
   },
   {
     "file": "web/app/history/page.tsx",
@@ -677,7 +677,7 @@
   {
     "file": "web/components/port-planner/capacity-evidence.tsx",
     "bytes": 6992,
-    "sha256": "2a9d9b9007e48e58c4cde7cbdad539b245823b93ca7ce9633602f609424856f9"
+    "sha256": "b663043626d28ea9c3fa0004584419a09ed11670d235442cebe905d8631d6608"
   },
   {
     "file": "web/components/port-planner/data-panel.tsx",
@@ -686,8 +686,8 @@
   },
   {
     "file": "web/components/port-planner/port-planner.tsx",
-    "bytes": 27435,
-    "sha256": "2ecd1964f4fee0527b4f260e7f74d5475c6aca1fa3630e9bef7808fa17c5a651"
+    "bytes": 28129,
+    "sha256": "f9b8f1b1531e9f4d13b7946134f25492372842ef78e243415672e0132898d33b"
   },
   {
     "file": "web/components/port-planner/replay-panel.tsx",
@@ -696,18 +696,18 @@
   },
   {
     "file": "web/components/port-planner/replay-results.tsx",
-    "bytes": 32659,
-    "sha256": "9e3ef0333111f5b2e7c6d7d5ae931d7e883b3accba31dcef91820a75de36d3b1"
+    "bytes": 32738,
+    "sha256": "bdf169aa6f37fdde1c2dba32d8c621720bff84badd19f6710dc898a05ce195c0"
   },
   {
     "file": "web/components/port-planner/replay.css",
-    "bytes": 13284,
-    "sha256": "8f222799e7882e3fb1a093d002d2623ef1104ffd338b0dd116ad426635052916"
+    "bytes": 20571,
+    "sha256": "f97f5c770f189ec22012998636334113d3d26124f495d0ca6e8a01b2292be857"
   },
   {
     "file": "web/components/port-planner/results.tsx",
     "bytes": 25698,
-    "sha256": "3aafe515bd6007b03fcb8733b702b10c4d52262451f4cbd086b0cf2a86657dd2"
+    "sha256": "d715a5bd81a46ec3c4fe457e865dd317fdc5e45e7cbbc2e818ffa2663cf0eeeb"
   },
   {
     "file": "web/data/.gitattributes",

@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {ArrowDownToLine, ArrowRight, CheckCircle2, CircleHelp, TriangleAlert} from 'lucide-react';
-import {CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
+import {Area, AreaChart, CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 import {STRATEGIES, type ReplayResult} from '../../lib/replay';
 import type {ActionId} from '../../lib/contracts';
 import annual from '../../data/national-annual.json';
@@ -129,12 +129,12 @@ export function ReplayResults({result}: {result: ReplayResult}) {
         <div className="segmented replay-metric-switch" aria-label="Показатель исторического результата">{result.economics && <button aria-pressed={effectMetric === 'contribution'} onClick={() => setEffectMetric('contribution')}>Деньги после затрат</button>}<button aria-pressed={effectMetric === 'volume'} onClick={() => setEffectMetric('volume')}>Дополнительный груз</button>{result.economics && <button aria-pressed={effectMetric === 'vsFixed'} onClick={() => setEffectMetric('vsFixed')}>Постоянный резерв</button>}</div>
         {effectMetric === 'volume' && Math.abs(after.avoidedGap) < EPSILON && <p className="replay-summary-caption"><strong>{before.gap === 0 ? 'В проверенных окнах мощности хватало без дополнительных мер.' : 'В проверенных окнах выбранные меры не уменьшили превышение.'}</strong> {after.reserves + after.moves === 0 ? 'В этих окнах приложение сохранило исходный план без платных мер.' : 'Стоимость назначенных мер включена в денежный итог, даже когда они не дали прироста.'}</p>}
         <div className="replay-chart"><ResponsiveContainer width="100%" height={245}>
-          <LineChart data={cumulative} margin={{top: 15, right: 24, bottom: 4, left: 0}} accessibilityLayer>
+          <AreaChart data={cumulative} margin={{top: 15, right: 24, bottom: 4, left: 0}} accessibilityLayer>
             <CartesianGrid strokeDasharray="3 4" vertical={false}/><XAxis dataKey="period" tickFormatter={periodLabel} minTickGap={35} tick={{fontSize: 11}}/>
             <YAxis domain={[Math.min(0, ...cumulative.map(row => row.value ?? 0)), 'auto']} tick={{fontSize: 11}} width={50}/><ReferenceLine y={0} stroke="#99adb9"/>
             <Tooltip labelFormatter={label => periodLabel(String(label))} formatter={value => [effectMetric !== 'volume' ? `${number(Number(value), 2)} млн ₽` : volume(Number(value)), 'Накопленный результат']}/>
-            <Line dataKey="value" name={effectMetric === 'contribution' ? 'Дополнительный вклад после затрат' : effectMetric === 'vsFixed' ? 'Вклад относительно постоянного резерва' : 'Дополнительный обслуживаемый объём'} stroke="#12796c" strokeWidth={3.5} dot={{r: 4}} connectNulls={false} activeDot={{r: 6}} isAnimationActive={false}/>
-          </LineChart>
+            <Area dataKey="value" name={effectMetric === 'contribution' ? 'Дополнительный вклад после затрат' : effectMetric === 'vsFixed' ? 'Вклад относительно постоянного резерва' : 'Дополнительный обслуживаемый объём'} stroke="#3159e8" fill="#3159e8" fillOpacity={0.13} strokeWidth={3} dot={{r: 4, fill: '#fff', strokeWidth: 2}} connectNulls={false} activeDot={{r: 6}} isAnimationActive={false}/>
+          </AreaChart>
         </ResponsiveContainer></div>
         <p className="replay-summary-caption">Ровный участок означает отсутствие изменения выбранного показателя. Разрыв означает, что окно не оценено из-за отсутствия данных. Сумма учитывает все проверенные окна, включая неудачные.{effectMetric === 'vsFixed' && ' Положительный результат означает преимущество перед платным резервом в каждом окне, а не доказанную экономию относительно реальной политики оператора.'}</p>
       </section>
@@ -220,7 +220,7 @@ export function AnnualHistory() {
   return <details className="replay-annual"><summary>Годовая история морских портов России, 1991–2025</summary>
     <p>Перевалка всех портов России, млн т за год. Расчёт решений выше использует отдельную квартальную историю бассейна.</p>
     <div className="replay-chart"><ResponsiveContainer width="100%" height={230}><LineChart data={annual} accessibilityLayer>
-      <CartesianGrid vertical={false} strokeDasharray="3 4"/><XAxis dataKey="year" minTickGap={30} tick={{fontSize: 11}}/><YAxis tick={{fontSize: 11}} width={50}/><Tooltip formatter={value => [volume(Number(value)), 'Перевалка']}/><Line dataKey="value" stroke="#12796c" strokeWidth={2} dot={false} isAnimationActive={false}/>
+      <CartesianGrid vertical={false} strokeDasharray="3 4"/><XAxis dataKey="year" minTickGap={30} tick={{fontSize: 11}}/><YAxis tick={{fontSize: 11}} width={50}/><Tooltip formatter={value => [volume(Number(value)), 'Перевалка']}/><Line dataKey="value" stroke="#3159e8" strokeWidth={2} dot={false} isAnimationActive={false}/>
     </LineChart></ResponsiveContainer></div>
     <ul>{[
       ['1991–1999 · стратегия Росморпорта', annual[0].sourceUrl],

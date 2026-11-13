@@ -27,7 +27,7 @@ export function CapacityEvidence() {
         <LineChart data={basinRows.map(({year, record}) => ({year, capacity: record?.annualCapacity ?? null}))} margin={{top: 15, right: 25, bottom: 4, left: 0}} accessibilityLayer>
           <CartesianGrid vertical={false} strokeDasharray="3 4"/><XAxis dataKey="year" minTickGap={24} tick={{fontSize: 11}}/><YAxis domain={[0, 'auto']} width={55} tick={{fontSize: 11}}/>
           <Tooltip formatter={value => [`${number(Number(value))} млн т/год`, 'Опубликованная мощность']}/>
-          <Line dataKey="capacity" stroke="#254e6b" strokeWidth={3} dot={{r: 5}} connectNulls={false} isAnimationActive={false}/>
+          <Line dataKey="capacity" stroke="#142745" strokeWidth={3} dot={{r: 5}} connectNulls={false} isAnimationActive={false}/>
         </LineChart>
       </ResponsiveContainer></div>
       <p className="capacity-explanation">Разрыв линии означает отсутствие подтверждённого значения. Между известными годами мощность не интерполируем и не переносим автоматически.</p>
@@ -42,7 +42,7 @@ export function CapacityEvidence() {
       <ResponsiveContainer width="100%" height={270} minWidth={0}><LineChart data={nationalRows} margin={{top: 15, right: 25, bottom: 4, left: 0}} accessibilityLayer>
         <CartesianGrid vertical={false} strokeDasharray="3 4"/><XAxis dataKey="year" minTickGap={30} tick={{fontSize: 11}}/><YAxis domain={[0, 'auto']} width={55} tick={{fontSize: 11}}/>
         <Tooltip formatter={(value, name) => [`${number(Number(value))} млн т/год`, name === 'capacity' ? 'Мощность' : 'Перевалка']}/>
-        <Line dataKey="capacity" stroke="#254e6b" strokeWidth={2.5} dot={false} connectNulls={false} isAnimationActive={false}/><Line dataKey="cargo" stroke="#12796c" strokeWidth={2.5} dot={false} isAnimationActive={false}/>
+        <Line dataKey="capacity" stroke="#142745" strokeWidth={2.5} dot={false} connectNulls={false} isAnimationActive={false}/><Line dataKey="cargo" stroke="#3159e8" strokeWidth={2.5} dot={false} isAnimationActive={false}/>
       </LineChart></ResponsiveContainer>
       <p className="capacity-explanation"><a href={nationalCapacities[0].sourceUrl} target="_blank" rel="noreferrer">АМТП: мощности России за 2000–2024 годы</a> · <a href={nationalCapacities[0].localSourceUrl} target="_blank" rel="noreferrer">Копия графика в проекте</a>. Источники фактической перевалки сохранены в годовом архиве. Значение мощности за 2025 год в этом документе отсутствует.</p>
     </div>

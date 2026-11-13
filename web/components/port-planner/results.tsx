@@ -5,9 +5,9 @@ import type {ActionId, ActionResult, ScenarioResult} from '../../lib/contracts';
 import {dateLabel, number, periodLabel} from './data-panel';
 
 const names: Record<ActionId, string> = {base: 'Исходный план', reserve: 'Резерв', move: 'Перенос ремонта'};
-const ticks = {fill: '#5d7485', fontSize: 11};
-const tooltip = {border: '1px solid #dce6ec', borderRadius: 8, fontSize: 12};
-const grid = <CartesianGrid vertical={false} stroke="#e4ecf1" strokeDasharray="3 3"/>;
+const ticks = {fill: '#637086', fontSize: 11};
+const tooltip = {border: '1px solid #d8dee8', borderRadius: 8, fontSize: 12};
+const grid = <CartesianGrid vertical={false} stroke="#e0e5ed" strokeDasharray="3 3"/>;
 const tons = (value: unknown) => `${number(Number(value))} млн т`;
 const signed = (value: number) => `${value > 0 ? '+' : ''}${number(value, 2)}%`;
 
@@ -34,13 +34,13 @@ export function PlanChart({result, selected}: {result: ScenarioResult; selected:
       <ComposedChart data={rows} margin={{top: 22, right: 24, bottom: 0, left: -22}} accessibilityLayer>
         {grid}<XAxis dataKey="period" tick={ticks} tickLine={false} axisLine={false}/><YAxis domain={[0, 'auto']} tick={ticks} tickLine={false} axisLine={false}/>
         <Tooltip formatter={value => tons(value)} contentStyle={tooltip}/>
-        <Bar dataKey="base" name="Базовый прогноз" fill="#d7e4eb" radius={[4, 4, 0, 0]} maxBarSize={54} isAnimationActive={false}/>
-        <Bar dataKey="covered" name="Нагрузка в пределах мощности" stackId="scenario" fill="#168d80" maxBarSize={54} isAnimationActive={false}/>
-        <Bar dataKey="gap" name="Превышение" stackId="scenario" fill="#d6a45e" radius={[4, 4, 0, 0]} maxBarSize={54} isAnimationActive={false}>
-          <LabelList dataKey="scenario" position="top" fill="#173c52" fontSize={13} formatter={value => number(Number(value))}/>
+        <Bar dataKey="base" name="Базовый прогноз" fill="#cdd5ee" radius={[4, 4, 0, 0]} maxBarSize={54} isAnimationActive={false}/>
+        <Bar dataKey="covered" name="Нагрузка в пределах мощности" stackId="scenario" fill="#3159e8" maxBarSize={54} isAnimationActive={false}/>
+        <Bar dataKey="gap" name="Превышение" stackId="scenario" fill="#f2a344" radius={[4, 4, 0, 0]} maxBarSize={54} isAnimationActive={false}>
+          <LabelList dataKey="scenario" position="top" fill="#17243b" fontSize={13} formatter={value => number(Number(value))}/>
         </Bar>
         <Bar dataKey="capacity" name={selected.available ? 'Доступная мощность' : 'Условная мощность'}
-          fill={selected.available ? '#254e6b' : '#8799a6'} radius={[4, 4, 0, 0]} maxBarSize={54} isAnimationActive={false}/>
+          fill={selected.available ? '#142745' : '#98a1b3'} radius={[4, 4, 0, 0]} maxBarSize={54} isAnimationActive={false}/>
       </ComposedChart>
     </ResponsiveContainer></div>
     <div className="quarter-labels">{rows.map(row => <p key={row.period}>
@@ -95,10 +95,10 @@ function HistoryChart({result, horizon, onHorizon}: {
             {grid}<XAxis dataKey="period" tickFormatter={periodLabel} tick={ticks} tickLine={false} axisLine={false} minTickGap={14}/>
             <YAxis tick={ticks} tickLine={false} axisLine={false} domain={['auto', 'auto']}/>
             <Tooltip formatter={value => tons(value)} labelFormatter={value => periodLabel(String(value))} contentStyle={tooltip}/>
-            {last && <ReferenceLine x={last.period} stroke="#94a9b8" strokeDasharray="3 4" label={{value: 'Срез фактов', position: 'top', fill: '#5d7485', fontSize: 11}}/>}
-            <Line name="Факт" dataKey="actual" stroke="#254e6b" strokeWidth={2.5} dot={{r: 3, fill: '#fff'}} isAnimationActive={false}/>
-            <Line name="Базовый прогноз" dataKey="base" stroke="#778c9b" strokeWidth={2.5} strokeDasharray="6 4" dot={{r: 3}} isAnimationActive={false}/>
-            <Line name="Сценарная нагрузка" dataKey="scenario" stroke="#168d80" strokeWidth={2.5} strokeDasharray="2 3" dot={{r: 4, fill: '#fff'}} isAnimationActive={false}/>
+            {last && <ReferenceLine x={last.period} stroke="#94a9b8" strokeDasharray="3 4" label={{value: 'Срез фактов', position: 'top', fill: '#637086', fontSize: 11}}/>}
+            <Line name="Факт" dataKey="actual" stroke="#142745" strokeWidth={2.5} dot={{r: 3, fill: '#fff'}} isAnimationActive={false}/>
+            <Line name="Базовый прогноз" dataKey="base" stroke="#8c96aa" strokeWidth={2.5} strokeDasharray="6 4" dot={{r: 3}} isAnimationActive={false}/>
+            <Line name="Сценарная нагрузка" dataKey="scenario" stroke="#3159e8" strokeWidth={2.5} strokeDasharray="2 3" dot={{r: 4, fill: '#fff'}} isAnimationActive={false}/>
           </LineChart>
         </ResponsiveContainer></div>
         <div className="observation-grid">
@@ -129,7 +129,7 @@ function MonthlyFacts({result}: {result: ScenarioResult}) {
       <ComposedChart data={result.monthlyHistory} margin={{top: 24, right: 20, left: -15, bottom: 4}} accessibilityLayer>
         {grid}<XAxis dataKey="period" tickFormatter={periodLabel} tick={ticks} axisLine={false} tickLine={false}/><YAxis domain={[0, 'auto']} tick={ticks} axisLine={false} tickLine={false}/>
         <Tooltip labelFormatter={value => periodLabel(String(value))} formatter={value => tons(value)} contentStyle={tooltip}/>
-        <Bar dataKey="value" name="Факт" fill="#315a74" maxBarSize={65} radius={[4, 4, 0, 0]} isAnimationActive={false}><LabelList dataKey="value" position="top" formatter={value => number(Number(value))}/></Bar>
+        <Bar dataKey="value" name="Факт" fill="#142745" maxBarSize={65} radius={[4, 4, 0, 0]} isAnimationActive={false}><LabelList dataKey="value" position="top" formatter={value => number(Number(value))}/></Bar>
       </ComposedChart>
     </ResponsiveContainer></div>
     <div className="table-scroll"><table><thead><tr><th>Месяц</th><th>Объём, млн т</th><th>Опубликовано</th><th>Источник</th></tr></thead><tbody>
@@ -191,8 +191,8 @@ function Verification({result}: {result: ScenarioResult}) {
           <LineChart data={result.backtest.points} margin={{top: 14, right: 17, left: -17, bottom: 3}} accessibilityLayer>
             {grid}<XAxis dataKey="period" tickFormatter={periodLabel} tick={ticks} axisLine={false} tickLine={false}/><YAxis domain={['auto', 'auto']} tick={ticks} axisLine={false} tickLine={false}/>
             <Tooltip labelFormatter={value => periodLabel(String(value))} formatter={value => tons(value)} contentStyle={tooltip}/>
-            <Line name="Факт" dataKey="actual" stroke="#254e6b" strokeWidth={2.5} isAnimationActive={false}/>
-            <Line name="Прогноз" dataKey={method} stroke="#168d80" strokeWidth={2.5} strokeDasharray="5 4" isAnimationActive={false}/>
+            <Line name="Факт" dataKey="actual" stroke="#142745" strokeWidth={2.5} isAnimationActive={false}/>
+            <Line name="Прогноз" dataKey={method} stroke="#3159e8" strokeWidth={2.5} strokeDasharray="5 4" isAnimationActive={false}/>
           </LineChart>
         </ResponsiveContainer></div> : <p className="chart-note">Пока нет сопоставимых контрольных кварталов.</p>}
         <p className="chart-note">{metric?.n ? `Для метода «${metric.label}» на горизонте 1 квартала средний размер ошибки составил ${tons(metric.mae)} по ${metric.n} контрольным кварталам. ` : ''}MAE — средняя абсолютная ошибка в млн т. Это проверка базового прогноза без пользовательской поправки. Для оценки вероятности дефицита этих данных недостаточно.</p>

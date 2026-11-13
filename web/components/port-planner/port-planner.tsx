@@ -2,7 +2,7 @@
 
 import {useEffect, useMemo, useState} from 'react';
 import Link from 'next/link';
-import {ArrowDownToLine, ArrowRight, CalendarDays, CircleHelp, Info, LoaderCircle, RotateCcw, Settings2, TriangleAlert} from 'lucide-react';
+import {ArrowDownToLine, ArrowRight, CalendarDays, CircleHelp, Database, History, Info, LoaderCircle, RotateCcw, Settings2, TrendingUp, TriangleAlert} from 'lucide-react';
 import {BASINS, DEMO_INPUT, moscowDate, type ActionId, type ApiError, type BasinId, type HistoricalDataset, type ScenarioInput, type ScenarioResult} from '../../lib/contracts';
 import {Brand, DataPanel, dateLabel, download, number, periodLabel} from './data-panel';
 import {PlanChart, ScenarioDetails} from './results';
@@ -15,10 +15,10 @@ const STORAGE_KEY = 'port-planner.dataset.v1';
 const SCENARIO_KEY = 'port-planner.scenario.v1';
 type PlannerView = 'forecast' | 'history' | 'replay' | 'data';
 const pages = [
-  {view: 'forecast', href: '/', label: 'Текущий прогноз'},
-  {view: 'history', href: '/history', label: 'История'},
-  {view: 'replay', href: '/retrospective', label: 'Ретроспектива'},
-  {view: 'data', href: '/data', label: 'Данные'},
+  {view: 'forecast', href: '/', label: 'Текущий прогноз', icon: TrendingUp},
+  {view: 'history', href: '/history', label: 'История', icon: History},
+  {view: 'replay', href: '/retrospective', label: 'Ретроспектива', icon: Settings2},
+  {view: 'data', href: '/data', label: 'Данные', icon: Database},
 ] as const;
 const introductions: Record<PlannerView, {title: string; description: string}> = {
   forecast: {title: 'Хватит ли мощности для ожидаемого груза?', description: 'Измените условия. Сравните прогноз перевалки с мощностью и выберите доступные меры.'},
@@ -47,9 +47,9 @@ function validate(input: ScenarioInput) {
   return errors;
 }
 
-function Slider({id, label, unit, value, min, max, onChange, error}: {
+function Slider({id, label, unit, value, min, max, onChange, error, help}: {
   id: string; label: string; unit: string; value: number; min: number; max: number;
-  onChange: (value: number) => void; error?: string;
+  onChange: (value: number) => void; error?: string; help?: string;
 }) {
   const finite = Number.isFinite(value);
   const lower = finite ? Math.min(min, value) : min;
@@ -64,6 +64,7 @@ function Slider({id, label, unit, value, min, max, onChange, error}: {
     <input className="slider" type="range" min={lower} max={upper} step="0.1" value={finite ? value : lower} aria-label={`${label} — ползунок`}
       style={{'--progress': `${progress}%`} as React.CSSProperties} onChange={event => onChange(event.currentTarget.valueAsNumber)}/>
     <div className="slider-limits"><span>{Number.isInteger(lower) ? number(lower, 0) : lower.toLocaleString('ru-RU')}</span><span>{Number.isInteger(upper) ? number(upper, 0) : upper.toLocaleString('ru-RU')}</span></div>
+    {help && <p className="slider-help">{help}</p>}
     {error && <p className="input-error" id={`${id}-error`}>{error}</p>}
   </div>;
 }
@@ -218,16 +219,16 @@ export default function PortPlanner({view = 'forecast'}: {view?: PlannerView}) {
     <header className="topbar">
       <div className="topbar-inner">
         <Brand/>
-        <nav aria-label="Разделы">{pages.map(page => <Link key={page.view} href={page.href} aria-current={view === page.view ? 'page' : undefined}>{page.label}</Link>)}</nav>
+        <nav aria-label="Разделы">{pages.map(page => <Link key={page.view} href={page.href} aria-current={view === page.view ? 'page' : undefined}><page.icon size={16} aria-hidden="true"/>{page.label}</Link>)}</nav>
         {(view === 'forecast' || view === 'history') && <details className="export-menu"><summary className="button" aria-disabled={!result}><ArrowDownToLine size={15}/> Экспорт</summary>
           <div><button disabled={!result} onClick={() => exportResult('memo')}>Записка с выводами</button><button disabled={!result} onClick={() => exportResult('csv')}>Таблица расчёта · CSV</button><button disabled={!result} onClick={() => exportResult('json')}>Полный расчёт · JSON</button></div>
         </details>}
       </div>
     </header>
-    <main id="overview">
+    <main id="overview" className={`page-${view}`}>
       <div className="intro">
-        <div><h1>{introductions[view].title}</h1><p>{introductions[view].description}</p></div>
-        <span className="case-label">Планирование ресурсов<br/><strong>Морские бассейны России</strong></span>
+        <div><div className="page-eyebrow"><span>{String(pages.findIndex(page => page.view === view) + 1).padStart(2, '0')}</span>Рабочее пространство / {pages.find(page => page.view === view)?.label}</div><h1>{introductions[view].title}</h1><p>{introductions[view].description}</p></div>
+        <span className="case-label">КЕЙС А1<br/><strong>Морские бассейны<br/>России</strong></span>
       </div>
       {view === 'forecast' && <>
       <div className="workspace">
@@ -242,8 +243,8 @@ export default function PortPlanner({view = 'forecast'}: {view?: PlannerView}) {
             aria-pressed={archiveExample && input.shockPercent === value && input.basin === 'baltic'}>{value === 0 ? 'Базовый' : value < 0 ? '−5%' : '+5%'}</button>)}</div>
           <Slider id="shockPercent" label="Поправка к прогнозу" unit="%" value={input.shockPercent} min={-15} max={15} error={fieldError('shockPercent')} onChange={value => update('shockPercent', value)}/>
           <Slider id="capacity" label="Мощность без ремонта" unit="млн т" value={input.capacity} min={20} max={100} error={fieldError('capacity')} onChange={value => update('capacity', value)}/>
-          <Slider id="repairLoss" label="Потеря при ремонте" unit="млн т" value={input.repairLoss} min={0} max={15} error={fieldError('repairLoss')} onChange={value => update('repairLoss', value)}/>
-          <Slider id="reserve" label="Доступный резерв" unit="млн т" value={input.reserve} min={0} max={15} error={fieldError('reserve')} onChange={value => update('reserve', value)}/>
+          <Slider id="repairLoss" label="Потеря при ремонте" unit="млн т" value={input.repairLoss} min={0} max={15} help="Ремонт оборудования временно уменьшает объём обработки." error={fieldError('repairLoss')} onChange={value => update('repairLoss', value)}/>
+          <Slider id="reserve" label="Доступный резерв" unit="млн т" value={input.reserve} min={0} max={15} help="Дополнительные ресурсы: например, техника или смены. В модели — прирост мощности." error={fieldError('reserve')} onChange={value => update('reserve', value)}/>
           <details className="advanced"><summary><CalendarDays size={15}/> Дата и сроки согласования</summary>
             <div className="advanced-body">
               <label>Дата решения<input type="date" value={input.asOf} min="2012-01-01" max="2100-12-31" onChange={event => update('asOf', event.currentTarget.value)}/></label>
