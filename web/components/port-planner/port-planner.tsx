@@ -270,6 +270,7 @@ export default function PortPlanner({view = 'forecast'}: {view?: PlannerView}) {
                 <div><span>{input.calendarEnabled ? 'Минимум среди доступных' : 'Минимум при согласовании'}</span><strong className={result.recommendation.residualGap > 0 ? 'warning-text' : 'teal'}>{number(result.recommendation.residualGap)} <small>млн т</small></strong></div>
                 <p>{recommended.id === 'base' ? base.totalGap === 0 ? 'При этих условиях мощности хватает без дополнительных мер.' : 'Доступные меры не снижают превышение.' : `${actionNames[recommended.id]}: ${result.recommendation.fullyCovered ? 'расчётное превышение закрыто.' : 'нужен дополнительный ресурс или другой график.'}`}</p>
               </div>
+              <div className="required-reserve-note"><strong>Чтобы закрыть превышение:</strong> {result.planPeriods.map((period, index) => <span key={period}>{periodLabel(period)} — {number(result.requiredReserve.byPeriod[index])} млн т дополнительной мощности{index < result.planPeriods.length - 1 ? '; ' : '.'}</span>)} <span>Задано {number(input.reserve)} млн т для одного квартала.</span></div>
               <div className="action-cards" aria-label="Сценарии для сравнения на графике">{result.actions.map(item => <button key={item.id} className={item.available ? 'action-card' : 'action-card unavailable'} aria-pressed={selected.id === item.id} onClick={() => setAction({key, id: item.id})}>
                 <span className="action-title">{actionNames[item.id]}{item.id === result.recommendedId && <small>{input.calendarEnabled ? 'Лучший из доступных' : 'Лучший при согласовании'}</small>}</span>
                 <strong>{number(item.totalGap)} <small>{item.available ? 'млн т превышения' : 'млн т, если выполнить'}</small></strong>
@@ -291,6 +292,7 @@ export default function PortPlanner({view = 'forecast'}: {view?: PlannerView}) {
       </div>
       {missingRecentFact && <div className="freshness-note"><Info size={15}/><span>Не хватает факта за {periodLabel(missingRecentFact)}. Если квартальный итог опубликован, <Link href="/data">загрузите CSV</Link>.</span></div>}
       <div className="problem-note"><CircleHelp size={18}/><p>Во время ремонта мощность снижается, и часть ожидаемого объёма может не уместиться в квартальный план. Аналитик проверяет возможное превышение и выбирает, какие меры ещё можно согласовать. Расчёт охватывает бассейн. Для расписания конкретного терминала нужны его мощности и заявки.</p></div>
+      {result && <p className="chart-note">На {result.metrics.n} контрольных кварталах средний размер ошибки сезонного ориентира для горизонта {result.metrics.horizon} кв. составил {number(result.metrics.mae, 2)} млн т. Малое расчётное превышение может быть меньше ошибки прогноза. Поправки ±5% — проверка сценариев, а не доверительный интервал. <Link href="/history">Посмотреть проверку прогноза →</Link></p>}
       </>}
       {view === 'history' && <>
         <div className="panel history-selection">

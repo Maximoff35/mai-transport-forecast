@@ -101,13 +101,28 @@
   },
   {
     "file": "01 Паспорт/Паспорт проекта.pdf",
-    "bytes": 93258,
-    "sha256": "01960fbe2e49ed17df269558ad7aa40cf1697c378f47ff40ffeab64867dce5b9"
+    "bytes": 93638,
+    "sha256": "6737273576ad2226dd86a86a53bc819ffac6ebad00db9da97390ddc8b28d65f5"
   },
   {
     "file": "01 Паспорт/Паспорт — текст для правок.md",
-    "bytes": 8124,
-    "sha256": "48ec63e5ee9b9e5f069dd7eab1c9ae0883365dea2a633f07f5fb3d0a1a278ca5"
+    "bytes": 8888,
+    "sha256": "25bda9675d71615a293e301c3f86dac6a26bca48439aa1dc4e08d040a2932784"
+  },
+  {
+    "file": "02 Защита/Веб — базовый.png",
+    "bytes": 105207,
+    "sha256": "f25a69d436bce758a75c12119c134e8219095aa1e8d5fab187046202fdf04eeb"
+  },
+  {
+    "file": "02 Защита/Веб — нагрузка минус 5.png",
+    "bytes": 108637,
+    "sha256": "46ee3830318e51cd52dacd3d7cec9f70f315e7299462e260f7043c9a81e8bc70"
+  },
+  {
+    "file": "02 Защита/Веб — нагрузка плюс 5.png",
+    "bytes": 109127,
+    "sha256": "aa27ea6dd988e3149257598f94faa5d8f111376fda33211ddca402683dd3e346"
   },
   {
     "file": "02 Защита/Демо — базовый сценарий.jpg",
@@ -126,18 +141,28 @@
   },
   {
     "file": "02 Защита/Защита.pptx",
-    "bytes": 54865,
-    "sha256": "3fe6786bc1bb29ae1dd2f6290130237b84b2c5f1450247e2455654420436f5d2"
+    "bytes": 54967,
+    "sha256": "e6ca919423acaa2fc634fb59c783ff1e5c83f9b3467ed2f014995d4a27223fa6"
   },
   {
     "file": "02 Защита/Карточка защиты.md",
-    "bytes": 6335,
-    "sha256": "3ade1b215254891089b495c70f38b5089ee305c2329020be0ccd894d5014ae69"
+    "bytes": 7842,
+    "sha256": "14df03b48d48ace78677d4ee098dbca2cd528ca017369146262423b5090fa6de"
+  },
+  {
+    "file": "02 Защита/Короткая защита.md",
+    "bytes": 2518,
+    "sha256": "f96a32e1597a40e3294b4b0436a33574e858d6e6f4e724c56d17e0662d95b787"
+  },
+  {
+    "file": "02 Защита/Подготовка команды.md",
+    "bytes": 5234,
+    "sha256": "a7902684c2bfff399addd86f07c3890614abfb7077ee6e46afbd7875bb0b0f8e"
   },
   {
     "file": "02 Защита/Сценарий защиты.md",
-    "bytes": 22433,
-    "sha256": "30380177bec2f124cf8d42e7d0853f0c21d9fa5e222f05c18def975759ac82af"
+    "bytes": 22594,
+    "sha256": "fb59dc8d26dbc1c1941c1a3248f88e0f73fd6a5c67a39e62d62ce04d165cf5ea"
   },
   {
     "file": "03 Инструмент/README.md",
@@ -515,6 +540,11 @@
     "sha256": "43b41714bad058a2eaf3eb2310d96f174b04137a227e42f0357dca9678de2d77"
   },
   {
+    "file": "04 Проверка/Готовность к финалу.md",
+    "bytes": 6890,
+    "sha256": "4bec62bc983da141e975b1b20736130a157940d1ec641712d6120a913bd4a403"
+  },
+  {
     "file": "04 Проверка/Пересчёт 12 ноября.json",
     "bytes": 1698,
     "sha256": "669542ff440106ec88e84fd06d65eb9e2052465701130ed652a0c764501a2d84"
@@ -531,8 +561,8 @@
   },
   {
     "file": "04 Проверка/Проверка веб-приложения.md",
-    "bytes": 3688,
-    "sha256": "d95581939db66d8204206d0dc812221e3164a1dc33372a624744d1f76611c4ea"
+    "bytes": 5761,
+    "sha256": "ac145027ccb7b2211b117544d58dadbef13686e294459ff8566839adcd635729"
   },
   {
     "file": "04 Проверка/Проверка качества.md",
@@ -561,8 +591,8 @@
   },
   {
     "file": "README.md",
-    "bytes": 14241,
-    "sha256": "d7702d3acaf5eae603d852fa33aac6efd3205bf326dc39e087f6c9f0d7e313a9"
+    "bytes": 14699,
+    "sha256": "025b3e222f38c2d7ce672376bd0a848e1f96769c335c9722494e99f03b4dd8bd"
   },
   {
     "file": "web/.gitignore",
@@ -621,8 +651,8 @@
   },
   {
     "file": "web/app/globals.css",
-    "bytes": 23258,
-    "sha256": "3830a6d538954ced988beb7f63bc083e2d684b0acae3e37b770b2eb2d53a670f"
+    "bytes": 23456,
+    "sha256": "60f3413e4a74a7acf5a0d0b1840bde29589a7f0d3bb7ab539027a4e982c13b25"
   },
   {
     "file": "web/app/history/page.tsx",
@@ -656,8 +686,8 @@
   },
   {
     "file": "web/components/port-planner/port-planner.tsx",
-    "bytes": 26265,
-    "sha256": "7af1beff9a2314e1061e36ad59dccbf849588d4cc6b56a292d5c474567d783a4"
+    "bytes": 27370,
+    "sha256": "722bcc175a92563d227eb7436c299b711fe56a55b47927ecc38a7782852740db"
   },
   {
     "file": "web/components/port-planner/replay-panel.tsx",
@@ -676,8 +706,8 @@
   },
   {
     "file": "web/components/port-planner/results.tsx",
-    "bytes": 25360,
-    "sha256": "80c5eb27080ae30481d3d9f83f26a4ef06e634b34a1568c53661e22d9f520a57"
+    "bytes": 25698,
+    "sha256": "3aafe515bd6007b03fcb8733b702b10c4d52262451f4cbd086b0cf2a86657dd2"
   },
   {
     "file": "web/data/.gitattributes",

@@ -44,7 +44,7 @@ export function PlanChart({result, selected}: {result: ScenarioResult; selected:
       </ComposedChart>
     </ResponsiveContainer></div>
     <div className="quarter-labels">{rows.map(row => <p key={row.period}>
-      Мощность <b>{number(row.capacity)}</b> · <b className={row.gap > 0 ? 'warning-text' : 'teal'}>{row.gap > 0 ? `превышение ${number(row.gap)}` : 'мощности хватает'}</b>
+      Нагрузка <b>{number(row.scenario)}</b> · мощность <b>{number(row.capacity)}</b> · <b className={row.gap > 0 ? 'warning-text' : 'teal'}>{row.gap > 0 ? `превышение ${number(row.gap)}` : 'мощности хватает'}</b>
     </p>)}</div>
   </div>;
 }
@@ -175,7 +175,8 @@ function ActionDetails({result}: {result: ScenarioResult}) {
 function Verification({result}: {result: ScenarioResult}) {
   const [horizon, setHorizon] = useState(1);
   const [method, setMethod] = useState('previousYear');
-  const metric = result.backtest.methods.find(row => row.id === 'previous_year' && row.horizon === 1);
+  const metricId = {previousYear: 'previous_year', previousQuarter: 'previous_quarter', mean2y: 'same_quarter_mean_2y'}[method];
+  const metric = result.backtest.methods.find(row => row.id === metricId && row.horizon === 1);
   const comparable = result.policyComparison.filter(row => row.windows > 0);
   const reserveOutperforms = comparable.length > 0 && comparable.every(row => row.alwaysReserve < row.forecastChoice);
   return <section id="verification" className="section">
@@ -194,7 +195,7 @@ function Verification({result}: {result: ScenarioResult}) {
             <Line name="Прогноз" dataKey={method} stroke="#168d80" strokeWidth={2.5} strokeDasharray="5 4" isAnimationActive={false}/>
           </LineChart>
         </ResponsiveContainer></div> : <p className="chart-note">Пока нет сопоставимых контрольных кварталов.</p>}
-        <p className="chart-note">{metric?.n ? `Для базового метода на горизонте 1 квартала MAE составила ${tons(metric.mae)} по ${metric.n} контрольным кварталам. ` : ''}MAE — средняя абсолютная ошибка. Для оценки вероятности дефицита этих данных недостаточно.</p>
+        <p className="chart-note">{metric?.n ? `Для метода «${metric.label}» на горизонте 1 квартала средний размер ошибки составил ${tons(metric.mae)} по ${metric.n} контрольным кварталам. ` : ''}MAE — средняя абсолютная ошибка в млн т. Это проверка базового прогноза без пользовательской поправки. Для оценки вероятности дефицита этих данных недостаточно.</p>
       </div>
       <div className="panel detail-panel">
         <div className="panel-heading"><h3>Сравнение трёх методов</h3><label className="inline-fields">Горизонт<select value={horizon} onChange={event => setHorizon(Number(event.currentTarget.value))}>{[1, 2, 3, 4].map(value => <option key={value} value={value}>{value} кв.</option>)}</select></label></div>
