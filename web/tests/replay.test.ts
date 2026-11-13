@@ -5,6 +5,7 @@ import { calculateReplay, validateReplay, type ReplayResult } from '../lib/repla
 import { VERIFIED_DATASET } from '../lib/seed';
 import { validateUploadedDataset } from '../lib/csv';
 import national from '../data/national-annual.json';
+import { capacityForPeriod, PUBLISHED_CAPACITIES, type AnnualCapacityRecord } from '../lib/capacity';
 
 const request = {
   basin: 'baltic', first: '2026-Q1', last: '2026-Q2', capacity: 68, repairLoss: 4, reserve: 3,
@@ -162,6 +163,114 @@ test('empty replay retains zero aggregates and explicit economic assumptions', (
     assert.deepEqual([row.gap, row.servedVolume, row.reserves, row.contribution], [0,0,0,0]);
     assert.equal(Object.values(row.classificationCounts).reduce((a,b)=>a+b,0),0);
   }
+});
+
+const capacityRecord = (year: number, annualCapacity: number): AnnualCapacityRecord => ({
+  year, measuredYear: year - 1, annualCapacity, asOf: `${year}-01-01`, basin: 'baltic',
+  sourceUrl: 'https://example.test/capacity', publishedOn: `${year}-07-13`,
+});
+
+test('published capacity reconstruction preserves constant-capacity arithmetic and marks late information', () => {
+  const scenario = calculateReplay(VERIFIED_DATASET, validateReplay(request));
+  const published = calculateReplay(VERIFIED_DATASET, validateReplay({...request, capacityMode:'published'}), [capacityRecord(2026,272)]);
+  assert.deepEqual(published.strategies.map(row=>row.gap), scenario.strategies.map(row=>row.gap));
+  assert.deepEqual(published.windows[0].actions, scenario.windows[0].actions);
+  assert.equal(published.capacityMode,'published');
+  assert.equal(published.causalBacktest,false);
+  assert.equal(published.windows[0].capacityKnownAtDecision,false);
+  assert.deepEqual(published.windows[0].capacityQuarterly,[68,68]);
+  assert.equal(published.windows[0].capacityReferences[0].annualCapacity,272);
+  assert.ok(published.capacityAssumptions.some(text=>text.includes('позднее')));
+  assert.equal(scenario.capacityMode,'scenario');
+  assert.equal(scenario.causalBacktest,true);
+});
+
+test('year-specific capacities change the reserve quarter and retain the common calendar rules', () => {
+  const input = validateReplay({...request,first:'2025-Q4',last:'2026-Q1',capacityMode:'published'});
+  const result=calculateReplay(VERIFIED_DATASET,input,[capacityRecord(2025,240),capacityRecord(2026,400)]);
+  const window=result.windows[0];
+  assert.deepEqual(window.capacityQuarterly,[60,100]);
+  assert.deepEqual(window.actions.map(row=>row.capacities),[[60,96],[63,96],[56,100]]);
+  assert.equal(window.actions[1].reservePeriod,'2025-Q4');
+  assert.equal(window.actions[1].deadline,'2025-08-17');
+  assert.equal(window.actions[1].available,true);
+  assert.deepEqual(window.strategies.base.capacities,[60,96]);
+  assert.deepEqual(window.strategies.fixed.capacities,[60,99]);
+  assert.equal(window.strategies.forecast.totalGap,4.4);
+  assert.equal(window.strategies.base.totalGap,7.4);
+  const changed=structuredClone(VERIFIED_DATASET);
+  changed.basins.baltic.find(row=>row.period==='2026-Q1')!.value=500;
+  const rerun=calculateReplay(changed,input,[capacityRecord(2025,240),capacityRecord(2026,400)]);
+  assert.deepEqual(rerun.windows[0].actions,window.actions);
+  assert.equal(rerun.windows[0].strategies.forecast.action,window.strategies.forecast.action);
+});
+
+test('published mode keeps the requested full history and names every missing capacity year', () => {
+  const result=calculateReplay(VERIFIED_DATASET,validateReplay({...request,first:'2012-Q1',capacityMode:'published'}),[capacityRecord(2026,400)]);
+  assert.equal(result.first,'2012-Q1');
+  assert.equal(result.coverage.requestedWindows,29);
+  assert.equal(result.coverage.evaluatedWindows,1);
+  assert.equal(result.coverage.skippedWindows,28);
+  assert.deepEqual(result.coverage.availableCapacityYears,[2026]);
+  assert.deepEqual(result.coverage.missingCapacityYears,Array.from({length:14},(_,i)=>2012+i));
+  assert.ok(result.skipped.some(row=>row.reason.includes('2012')));
+  assert.deepEqual(result.coverage.coveredPeriods,['2026-Q1','2026-Q2']);
+  assert.deepEqual(result.strategies.map(row=>row.gap),[0,0,0]);
+});
+
+test('capacity snapshots apply only to their dated year and reject an invalid snapshot or excessive repair', () => {
+  const record=capacityRecord(2013,303.8);
+  assert.equal(capacityForPeriod([record],'baltic','2012-Q4'),undefined);
+  assert.equal(capacityForPeriod([record],'baltic','2014-Q1'),undefined);
+  assert.equal(capacityForPeriod([record],'baltic','2013-Q1')?.quarterlyEquivalent,75.95);
+  assert.throws(()=>capacityForPeriod([{...record,asOf:'2012-01-01'}],'baltic','2013-Q1'));
+  const tooSmall=calculateReplay(VERIFIED_DATASET,validateReplay({...request,capacityMode:'published'}),[capacityRecord(2026,8)]);
+  assert.equal(tooSmall.windows.length,0);
+  assert.match(tooSmall.skipped[0].reason,/Потеря при ремонте/);
+  assert.throws(()=>validateReplay({...request,capacityMode:'guessed'}),{name:'ValidationError'});
+});
+
+test('the published source archive covers only available capacity years and preserves source provenance', () => {
+  const result=calculateReplay(VERIFIED_DATASET,validateReplay({...request,first:'2012-Q1',capacityMode:'published'}));
+  const sourceYears=[...new Set(PUBLISHED_CAPACITIES.filter(row=>row.basin==='baltic').map(row=>row.year))].sort((a,b)=>a-b);
+  const firstHistoryYear=Number(VERIFIED_DATASET.basins.baltic[0].period.slice(0,4));
+  const completeAvailableYears=sourceYears.filter(year=>year>firstHistoryYear&&year<2026);
+  assert.deepEqual(result.coverage.availableCapacityYears,sourceYears);
+  assert.equal(result.coverage.evaluatedWindows,completeAvailableYears.length*2);
+  assert.equal(result.coverage.requestedWindows,29);
+  assert.equal(result.coverage.evaluatedWindows+result.coverage.skippedWindows,29);
+  const example=result.windows.find(window=>window.periods[0]==='2017-Q1')!;
+  assert.deepEqual(example.capacityQuarterly,[83.625,83.625]);
+  assert.equal(example.capacityReferences[0].annualCapacity,334.5);
+  assert.ok(example.capacityReferences.every(row=>!!row.sourceUrl&&!!row.localSourceUrl));
+  assert.equal(example.capacityKnownAtDecision,false);
+  assert.equal(result.causalBacktest,false);
+});
+
+test('the published 2013 to 2014 boundary applies each sourced annual value to its own year', () => {
+  const result=calculateReplay(VERIFIED_DATASET,validateReplay({...request,first:'2013-Q4',last:'2014-Q1',capacityMode:'published'}));
+  const window=result.windows[0];
+  assert.deepEqual(window.capacityQuarterly,[75.95,76.95]);
+  assert.deepEqual(window.actions[0].capacities,[75.95,72.95]);
+  assert.deepEqual(window.capacityReferences.map(row=>row.year),[2013,2014]);
+  assert.deepEqual(window.capacityReferences.map(row=>row.measuredYear),[2012,2013]);
+  assert.equal(window.capacityKnownAtDecision,false);
+  assert.ok(window.capacityReferences.every(row=>row.publishedOn===null));
+});
+
+test('six sourced capacity snapshots retain exact annual-to-quarter arithmetic for each basin', () => {
+  const expected: Record<number,number[]> = {
+    2012:[73.05,57.75,40.675], 2013:[75.95,64.775,47.025],
+    2014:[76.95,66,47.975], 2017:[83.625,93.35,51],
+    2018:[86.45,95.7,56.575], 2019:[90.35,97.6,59.825],
+  };
+  for(const [year,values] of Object.entries(expected)) {
+    const actual=(['baltic','azov','far_east'] as const).map(basin=>capacityForPeriod(PUBLISHED_CAPACITIES,basin,`${year}-Q1`)?.quarterlyEquivalent);
+    assert.deepEqual(actual,values);
+  }
+  const keys=PUBLISHED_CAPACITIES.map(row=>`${row.basin}:${row.year}`);
+  assert.equal(new Set(keys).size,keys.length);
+  assert.ok(PUBLISHED_CAPACITIES.every(row=>row.unit==='million_tonnes_per_year'&&row.measurement==='installed'));
 });
 
 test('previous browser dataset is backfilled with the new archive', () => {

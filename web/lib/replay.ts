@@ -1,5 +1,6 @@
 import { BASINS, DEMO_INPUT, type ActionId, type ActionResult, type HistoricalDataset, type Observation } from './contracts';
 import { actionSet, choose, validateInput } from './engine';
+import { capacityForPeriod, PUBLISHED_CAPACITIES, PUBLISHED_CAPACITY_ASSUMPTIONS, type AnnualCapacityRecord, type CapacityMode, type CapacityReference } from './capacity';
 
 export const STRATEGIES = {
   base: 'Исходный план',
@@ -20,8 +21,10 @@ function invalid(message: string): never {
 export function validateReplay(raw: unknown) {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) invalid('Укажите параметры ретроспективы.');
   const r = raw as Record<string, unknown>;
+  const capacityMode = r.capacityMode === undefined ? 'scenario' : r.capacityMode;
+  if (capacityMode !== 'scenario' && capacityMode !== 'published') invalid('Режим мощности должен быть scenario или published.');
   const scenario = validateInput({
-    ...DEMO_INPUT, basin: r.basin, capacity: r.capacity, repairLoss: r.repairLoss, reserve: r.reserve,
+    ...DEMO_INPUT, basin: r.basin, capacity: r.capacity === undefined && capacityMode === 'published' ? DEMO_INPUT.capacity : r.capacity, repairLoss: r.repairLoss, reserve: r.reserve,
     reserveLeadDays: r.reserveLeadDays, repairLeadDays: r.repairLeadDays, allowMove: r.allowMove,
   });
   const first = r.first;
@@ -36,7 +39,7 @@ export function validateReplay(raw: unknown) {
     invalid('Для оценки экономики укажите долю от 0 до 100%, тариф, переменные затраты и стоимость обеих мер.');
   }
   const economics = typeof supplied[0] === 'number' ? Object.fromEntries(keys.map((k, i) => [k, supplied[i]])) as Record<typeof keys[number], number> : null;
-  return { scenario, first, last, economics };
+  return { scenario, first, last, economics, capacityMode: capacityMode as CapacityMode };
 }
 
 function summarize(actual: number[], capacities: number[]) {
@@ -61,7 +64,21 @@ type ReplayWindow = {
   predictedChoiceScore: number;
   predictedContributionByAction: Record<ActionId, number | null>;
   choiceReason: string;
+  capacityReferences: CapacityReference[];
+  capacityQuarterly: number[];
+  capacityKnownAtDecision: boolean;
 };
+
+function actionsWithPeriodCapacities(loads: number[], periods: string[], input: ReplayInput['scenario'], capacities: number[]) {
+  // Shift loads to reuse the shared action placement, deadlines and availability.
+  // Moving both load and capacity by the same amount preserves every shortfall.
+  const pivot = capacities[0];
+  const adjustedLoads = loads.map((load, i) => load + pivot - capacities[i]);
+  return actionSet(adjustedLoads, periods, { ...input, capacity: pivot }).map(action => {
+    const adjustedCapacities = action.capacities.map((capacity, i) => round(capacity + capacities[i] - pivot));
+    return { ...action, ...summarize(loads, adjustedCapacities) };
+  });
+}
 
 function measureCost(action: ActionId, economics: ReplayInput['economics']) {
   if (!economics || action === 'base') return 0;
@@ -73,11 +90,12 @@ function expectedContribution(action: ActionId, avoidedGap: number, economics: N
   return recoveredTons * (economics.tariff - economics.variableCost) - measureCost(action, economics);
 }
 
-export function calculateReplay(dataset: HistoricalDataset, input: ReplayInput) {
-  const { scenario, first, last, economics } = input;
+export function calculateReplay(dataset: HistoricalDataset, input: ReplayInput, capacityRecords: readonly AnnualCapacityRecord[] = PUBLISHED_CAPACITIES) {
+  const { scenario, first, last, economics, capacityMode } = input;
   const rows = new Map(dataset.basins[scenario.basin].map(row => [index(row.period), row]));
   const skipped: { first: string; reason: string }[] = [];
   const windows: ReplayWindow[] = [];
+  const missingCapacityYears = new Set<number>();
   for (let q = index(first); q + 1 <= index(last); q += 2) {
     // The last calendar quarter usually publishes after the target starts.
     // Use the most recent quarter actually available before that date.
@@ -85,6 +103,17 @@ export function calculateReplay(dataset: HistoricalDataset, input: ReplayInput) 
     const facts = [rows.get(q), rows.get(q + 1)];
     const refs = [rows.get(q - 4), rows.get(q - 3)];
     const periods = [label(q), label(q + 1)];
+    const capacityReferences: CapacityReference[] = [];
+    if (capacityMode === 'published') {
+      const references = periods.map(period => capacityForPeriod(capacityRecords, scenario.basin, period));
+      const missingYears = [...new Set(periods.filter((_, i) => !references[i]).map(period => Number(period.slice(0, 4))))];
+      if (missingYears.length) {
+        missingYears.forEach(year => missingCapacityYears.add(year));
+        skipped.push({ first: periods[0], reason: `Опубликованная мощность ${BASINS[scenario.basin]} для ${missingYears.join(', ')} неизвестна. Для окна ${periods.join(', ')} нужен подтверждённый годовой показатель, отнесённый к этим годам реконструкции.` });
+        continue;
+      }
+      capacityReferences.push(...references as CapacityReference[]);
+    }
     if (!origin || q + 1 - index(origin.period) > 4 || facts.some(f => !f) || refs.some(ref => !ref || ref.publishedOn > origin.publishedOn)) {
       const missing = [q - 4, q - 3, q, q + 1].filter(n => !rows.has(n)).map(label);
       skipped.push({ first: periods[0], reason: missing.length ? `Нет данных за ${missing.join(', ')}.` : 'К дате решения нет подходящего опубликованного среза для горизонта 1–4 квартала.' });
@@ -94,7 +123,13 @@ export function calculateReplay(dataset: HistoricalDataset, input: ReplayInput) 
     const actual = facts as Observation[];
     const loads = references.map(row => row.value);
     const asOf = origin.publishedOn;
-    const actions = actionSet(loads, periods, { ...scenario, asOf });
+    const capacityQuarterly = capacityMode === 'published'
+      ? capacityReferences.map(row => row.quarterlyEquivalent) : [scenario.capacity, scenario.capacity];
+    if (capacityQuarterly.some(capacity => capacity < scenario.repairLoss)) {
+      skipped.push({ first: periods[0], reason: `Потеря при ремонте ${scenario.repairLoss} млн т превышает квартальный эквивалент мощности в окне ${periods.join(', ')}.` });
+      continue;
+    }
+    const actions = actionsWithPeriodCapacities(loads, periods, { ...scenario, asOf }, capacityQuarterly);
     const predictedContributionByAction: Record<ActionId, number | null> = { base: null, reserve: null, move: null };
     if (economics) {
       for (const action of actions) {
@@ -120,7 +155,7 @@ export function calculateReplay(dataset: HistoricalDataset, input: ReplayInput) 
     const fixedReserve = asOf <= fixedDeadline && scenario.reserve > 0;
     const values = actual.map(row => row.value);
     const base = summarize(values, actions[0].capacities);
-    const fixedCaps = [scenario.capacity, round(scenario.capacity - scenario.repairLoss + (fixedReserve ? scenario.reserve : 0))];
+    const fixedCaps = [capacityQuarterly[0], round(capacityQuarterly[1] - scenario.repairLoss + (fixedReserve ? scenario.reserve : 0))];
     const policies = {
       base: { ...base, action: 'base' as const },
       forecast: { ...summarize(values, selected.capacities), action: selected.id },
@@ -138,7 +173,8 @@ export function calculateReplay(dataset: HistoricalDataset, input: ReplayInput) 
       }];
     })) as ReplayWindow['strategies'];
     windows.push({ periods, asOf, origin, references, actual, actions, strategies, fixedDeadline,
-      predictedChoiceScore, predictedContributionByAction, choiceReason });
+      predictedChoiceScore, predictedContributionByAction, choiceReason, capacityReferences, capacityQuarterly,
+      capacityKnownAtDecision: capacityMode === 'scenario' || capacityReferences.every(row => !!row.publishedOn && row.publishedOn <= asOf) });
   }
   const totalObserved = round(windows.reduce((total, window) => total + window.actual.reduce((sum, row) => sum + row.value, 0), 0));
   const strategies = (Object.keys(STRATEGIES) as Strategy[]).map(id => {
@@ -207,6 +243,19 @@ export function calculateReplay(dataset: HistoricalDataset, input: ReplayInput) 
         (economics.tariff - economics.variableCost) / (fixed.reserves - forecast.reserves)) : null,
   };
   return { basin: BASINS[scenario.basin], first, last, windows, skipped, strategies, economics, scenario, comparison,
+    capacityMode, causalBacktest: capacityMode === 'scenario',
+    capacityAssumptions: capacityMode === 'published' ? [...PUBLISHED_CAPACITY_ASSUMPTIONS] : [
+      'Одинаковая условная мощность применяется к каждому кварталу выбранного диапазона. Ремонт и резерв задаются пользователем.',
+    ],
+    coverage: {
+      requestedWindows: Math.floor((index(last) - index(first) + 1) / 2),
+      evaluatedWindows: windows.length,
+      skippedWindows: skipped.length,
+      missingCapacityYears: [...missingCapacityYears].sort((a,b) => a-b),
+      availableCapacityYears: capacityMode === 'published'
+        ? [...new Set(capacityRecords.filter(row => row.basin === scenario.basin).map(row => row.year))].sort((a,b) => a-b) : [],
+      coveredPeriods: windows.flatMap(window => window.periods),
+    },
     totalObserved, chosenObjective: economics ? 'contribution' as const : 'gap' as const,
     economicAssumptions: economics ? [
       'Дополнительный операционный вклад считается относительно исходного плана для тех же фактических объёмов.',

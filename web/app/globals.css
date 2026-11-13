@@ -41,8 +41,9 @@ main { padding: 23px 0 0; }
 .brand small { display: block; margin-top: 1px; color: var(--muted); font-size: 10px; font-weight: 500; }
 nav { display: flex; gap: 26px; align-self: stretch; align-items: stretch; }
 nav a { display: flex; align-items: center; position: relative; font-size: 13px; color: var(--muted); }
-nav a:hover, nav a:first-child { color: var(--navy); }
-nav a:first-child::after { content: ''; height: 3px; background: var(--teal); position: absolute; inset: auto 0 0; border-radius: 5px 5px 0 0; }
+nav a:hover, nav a[aria-current=page] { color: var(--navy); }
+nav a[aria-current=page] { font-weight: 650; }
+nav a[aria-current=page]::after { content: ''; height: 3px; background: var(--teal); position: absolute; inset: auto 0 0; border-radius: 5px 5px 0 0; }
 .button, .icon-button {
   display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 7px 11px;
   border: 1px solid #cadbe5; border-radius: 7px; color: var(--navy); background: #fff;
@@ -128,6 +129,17 @@ input::-webkit-inner-spin-button, input::-webkit-outer-spin-button { -webkit-app
 input[type=checkbox] { accent-color: var(--teal); }
 .settings-note { display: flex; align-items: flex-start; gap: 5px; color: var(--muted); font-size: 10px; margin-top: 8px; }
 .settings-note svg { margin-top: 1px; }
+.settings-note a { color: var(--teal); text-decoration: underline; }
+.history-selection { display: flex; align-items: center; gap: 20px; padding: 13px 16px; }
+.history-selection label { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; }
+.history-selection select { width: min(330px, 100%); }
+.history-selection > span { color: var(--muted); font-size: 12px; }
+.history-selection a { color: var(--teal); }
+.capacity-evidence-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.capacity-evidence-heading select { max-width: 320px; }
+.capacity-explanation { color: var(--muted); font-size: 12px; margin: 8px 0; }
+.capacity-national { margin: 14px 0; }
+.capacity-chart { width: 100%; min-width: 0; }
 .input-error { color: #a13429; font-size: 11px; margin-top: 4px; }
 .plan-panel { padding: 15px 19px 14px; min-height: 417px; }
 .kicker { color: var(--muted); font-size: 10px; }
@@ -270,7 +282,10 @@ footer { margin-top: 25px; padding: 15px 0; border-top: 1px solid var(--line); d
 }
 @media (max-width: 650px) {
   main, .topbar-inner { width: calc(100% - 24px); }
-  nav { display: none; }
+  .topbar-inner { height: auto; min-height: 62px; flex-wrap: wrap; gap: 8px; padding-top: 10px; }
+  nav { display: flex; gap: 18px; order: 3; flex: 1 0 100%; overflow-x: auto; align-self: auto; padding-bottom: 0; }
+  nav a { white-space: nowrap; min-height: 35px; font-size: 12px; }
+  .history-selection, .history-selection label, .capacity-evidence-heading { flex-wrap: wrap; gap: 8px; }
   main { padding-top: 16px; }
   .intro { margin-bottom: 12px; }
   .intro p { font-size: 12px; }

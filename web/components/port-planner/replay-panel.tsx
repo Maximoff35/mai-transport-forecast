@@ -4,6 +4,7 @@ import {useEffect, useMemo, useRef, useState, type FormEvent} from 'react';
 import {Calculator, ChevronDown, Info} from 'lucide-react';
 import {BASINS, type ApiError, type BasinId, type HistoricalDataset} from '../../lib/contracts';
 import type {ReplayResult} from '../../lib/replay';
+import type {CapacityMode} from '../../lib/capacity';
 import {VERIFIED_DATASET} from '../../lib/seed';
 import {periodLabel} from './data-panel';
 import {ReplayFinancialHeadline, ReplayResults, AnnualHistory} from './replay-results';
@@ -34,6 +35,7 @@ export function ReplayPanel({dataset}: {dataset: HistoricalDataset | null}) {
   const [working, setWorking] = useState(false);
   const [error, setError] = useState('');
   const [economics, setEconomics] = useState(true);
+  const [capacityMode, setCapacityMode] = useState<CapacityMode>('published');
   const [automaticRun, setAutomaticRun] = useState(0);
   const formElement = useRef<HTMLFormElement | null>(null);
   const request = useRef<AbortController | null>(null);
@@ -51,9 +53,10 @@ export function ReplayPanel({dataset}: {dataset: HistoricalDataset | null}) {
     const form = new FormData(event.currentTarget);
     const scenarioFields = ['capacity', 'repairLoss', 'reserve', 'reserveLeadDays', 'repairLeadDays'];
     const body = {
-      basin, first, last, allowMove: form.has('allowMove'), dataset: dataset ?? undefined,
+      basin, first, last, capacityMode, allowMove: form.has('allowMove'), dataset: dataset ?? undefined,
       ...Object.fromEntries(scenarioFields.map(key => [key, Number(form.get(key))])),
       ...Object.fromEntries(economicsFields.map(({key}) => [key, economics ? Number(form.get(key)) : null])),
+      capacity: capacityMode === 'published' ? 68 : Number(form.get('capacity')),
     };
     setWorking(true);
     setError('');
@@ -88,6 +91,7 @@ export function ReplayPanel({dataset}: {dataset: HistoricalDataset | null}) {
     setFirst(data.basins.baltic[0].period);
     setLast(data.basins.baltic.at(-1)!.period);
     setEconomics(true);
+    setCapacityMode('published');
     setError('');
     setResult(null);
     setAutomaticRun(value => value + 1);
@@ -95,7 +99,7 @@ export function ReplayPanel({dataset}: {dataset: HistoricalDataset | null}) {
 
   return <section id="replay" className="replay-section">
     <div className="section-heading">
-      <div><h2>Что изменилось бы с нашим прогнозом</h2><p>Проверяем прошлый период. Решение принимается по данным, известным в тот момент, затем результат сравнивается с опубликованным фактом.</p></div>
+      <div><h2>Что изменилось бы с нашим прогнозом</h2><p>{capacityMode === 'published' ? 'Реконструируем прошлые условия с опубликованной годовой мощностью. История для прогноза ограничена датой решения, сведения о мощности могли появиться позднее.' : 'Проверяем прошлый период при заданной мощности. Прогноз использует известную на дату решения историю, затем результат сравнивается с фактом.'}</p></div>
       <button className="button" type="button" disabled={working} onClick={resetExample}>Сбросить пример</button>
     </div>
     {working && <p className="replay-loading" role="status">Считаем результат на всей доступной истории при выбранных условиях…</p>}
@@ -113,6 +117,19 @@ export function ReplayPanel({dataset}: {dataset: HistoricalDataset | null}) {
           <label>Начало периода<select value={first} onChange={event => setFirst(event.currentTarget.value)}>{quarters.map(quarter => <option key={quarter} value={quarter}>{periodLabel(quarter)}</option>)}</select></label>
           <label>Конец периода<select value={last} onChange={event => setLast(event.currentTarget.value)}>{quarters.map(quarter => <option key={quarter} value={quarter}>{periodLabel(quarter)}</option>)}</select></label>
         </div>
+        <div className="replay-capacity-mode">
+          <label>Мощность в истории<select value={capacityMode} onChange={event => {
+            setCapacityMode(event.currentTarget.value as CapacityMode);
+            setResult(null);
+            setAutomaticRun(value => value + 1);
+          }}>
+            <option value="published">По опубликованной годовой мощности</option>
+            <option value="scenario">Условная мощность</option>
+          </select></label>
+          <p>{capacityMode === 'published'
+            ? 'Годовую мощность из источника делим на четыре и получаем квартальный эквивалент. Для годов без данных окна остаются в диапазоне с отметкой о пропуске. Даты поздних публикаций учитываются в пояснении реконструкции.'
+            : 'Одна и та же заданная мощность используется во всех прошлых кварталах.'} Ремонт, дополнительная мощность и цены задаются для сценария.</p>
+        </div>
         <div className="replay-range-buttons">
           <span>Быстрый выбор</span>
           {[3, 5, 10].map(years => <button key={years} type="button" className="button" onClick={() => chooseRange(years)}>Последние {years} г.</button>)}
@@ -120,9 +137,9 @@ export function ReplayPanel({dataset}: {dataset: HistoricalDataset | null}) {
         </div>
         <details className="replay-assumptions">
           <summary>Условия мощности и ремонта <ChevronDown size={15}/></summary>
-          <p><strong>Мощность</strong> — сколько груза можно обработать за квартал. <strong>Превышение</strong> — объём сверх этой мощности. Во всех прошлых окнах применяются одни и те же заданные условия.</p>
+          <p><strong>Мощность</strong> — сколько груза можно обработать за квартал. <strong>Превышение</strong> — объём сверх этой мощности. {capacityMode === 'published' ? 'Четверть годового показателя — расчётный эквивалент. Для фактической доступности в квартале нужны сведения оператора.' : 'Во всех прошлых окнах применяются одни и те же заданные условия.'}</p>
           <div className="replay-fields">
-            <label>Мощность без ремонта, млн т/кв.<input name="capacity" type="number" required min="0.01" max="1000" step="any" defaultValue={68}/></label>
+            <label hidden={capacityMode === 'published'}>Мощность без ремонта, млн т/кв.<input name="capacity" type={capacityMode === 'published' ? 'hidden' : 'number'} required={capacityMode === 'scenario'} min="0.01" max="1000" step="any" defaultValue={68}/></label>
             <label>Снижение мощности при ремонте, млн т<input name="repairLoss" type="number" required min="0" max="1000" step="any" defaultValue={4}/></label>
             <label>Дополнительная мощность, млн т<input name="reserve" type="number" required min="0" max="1000" step="any" defaultValue={3}/></label>
           </div>
@@ -154,7 +171,7 @@ export function ReplayPanel({dataset}: {dataset: HistoricalDataset | null}) {
       </fieldset>
     </form>
     {error && <p className="import-error" role="alert">{error}</p>}
-    {result && <ReplayResults key={`${result.first}-${result.last}-${result.basin}-${result.chosenObjective}`} result={result}/>}
+    {result && <ReplayResults key={`${result.first}-${result.last}-${result.basin}-${result.chosenObjective}-${result.capacityMode}`} result={result}/>}
     <details className="panel replay-context"><summary><Info size={15}/> Источники, допущения и история отрасли</summary><div>
       <p>Опубликованная перевалка используется как одинаковая нагрузка в двух вариантах. Обработанный объём рассчитывается при заданной мощности. Для подтверждения эффекта в работе оператора нужны его заявки, мощности и фактические затраты.</p>
       <details><summary>Где проверить цены на отдельную услугу</summary><p><a href="https://www.globalports.com/ru/terminals/ust-luga-container-terminal/information-disclosure/" target="_blank" rel="noreferrer">Раскрытие информации УЛКТ</a> содержит тарифные документы. Ставку нужно выбрать для своего груза и схемы обработки. Затраты на тонну и цены дополнительных мер подтверждает оператор.</p></details>

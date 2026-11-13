@@ -1,4 +1,9 @@
 .replay-section .replay-form { padding: 18px 20px; }
+.replay-capacity-mode { display: flex; align-items: flex-start; gap: 18px; padding: 10px 0; border-bottom: 1px solid var(--line); margin-bottom: 10px; }
+.replay-capacity-mode label { flex: 0 0 320px; display: grid; gap: 4px; font-size: 12px; font-weight: 650; }
+.replay-capacity-mode select { height: 36px; }
+.replay-capacity-mode p { font-size: 12px; line-height: 1.65; }
+.replay-fields > [hidden] { display: none; }
 .replay-loading { color: var(--muted); padding: 12px 0; font-size: 13px; }
 .replay-financial-headline { padding: 18px 20px; margin: 14px 0; background: #f6fcf9; border-color: #bdddcf; }
 .replay-financial-main { display: flex; align-items: center; gap: 22px; padding: 14px 0; }
@@ -30,6 +35,10 @@
 .replay-submit { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-top: 10px; }
 .replay-submit > span { font-size: 11px; color: var(--muted); }
 .replay-results { display: grid; gap: 14px; margin-top: 16px; }
+.replay-benchmark-note { display: flex; gap: 20px; align-items: center; padding: 12px; background: #eef6f2; border-top: 1px solid var(--line); margin-top: 12px; }
+.replay-benchmark-note > strong { font-size: 28px; white-space: nowrap; }
+.replay-benchmark-note > p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+.replay-metric-switch { margin-top: 12px; width: fit-content; max-width: 100%; flex-wrap: wrap; }
 .replay-summary, .replay-chart-panel, .replay-example, .replay-alternatives, .replay-money { padding: 18px 20px; min-width: 0; }
 .replay-result-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .replay-result-heading p, .replay-result-heading > span { font-size: 12px; color: var(--muted); margin-top: 4px; }
@@ -94,6 +103,9 @@
 .replay-context details summary { cursor: pointer; color: var(--navy); font-size: 12px; font-weight: 650; }
 .replay-annual li { font-size: 12px; }
 @media (max-width: 650px) {
+  .replay-benchmark-note { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .replay-capacity-mode { flex-direction: column; gap: 8px; }
+  .replay-capacity-mode label { flex-basis: auto; width: 100%; }
   .replay-financial-headline { padding: 13px; }
   .replay-financial-main { flex-wrap: wrap; gap: 12px; }
   .replay-financial-main > p { flex-basis: 100%; margin: 0; padding: 8px 0 0; border-left: 0; border-top: 1px solid #d3e7df; }

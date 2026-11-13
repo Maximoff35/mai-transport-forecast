@@ -136,8 +136,8 @@
   },
   {
     "file": "02 Защита/Сценарий защиты.md",
-    "bytes": 20576,
-    "sha256": "05de1cf8a94f9cdf6cb68411adf8c073a2e1359cb6d17d9699a2464dc8df20c3"
+    "bytes": 22433,
+    "sha256": "30380177bec2f124cf8d42e7d0853f0c21d9fa5e222f05c18def975759ac82af"
   },
   {
     "file": "03 Инструмент/README.md",
@@ -546,8 +546,8 @@
   },
   {
     "file": "04 Проверка/Ретроспектива.md",
-    "bytes": 10082,
-    "sha256": "67ab951a24855b058595e393af526b5105edddb45c3523dec13eadd3de6db757"
+    "bytes": 12138,
+    "sha256": "6ecf87385e962e219a793e836d05ed38e0223666711a2aec8f145087ba33ba8d"
   },
   {
     "file": "04 Проверка/Сдача 10 ноября.md",
@@ -556,13 +556,13 @@
   },
   {
     "file": "04 Проверка/Экономика сценария.md",
-    "bytes": 12789,
-    "sha256": "f84d05788401eb8720b104fbc270c82b3cd9721313ce5fe8d25339af7de095c8"
+    "bytes": 13437,
+    "sha256": "99d448b1821597b6e0b12ad0605313cecd70b2ff1c7a2810cb39953021c0a4db"
   },
   {
     "file": "README.md",
-    "bytes": 12774,
-    "sha256": "427afd6a90480da48756c6c23e936e2c9f0aa914edea8119f021f277b92b1461"
+    "bytes": 14241,
+    "sha256": "d7702d3acaf5eae603d852fa33aac6efd3205bf326dc39e087f6c9f0d7e313a9"
   },
   {
     "file": "web/.gitignore",
@@ -576,8 +576,8 @@
   },
   {
     "file": "web/README.md",
-    "bytes": 7444,
-    "sha256": "c7e839c960a46646135afa5975e5eefe29e5f6ccdad07ae5805b089aa7391cba"
+    "bytes": 9258,
+    "sha256": "8f20cde086d842ec6eaf70170479597b303e98b7156fb99e2786b8e44f762c96"
   },
   {
     "file": "web/app/api/catalog/route.ts",
@@ -615,9 +615,19 @@
     "sha256": "f470ac158f63b05cd7e819e789dfc97bc4502c0f5312ab884b70cd8738e4bb37"
   },
   {
+    "file": "web/app/data/page.tsx",
+    "bytes": 287,
+    "sha256": "c423fde7c4562eedfc883380f71758e9cf9f213e73f435c39962ea149678efad"
+  },
+  {
     "file": "web/app/globals.css",
-    "bytes": 22059,
-    "sha256": "49b4719dc028f6824402f25bb5e8aab07e1ec8f7f328b9d944f7081b0b0488af"
+    "bytes": 23258,
+    "sha256": "3830a6d538954ced988beb7f63bc083e2d684b0acae3e37b770b2eb2d53a670f"
+  },
+  {
+    "file": "web/app/history/page.tsx",
+    "bytes": 309,
+    "sha256": "b0ef0c5638a3a520f0ac282b8b4d7b458588508bab379b7c5b9a5a154eaa2f33"
   },
   {
     "file": "web/app/layout.tsx",
@@ -630,29 +640,39 @@
     "sha256": "28bff2d9a5497fb1c27653a7ec96a0cf5bafdcd8ee638b955e680d2ced33c6e7"
   },
   {
+    "file": "web/app/retrospective/page.tsx",
+    "bytes": 298,
+    "sha256": "256cc1f2fb8278022e60465a4f8b13f64eece8e86840aa00f42ff6a60c3ca1ad"
+  },
+  {
+    "file": "web/components/port-planner/capacity-evidence.tsx",
+    "bytes": 6992,
+    "sha256": "2a9d9b9007e48e58c4cde7cbdad539b245823b93ca7ce9633602f609424856f9"
+  },
+  {
     "file": "web/components/port-planner/data-panel.tsx",
-    "bytes": 7492,
-    "sha256": "17cb27638e2bfef247b65a2499746416fe78b6997e1fd6cdaec07792b530caa1"
+    "bytes": 7521,
+    "sha256": "b39667be93ed2eddfc5b0d4664e7f3d12c109364f807bdb53a5c783ed23ba329"
   },
   {
     "file": "web/components/port-planner/port-planner.tsx",
-    "bytes": 25198,
-    "sha256": "76a68a5c0c3de75734a6a5918bbbde5252fa3a1ca2f462150d22dbe1a3c1f227"
+    "bytes": 26265,
+    "sha256": "7af1beff9a2314e1061e36ad59dccbf849588d4cc6b56a292d5c474567d783a4"
   },
   {
     "file": "web/components/port-planner/replay-panel.tsx",
-    "bytes": 14112,
-    "sha256": "d18cf2aab2b4d4ce384b521d33c5ba8767a5f178f8f977e752de041b839c4ae5"
+    "bytes": 16384,
+    "sha256": "2831e0117ca36b44501044d60bc410a171663f85151d5f7d7e26a326b13fc734"
   },
   {
     "file": "web/components/port-planner/replay-results.tsx",
-    "bytes": 24021,
-    "sha256": "b97fb7244c9733fbc78d9761d1213ff9db3881175141cf362e0ccee36cf152c1"
+    "bytes": 31634,
+    "sha256": "f0f32918924fe5ee5e90b9e26aeca660221c9fed562fb23c7e8c43dea8bd5fdf"
   },
   {
     "file": "web/components/port-planner/replay.css",
-    "bytes": 9895,
-    "sha256": "f4f5890e138dad9763e66bc7a74e264d0bad8bc9b4ff6334226d5a0bd8c29689"
+    "bytes": 10950,
+    "sha256": "47dfbd864457b07edb24c10b07ca7388ec2994bde6fde450a77da94465334159"
   },
   {
     "file": "web/components/port-planner/results.tsx",
@@ -663,6 +683,11 @@
     "file": "web/data/.gitattributes",
     "bytes": 18,
     "sha256": "35e76919bed9c73acafc3e390cc986ae50aa31a5273608f141a87de10dfadd1b"
+  },
+  {
+    "file": "web/data/CAPACITIES.md",
+    "bytes": 8125,
+    "sha256": "013b0042334478d6ae6706204af9d19af34baaf7e7da6c13e3339e2b3b0df8cc"
   },
   {
     "file": "web/data/README.md",
@@ -690,6 +715,11 @@
     "sha256": "2b544bff32148bd084cdbbfaf14f9788221d304ec7a17f00da8669018264b3fa"
   },
   {
+    "file": "web/data/basin-capacities.json",
+    "bytes": 14009,
+    "sha256": "d8b2171ce4687e80f655f4d9c7892ac9bd4c3197c2a1cf48d9872be553f16e35"
+  },
+  {
     "file": "web/data/historical-quarter-totals.json",
     "bytes": 11500,
     "sha256": "d4b07164dfe5f10f78cf7e4f647f3faff31d92f68dea2b7fb528443ee49a76fd"
@@ -705,9 +735,19 @@
     "sha256": "f01166ef7c678f96b52767b587090498b03d6269359c154787c217b0fa0177c1"
   },
   {
+    "file": "web/data/national-capacities.json",
+    "bytes": 15144,
+    "sha256": "f570f43d08315caed6ec0c833f1e1f25e2e4bcb6f64633ca6732a1d622c378fc"
+  },
+  {
     "file": "web/data/verified-quarters.json",
     "bytes": 5852,
     "sha256": "e96914ab327556816ae0748610fb311ef2b3eea39a7b33c40e9b90f976d79a68"
+  },
+  {
+    "file": "web/lib/capacity.ts",
+    "bytes": 3293,
+    "sha256": "01b29dc84bb9a81fae2e6399fdd63d513bdd132b8d10995e1a10b4716c1efa86"
   },
   {
     "file": "web/lib/contracts.ts",
@@ -731,8 +771,8 @@
   },
   {
     "file": "web/lib/replay.ts",
-    "bytes": 14412,
-    "sha256": "f7f4b0e641b2660b6d68fd01f0cdc1507973eaf28f4c066724ac5fba34cf0ff8"
+    "bytes": 18409,
+    "sha256": "790bf09e8b19416afae7957bfcb33eb1c945a2bc07ffdf900b6921601cb24789"
   },
   {
     "file": "web/lib/seed.ts",
@@ -770,6 +810,31 @@
     "sha256": "ee862979727f857d0c268c73cfe98fd207a671ad31dc157bf244175a117d50cd"
   },
   {
+    "file": "web/public/sources/capacity-audit-2020.pdf",
+    "bytes": 364361,
+    "sha256": "eafadd68f966bafafce618ffa0613516e534828bb2b5a1c70b12a3c643f4782a"
+  },
+  {
+    "file": "web/public/sources/capacity-national-2024.pdf",
+    "bytes": 192339,
+    "sha256": "55aaa7ca1b648c1635d083449f4e85ae8330818415abdd8ebafbc524a1224874"
+  },
+  {
+    "file": "web/public/sources/capacity-strategy-2011.pdf",
+    "bytes": 2262367,
+    "sha256": "c092236cec5f703428fac4a08afafab569a69fe23605e0c26305a099bee790ff"
+  },
+  {
+    "file": "web/public/sources/capacity-strategy-2012.pdf",
+    "bytes": 3430172,
+    "sha256": "338d3a90f86d0afa0186ca66930bb5d8f39f1539d6e5baa023b7668eebfe6bc4"
+  },
+  {
+    "file": "web/public/sources/capacity-strategy-2013.pdf",
+    "bytes": 1814823,
+    "sha256": "0c2193cbdc72478e4803ddc74d8b28b76ba7f0d2443bd498e1da75a7f89e9c75"
+  },
+  {
     "file": "web/scripts/test.mjs",
     "bytes": 1049,
     "sha256": "9ab29e1651c9ebeb14c9a7c5778809623d9b33b782aed8cfd4f974091644840e"
@@ -791,8 +856,8 @@
   },
   {
     "file": "web/tests/replay.test.ts",
-    "bytes": 10336,
-    "sha256": "a57cb6c7b271aa25dff7682e7aa7a0bb94a8c693a5389dc3bbffd716b88565df"
+    "bytes": 17393,
+    "sha256": "58640833d8592047dd299edeebe87301d57fea7b5a5e6ae293ac34bd1b6072f1"
   },
   {
     "file": "web/tests/sources.test.ts",

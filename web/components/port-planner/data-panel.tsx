@@ -1,5 +1,6 @@
 import {Anchor, ArrowDownToLine, Database, FileUp, X} from 'lucide-react';
 import {useRef, useState} from 'react';
+import Link from 'next/link';
 import {BASINS, type ApiError, type HistoricalDataset, type ImportPreview} from '../../lib/contracts';
 
 export const number = (value: number, digits = 1) => new Intl.NumberFormat('ru-RU', {
@@ -29,9 +30,9 @@ export function download(name: string, content: string, mime: string) {
 }
 
 export function Brand() {
-  return <a className="brand" href="#planner"><span className="brand-icon"><Anchor size={22}/></span>
+  return <Link className="brand" href="/"><span className="brand-icon"><Anchor size={22}/></span>
     <span>План мощности <small>it plow · Кейс А1</small></span>
-  </a>;
+  </Link>;
 }
 
 export function DataPanel({dataset, onApply, onReset}: {

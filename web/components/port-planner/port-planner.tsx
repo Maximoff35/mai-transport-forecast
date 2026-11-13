@@ -1,14 +1,31 @@
 'use client';
 
 import {useEffect, useMemo, useState} from 'react';
+import Link from 'next/link';
 import {ArrowDownToLine, ArrowRight, CalendarDays, CircleHelp, Info, LoaderCircle, RotateCcw, Settings2, TriangleAlert} from 'lucide-react';
 import {BASINS, DEMO_INPUT, moscowDate, type ActionId, type ApiError, type BasinId, type HistoricalDataset, type ScenarioInput, type ScenarioResult} from '../../lib/contracts';
 import {Brand, DataPanel, dateLabel, download, number, periodLabel} from './data-panel';
 import {PlanChart, ScenarioDetails} from './results';
 import {ReplayPanel} from './replay-panel';
 import {validateUploadedDataset} from '../../lib/csv';
+import {validateInput} from '../../lib/engine';
+import {CapacityEvidence} from './capacity-evidence';
 
 const STORAGE_KEY = 'port-planner.dataset.v1';
+const SCENARIO_KEY = 'port-planner.scenario.v1';
+type PlannerView = 'forecast' | 'history' | 'replay' | 'data';
+const pages = [
+  {view: 'forecast', href: '/', label: 'Текущий прогноз'},
+  {view: 'history', href: '/history', label: 'История'},
+  {view: 'replay', href: '/retrospective', label: 'Ретроспектива'},
+  {view: 'data', href: '/data', label: 'Данные'},
+] as const;
+const introductions: Record<PlannerView, {title: string; description: string}> = {
+  forecast: {title: 'Хватит ли мощности для ожидаемого груза?', description: 'Измените условия. Сравните прогноз перевалки с мощностью и выберите доступные меры.'},
+  history: {title: 'История перевалки и проверка прогноза', description: 'Сравните кварталы и месячные факты. Посмотрите, как прогноз совпадал с опубликованными объёмами.'},
+  replay: {title: 'Что получилось бы с решениями по прогнозу', description: 'Проверка на всей доступной истории с опубликованными мощностями и видимыми пропусками данных.'},
+  data: {title: 'Данные и опубликованные мощности', description: 'Добавьте новые квартальные факты из CSV и проверьте источники годовых мощностей.'},
+};
 const actionNames: Record<ActionId, string> = {base: 'Исходный план', reserve: 'Добавить резерв', move: 'Перенести ремонт'};
 
 function lastCompleteQuarter(asOf: string) {
@@ -59,7 +76,7 @@ type Outcome = {
   fields?: Record<string, string>;
 };
 
-export default function PortPlanner() {
+export default function PortPlanner({view = 'forecast'}: {view?: PlannerView}) {
   const [input, setInput] = useState<ScenarioInput>(DEMO_INPUT);
   const [dataset, setDataset] = useState<HistoricalDataset | null>(null);
   const [archiveExample, setArchiveExample] = useState(false);
@@ -69,13 +86,14 @@ export default function PortPlanner() {
   const [action, setAction] = useState<{key: string; id: ActionId} | null>(null);
   const [storageMessage, setStorageMessage] = useState('');
   const [visibleHorizon, setVisibleHorizon] = useState(4);
+  const [ready, setReady] = useState(false);
   const errors = useMemo(() => validate(input), [input]);
   const valid = !Object.keys(errors).length;
   const activeDataset = archiveExample ? null : dataset;
   const key = JSON.stringify([input, offline, attempt]);
   const current = outcome?.key === key && outcome.dataset === activeDataset ? outcome : null;
   const result = current?.result;
-  const busy = valid && !current;
+  const busy = !ready || (valid && !current);
 
   useEffect(() => {
     try {
@@ -87,11 +105,23 @@ export default function PortPlanner() {
     } catch {
       // A blocked or stale browser store does not affect the bundled dataset.
     }
-    setInput(current => ({...current, asOf: moscowDate()}));
+    try {
+      const storedScenario = sessionStorage.getItem(SCENARIO_KEY);
+      if (storedScenario) {
+        const saved = JSON.parse(storedScenario);
+        setInput(validateInput(saved.input));
+        setArchiveExample(saved.archiveExample === true);
+        setOffline(saved.offline === true);
+        if (Number.isInteger(saved.visibleHorizon) && saved.visibleHorizon >= 1 && saved.visibleHorizon <= 4) setVisibleHorizon(saved.visibleHorizon);
+      } else setInput(current => ({...current, asOf: moscowDate()}));
+    } catch {
+      setInput(current => ({...current, asOf: moscowDate()}));
+    }
+    setReady(true);
   }, []);
 
   useEffect(() => {
-    if (!valid) return;
+    if (!ready || !valid || (view !== 'forecast' && view !== 'history')) return;
     const controller = new AbortController();
     const timer = window.setTimeout(async () => {
       try {
@@ -121,7 +151,16 @@ export default function PortPlanner() {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [input, valid, key, activeDataset, offline]);
+  }, [input, valid, key, activeDataset, offline, ready, view]);
+
+  useEffect(() => {
+    if (!ready || !valid) return;
+    try {
+      sessionStorage.setItem(SCENARIO_KEY, JSON.stringify({input, archiveExample, offline, visibleHorizon}));
+    } catch {
+      // Calculation remains available when session storage is blocked.
+    }
+  }, [input, archiveExample, offline, visibleHorizon, ready, valid]);
 
   function update<K extends keyof ScenarioInput>(field: K, value: ScenarioInput[K]) {
     setInput(current => ({...current, [field]: value}));
@@ -179,25 +218,18 @@ export default function PortPlanner() {
     <header className="topbar">
       <div className="topbar-inner">
         <Brand/>
-        <nav aria-label="Разделы"><a href="#replay">Результат в деньгах</a><a href="#planner">Планирование</a><a href="#history">История</a><a href="#data">Данные</a></nav>
-        <details className="export-menu"><summary className="button" aria-disabled={!result}><ArrowDownToLine size={15}/> Экспорт</summary>
+        <nav aria-label="Разделы">{pages.map(page => <Link key={page.view} href={page.href} aria-current={view === page.view ? 'page' : undefined}>{page.label}</Link>)}</nav>
+        {(view === 'forecast' || view === 'history') && <details className="export-menu"><summary className="button" aria-disabled={!result}><ArrowDownToLine size={15}/> Экспорт</summary>
           <div><button disabled={!result} onClick={() => exportResult('memo')}>Записка с выводами</button><button disabled={!result} onClick={() => exportResult('csv')}>Таблица расчёта · CSV</button><button disabled={!result} onClick={() => exportResult('json')}>Полный расчёт · JSON</button></div>
-        </details>
+        </details>}
       </div>
     </header>
     <main id="overview">
       <div className="intro">
-        <div><h1>Больше обработанного груза. Меньше лишних затрат.</h1><p>Планируем ремонт и резерв заранее. Проверяем решения на прошлых данных и считаем экономический результат.</p></div>
+        <div><h1>{introductions[view].title}</h1><p>{introductions[view].description}</p></div>
         <span className="case-label">Планирование ресурсов<br/><strong>Морские бассейны России</strong></span>
       </div>
-      <section className="plain-context" aria-label="Как возникает экономический эффект">
-        <div><span>1</span><h2>Порт получает деньги за обработку груза</h2><p>Груз привозят поезда и вывозят суда. Перевалка — это перегрузка между ними, иногда через склад.</p></div>
-        <div><span>2</span><h2>Ремонт и поток нужно согласовать</h2><p>Во время ремонта порт может обработать меньше. Запоздалый резерв стоит денег, а лишний резерв тоже нужно оплатить.</p></div>
-        <div><span>3</span><h2>Прогноз помогает выбрать действие заранее</h2><p>Сравниваем ожидаемый доход с затратами и сроками. В истории проверяем, что получилось бы при тех же условиях.</p></div>
-      </section>
-      <details className="context-evidence"><summary>Проблема существует в отрасли? Источники и границы расчёта</summary><p>АМТП 9 декабря 2025 года сообщила: невыполнение согласованных планов перевозок мешало полностью использовать портовые мощности. Это проблема согласования потоков и ресурсов. Наш сценарий проверяет её часть: выбор резерва и времени ремонта. <a href="https://www.morport.com/rus/news/zasedanie-soveta-direktorov-associacii-morskih-torgovyh-portov-5" target="_blank" rel="noreferrer">Публикация АМТП ↗</a></p><p>Историческая перевалка — реальный опубликованный объём. Мощности, ремонт и экономические условия — параметры сценария. Расчёт показывает возможный эффект при этих условиях, а подтверждение на конкретном терминале требует его заявок и затрат.</p></details>
-      <ReplayPanel key={dataset?.snapshot.version ?? 'seed'} dataset={dataset}/>
-      <div className="section-heading planning-heading" id="planner"><div><h2>Как принять решение на следующие кварталы</h2><p>Измените ползунки. Сравним прогноз с доступной мощностью и объясним, какие меры ещё можно согласовать.</p></div></div>
+      {view === 'forecast' && <>
       <div className="workspace">
         <aside className="panel settings-panel" aria-label="Условия сценария">
           <div className="panel-heading"><h2><Settings2 size={17}/> Условия сценария</h2><button className="icon-button" aria-label="Сбросить весь пример" title="Сбросить весь пример" onClick={() => preset(0)}><RotateCcw size={16}/></button></div>
@@ -222,7 +254,7 @@ export default function PortPlanner() {
             </div>
           </details>
           {[fieldError('asOf'), fieldError('reserveLeadDays'), fieldError('repairLeadDays')].filter(Boolean).map((message, index) => <p className="input-error" key={index}>{message}</p>)}
-          <p className="settings-note"><Info size={14}/> Мощность, потери и резерв задаются для сценария, в млн т за квартал.</p>
+          <p className="settings-note"><Info size={14}/><span>Мощность задаётся для <strong>сценария</strong>. Опубликованные годовые мощности и источники — на странице <Link href="/data">«Данные»</Link>.</span></p>
         </aside>
         <section className="panel plan-panel" aria-label="Плановые кварталы" aria-busy={busy}>
           <div className="panel-heading"><div><p className="kicker">Два следующих полных квартала</p><h2>{result ? result.planPeriods.map(periodLabel).join(' — ') : 'Сценарий мощности'}</h2></div>
@@ -230,7 +262,7 @@ export default function PortPlanner() {
           {!valid ? <div className="empty-state"><TriangleAlert size={30}/><h3>Проверьте условия сценария</h3><p>Исправьте отмеченные поля. После этого расчёт обновится.</p></div>
             : busy ? <div className="empty-state"><LoaderCircle className="spin" size={30}/><h3>Считаем сценарий</h3><p>Сопоставляем прогноз и мощность. Проверяем сроки мер.</p></div>
             : current?.error ? <div className="empty-state"><TriangleAlert size={30}/><h3>Расчёт недоступен</h3><p>{current.error}</p><div className="button-group"><button className="button" onClick={() => { setOffline(false); setAttempt(value => value + 1); }}>Повторить запрос</button>{!offline && <button className="button" onClick={() => setOffline(true)}>Продолжить автономно</button>}</div></div>
-            : result && !result.planningAvailable ? <div className="empty-state"><CalendarDays size={30}/><h3>Для этого плана не хватает фактов</h3><p>{result.planningUnavailableReason}</p><div className="button-group"><a className="button primary" href="#data">Добавить факты</a><button className="button" onClick={() => preset(0)}>Открыть архивный пример</button></div></div>
+            : result && !result.planningAvailable ? <div className="empty-state"><CalendarDays size={30}/><h3>Для этого плана не хватает фактов</h3><p>{result.planningUnavailableReason}</p><div className="button-group"><Link className="button primary" href="/data">Добавить факты</Link><button className="button" onClick={() => preset(0)}>Открыть архивный пример</button></div></div>
             : result && selected && base && recommended ? <>
               <PlanChart result={result} selected={selected}/>
               <div className="outcome">
@@ -255,14 +287,25 @@ export default function PortPlanner() {
         {result && <span>Последний факт: {periodLabel(result.snapshot.lastPeriod)} · опубликован {dateLabel(result.snapshot.publicationDate)}</span>}
         {offline && <button className="link-button" onClick={() => setOffline(false)}>Вернуться к серверу</button>}
         {archiveExample && dataset && <button className="link-button" onClick={() => setArchiveExample(false)}>Вернуться к загруженным данным</button>}
-        <a href="#data">Управление данными ↓</a>
+        <Link href="/data">Управление данными →</Link>
       </div>
-      {missingRecentFact && <div className="freshness-note"><Info size={15}/><span>Не хватает факта за {periodLabel(missingRecentFact)}. Если квартальный итог опубликован, <a href="#data">загрузите CSV</a>.</span></div>}
+      {missingRecentFact && <div className="freshness-note"><Info size={15}/><span>Не хватает факта за {periodLabel(missingRecentFact)}. Если квартальный итог опубликован, <Link href="/data">загрузите CSV</Link>.</span></div>}
       <div className="problem-note"><CircleHelp size={18}/><p>Во время ремонта мощность снижается, и часть ожидаемого объёма может не уместиться в квартальный план. Аналитик проверяет возможное превышение и выбирает, какие меры ещё можно согласовать. Расчёт охватывает бассейн. Для расписания конкретного терминала нужны его мощности и заявки.</p></div>
-      <DataPanel dataset={dataset} onApply={applyDataset} onReset={() => applyDataset(null)}/>
-      {storageMessage && <p className="input-error" role="status">{storageMessage}</p>}
-      <ScenarioDetails result={result ?? null} visibleHorizon={visibleHorizon} onVisibleHorizon={setVisibleHorizon}/>
-      <footer><Brand/><a href="#planner">К сценарию ↑</a></footer>
+      </>}
+      {view === 'history' && <>
+        <div className="panel history-selection">
+          <label htmlFor="history-basin">Бассейн<select id="history-basin" value={input.basin} onChange={event => update('basin', event.currentTarget.value as BasinId)}>{Object.entries(BASINS).map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label>
+          <span>Параметры сценария сохранены. <Link href="/">Изменить текущий прогноз →</Link></span>
+        </div>
+        {busy ? <div className="empty-state"><LoaderCircle className="spin" size={24}/><p>Загружаем историю и проверку прогноза…</p></div> : current?.error ? <div className="empty-state"><p>{current.error}</p><button className="button" onClick={() => setAttempt(value => value + 1)}>Повторить</button></div> : <ScenarioDetails result={result ?? null} visibleHorizon={visibleHorizon} onVisibleHorizon={setVisibleHorizon}/>}
+      </>}
+      {view === 'replay' && ready && <ReplayPanel key={dataset?.snapshot.version ?? 'seed'} dataset={dataset}/>}
+      {view === 'data' && <>
+        {ready && <DataPanel dataset={dataset} onApply={applyDataset} onReset={() => applyDataset(null)}/>}
+        {storageMessage && <p className="input-error" role="status">{storageMessage}</p>}
+        <CapacityEvidence/>
+      </>}
+      <footer><Brand/><Link href="/">Текущий прогноз →</Link></footer>
     </main>
   </>;
 }
