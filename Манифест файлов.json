@@ -101,13 +101,13 @@
   },
   {
     "file": "01 Паспорт/Паспорт проекта.pdf",
-    "bytes": 92904,
-    "sha256": "1696e93ec60f6736e975dff4b827b2afb23f38cf7dbc1ff0c97f90f416ad47a5"
+    "bytes": 92961,
+    "sha256": "adde82fadfcdb496158902bf878e18dd7ccdcdb74f63725c0746f0eb3c83bd72"
   },
   {
     "file": "01 Паспорт/Паспорт — текст для правок.md",
-    "bytes": 7007,
-    "sha256": "2e5c72e8640069fdf2c268e3ec718ab6f02b19e7e1a74a18db3df8eb1e0866f9"
+    "bytes": 7075,
+    "sha256": "86e48d873c6c560314e297aeb687139ca57b4ce108c0c6ae118be162369a3393"
   },
   {
     "file": "02 Защита/Демо — базовый сценарий.jpg",
@@ -126,18 +126,18 @@
   },
   {
     "file": "02 Защита/Защита.pptx",
-    "bytes": 50794,
-    "sha256": "47f09bf590864919b5b022b6e06d5a68c45869178a051a4bdfa5a76a276c52ec"
+    "bytes": 50555,
+    "sha256": "d2690e0c9aef484963d9b200aec26167f0aa1ad873ba551a55c3dc12bc8390f8"
   },
   {
     "file": "02 Защита/Карточка защиты.md",
-    "bytes": 17955,
-    "sha256": "6d8d0e5be92057b035ebb1e1ac919d86737031c0b21b7fa8f85e78ddd3bd5593"
+    "bytes": 18377,
+    "sha256": "2ddab46c79bf34841ffa46a48d380ef2c4066d06006369d2b2de901264cb5d66"
   },
   {
     "file": "02 Защита/Сценарий защиты.md",
-    "bytes": 15653,
-    "sha256": "8155625dfc9867c61876a0a7137b6b021b5bcdbadf4771373f9d07566b68f304"
+    "bytes": 15564,
+    "sha256": "097c0f27f7aa46309a8ada0630399f7ae2dee2526fcf819185335626cc959a53"
   },
   {
     "file": "03 Инструмент/README.md",
@@ -545,14 +545,19 @@
     "sha256": "e4d367b1d674700f97aa1f5ffbe03e72c89368962517503eaa1a5a6d3f8e8b00"
   },
   {
+    "file": "04 Проверка/Ретроспектива.md",
+    "bytes": 4682,
+    "sha256": "e2af700b84d6cce853e7d7a622626a79b35c432171c47447ca0061b0fcb18bf6"
+  },
+  {
     "file": "04 Проверка/Сдача 10 ноября.md",
     "bytes": 1869,
     "sha256": "be2d39a0a2fd0e3f85b6920545043e9052b3e55c0b60b137495c3030a51368d0"
   },
   {
     "file": "README.md",
-    "bytes": 9830,
-    "sha256": "418277c7b28db4f3a1305e03025ac7b681b731e5e1634abaaff63f75630601d8"
+    "bytes": 10174,
+    "sha256": "f88d865cd418c082d1e3efdcf00ba155d0526dad9f674d14c3f194452013a9ec"
   },
   {
     "file": "web/.gitignore",
