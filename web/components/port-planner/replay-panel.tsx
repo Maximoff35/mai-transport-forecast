@@ -25,17 +25,22 @@ const EXAMPLE_ECONOMICS = {
   moveCost: 50000000,
 };
 
+function recentStart(rows: HistoricalDataset['basins'][BasinId]) {
+  const firstYear = Number(rows.at(-1)!.period.slice(0, 4)) - 2;
+  return rows.find(row => row.period >= `${firstYear}-Q1`)?.period ?? rows[0].period;
+}
+
 export function ReplayPanel({dataset}: {dataset: HistoricalDataset | null}) {
   const data = dataset ?? VERIFIED_DATASET;
   const initial = data.basins.baltic;
   const [basin, setBasin] = useState<BasinId>('baltic');
-  const [first, setFirst] = useState(initial[0].period);
+  const [first, setFirst] = useState(recentStart(initial));
   const [last, setLast] = useState(initial.at(-1)!.period);
   const [result, setResult] = useState<ReplayResult | null>(null);
   const [working, setWorking] = useState(false);
   const [error, setError] = useState('');
   const [economics, setEconomics] = useState(true);
-  const [capacityMode, setCapacityMode] = useState<CapacityMode>('published');
+  const [capacityMode, setCapacityMode] = useState<CapacityMode>('scenario');
   const [automaticRun, setAutomaticRun] = useState(0);
   const formElement = useRef<HTMLFormElement | null>(null);
   const request = useRef<AbortController | null>(null);
@@ -88,23 +93,24 @@ export function ReplayPanel({dataset}: {dataset: HistoricalDataset | null}) {
   function resetExample() {
     formElement.current?.reset();
     setBasin('baltic');
-    setFirst(data.basins.baltic[0].period);
+    setFirst(recentStart(data.basins.baltic));
     setLast(data.basins.baltic.at(-1)!.period);
     setEconomics(true);
-    setCapacityMode('published');
+    setCapacityMode('scenario');
     setError('');
     setResult(null);
     setAutomaticRun(value => value + 1);
   }
 
-  return <section id="replay" className="replay-section">
+  return <section id="replay" className={`replay-section${result?.economics && result.windows.length ? ' replay-with-money' : ''}`}>
     <div className="section-heading">
-      <div><h2>Что изменилось бы с нашим прогнозом</h2><p>{capacityMode === 'published' ? 'Реконструируем прошлые условия с опубликованной годовой мощностью. История для прогноза ограничена датой решения, сведения о мощности могли появиться позднее.' : 'Проверяем прошлый период при заданной мощности. Прогноз использует известную на дату решения историю, затем результат сравнивается с фактом.'}</p></div>
+      <div><h2>Больше обработанного груза — результат после затрат</h2><p>Готовый пример на реальной истории перевалки. Сначала выбираем действие по прогнозу, затем проверяем его фактом при заданных условиях мощности и затрат.</p></div>
       <button className="button" type="button" disabled={working} onClick={resetExample}>Сбросить пример</button>
     </div>
-    {working && <p className="replay-loading" role="status">Считаем результат на всей доступной истории при выбранных условиях…</p>}
+    {working && <p className="replay-loading" role="status">Считаем результат выбранного периода…</p>}
     {result && <ReplayFinancialHeadline result={result}/>}
-    <form ref={formElement} className="panel replay-form" onSubmit={submit} onChange={() => {setResult(null); setError('');}}>
+    <details className="panel replay-settings"><summary>Изменить период и условия расчёта</summary>
+    <form ref={formElement} className="replay-form" onSubmit={submit} onChange={() => {setResult(null); setError('');}}>
       <fieldset disabled={working}>
         <div className="replay-fields">
           <label>Бассейн<select value={basin} onChange={event => {
@@ -117,7 +123,7 @@ export function ReplayPanel({dataset}: {dataset: HistoricalDataset | null}) {
           <label>Начало периода<select value={first} onChange={event => setFirst(event.currentTarget.value)}>{quarters.map(quarter => <option key={quarter} value={quarter}>{periodLabel(quarter)}</option>)}</select></label>
           <label>Конец периода<select value={last} onChange={event => setLast(event.currentTarget.value)}>{quarters.map(quarter => <option key={quarter} value={quarter}>{periodLabel(quarter)}</option>)}</select></label>
         </div>
-        <div className="replay-capacity-mode">
+        <details className="replay-source-mode"><summary>Дополнительная проверка по годовым мощностям</summary><div className="replay-capacity-mode">
           <label>Мощность в истории<select value={capacityMode} onChange={event => {
             setCapacityMode(event.currentTarget.value as CapacityMode);
             setResult(null);
@@ -129,7 +135,7 @@ export function ReplayPanel({dataset}: {dataset: HistoricalDataset | null}) {
           <p>{capacityMode === 'published'
             ? 'Годовую мощность из источника делим на четыре и получаем квартальный эквивалент. Для годов без данных окна остаются в диапазоне с отметкой о пропуске. Даты поздних публикаций учитываются в пояснении реконструкции.'
             : 'Одна и та же заданная мощность используется во всех прошлых кварталах.'} Ремонт, дополнительная мощность и цены задаются для сценария.</p>
-        </div>
+        </div></details>
         <div className="replay-range-buttons">
           <span>Быстрый выбор</span>
           {[3, 5, 10].map(years => <button key={years} type="button" className="button" onClick={() => chooseRange(years)}>Последние {years} г.</button>)}
@@ -170,6 +176,7 @@ export function ReplayPanel({dataset}: {dataset: HistoricalDataset | null}) {
         <div className="replay-submit"><button className="button primary" type="submit">{working ? 'Проверяем прошлые решения…' : 'Сравнить до и после'}</button><span>{economics ? 'Выбираем меру по ожидаемому дополнительному вкладу' : 'Выбираем меру с наименьшим ожидаемым превышением'}</span></div>
       </fieldset>
     </form>
+    </details>
     {error && <p className="import-error" role="alert">{error}</p>}
     {result && <ReplayResults key={`${result.first}-${result.last}-${result.basin}-${result.chosenObjective}-${result.capacityMode}`} result={result}/>}
     <details className="panel replay-context"><summary><Info size={15}/> Источники, допущения и история отрасли</summary><div>

@@ -146,8 +146,8 @@
   },
   {
     "file": "02 Защита/Карточка защиты.md",
-    "bytes": 7842,
-    "sha256": "14df03b48d48ace78677d4ee098dbca2cd528ca017369146262423b5090fa6de"
+    "bytes": 8111,
+    "sha256": "8c252c7e06c5c15bcc88a11dbd46ed12fee81260096183e7c81609e42363f46f"
   },
   {
     "file": "02 Защита/Короткая защита.md",
@@ -161,8 +161,8 @@
   },
   {
     "file": "02 Защита/Сценарий защиты.md",
-    "bytes": 22594,
-    "sha256": "fb59dc8d26dbc1c1941c1a3248f88e0f73fd6a5c67a39e62d62ce04d165cf5ea"
+    "bytes": 22998,
+    "sha256": "17b2e09b896b78d35eefb8067ddb2e4a505aa673eec9d4788df161292d6faec1"
   },
   {
     "file": "03 Инструмент/README.md",
@@ -561,8 +561,8 @@
   },
   {
     "file": "04 Проверка/Проверка веб-приложения.md",
-    "bytes": 6356,
-    "sha256": "5e14ed4f03721b397e3b2ecbcb2de6e7b095bfe70edbfae88fd540435e124d0a"
+    "bytes": 8415,
+    "sha256": "1241d7b1464fee3863fb762026c3203d669428fe9053aa36c9ab1c96975ca84c"
   },
   {
     "file": "04 Проверка/Проверка качества.md",
@@ -576,8 +576,8 @@
   },
   {
     "file": "04 Проверка/Ретроспектива.md",
-    "bytes": 12138,
-    "sha256": "6ecf87385e962e219a793e836d05ed38e0223666711a2aec8f145087ba33ba8d"
+    "bytes": 13827,
+    "sha256": "03ad74d8c95971bd5724f0cbc952f7b2297a2af32045af426f31ba04bee25a0c"
   },
   {
     "file": "04 Проверка/Сдача 10 ноября.md",
@@ -591,8 +591,8 @@
   },
   {
     "file": "README.md",
-    "bytes": 14699,
-    "sha256": "025b3e222f38c2d7ce672376bd0a848e1f96769c335c9722494e99f03b4dd8bd"
+    "bytes": 15494,
+    "sha256": "4034cc731d223624993bc2c03a12fb617ce9611452ff40c4e648080629b510d0"
   },
   {
     "file": "web/.gitignore",
@@ -606,8 +606,8 @@
   },
   {
     "file": "web/README.md",
-    "bytes": 9258,
-    "sha256": "8f20cde086d842ec6eaf70170479597b303e98b7156fb99e2786b8e44f762c96"
+    "bytes": 10870,
+    "sha256": "7d3f366f6ea423ca84ced412e036ea80438a3b64ecff7e289e93c9776ad2fd8d"
   },
   {
     "file": "web/app/api/catalog/route.ts",
@@ -686,23 +686,23 @@
   },
   {
     "file": "web/components/port-planner/port-planner.tsx",
-    "bytes": 27370,
-    "sha256": "722bcc175a92563d227eb7436c299b711fe56a55b47927ecc38a7782852740db"
+    "bytes": 27435,
+    "sha256": "2ecd1964f4fee0527b4f260e7f74d5475c6aca1fa3630e9bef7808fa17c5a651"
   },
   {
     "file": "web/components/port-planner/replay-panel.tsx",
-    "bytes": 16384,
-    "sha256": "2831e0117ca36b44501044d60bc410a171663f85151d5f7d7e26a326b13fc734"
+    "bytes": 16638,
+    "sha256": "5abae0c612777cd996245a27a705e121be6583b5b51f6138204d7edfdb7e6267"
   },
   {
     "file": "web/components/port-planner/replay-results.tsx",
-    "bytes": 31634,
-    "sha256": "f0f32918924fe5ee5e90b9e26aeca660221c9fed562fb23c7e8c43dea8bd5fdf"
+    "bytes": 32659,
+    "sha256": "9e3ef0333111f5b2e7c6d7d5ae931d7e883b3accba31dcef91820a75de36d3b1"
   },
   {
     "file": "web/components/port-planner/replay.css",
-    "bytes": 10950,
-    "sha256": "47dfbd864457b07edb24c10b07ca7388ec2994bde6fde450a77da94465334159"
+    "bytes": 13284,
+    "sha256": "8f222799e7882e3fb1a093d002d2623ef1104ffd338b0dd116ad426635052916"
   },
   {
     "file": "web/components/port-planner/results.tsx",

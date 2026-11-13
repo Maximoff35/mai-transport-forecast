@@ -35,6 +35,13 @@
 .replay-submit { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-top: 10px; }
 .replay-submit > span { font-size: 11px; color: var(--muted); }
 .replay-results { display: grid; gap: 14px; margin-top: 16px; }
+.replay-settings { margin-top: 12px; }
+.replay-settings > summary, .replay-analysis-details > summary { padding: 12px 18px; cursor: pointer; color: var(--navy); font-size: 13px; font-weight: 650; }
+.replay-settings[open] > summary, .replay-analysis-details[open] > summary { border-bottom: 1px solid var(--line); }
+.replay-analysis-details .replay-summary + .replay-summary { border-top: 1px solid var(--line); }
+.replay-source-mode { font-size: 12px; margin: 10px 0; }
+.replay-source-mode > summary { cursor: pointer; color: var(--muted); }
+.replay-results > .replay-chart-panel { order: -1; }
 .replay-benchmark-note { display: flex; gap: 20px; align-items: center; padding: 12px; background: #eef6f2; border-top: 1px solid var(--line); margin-top: 12px; }
 .replay-benchmark-note > strong { font-size: 28px; white-space: nowrap; }
 .replay-benchmark-note > p { font-size: 12px; color: var(--muted); line-height: 1.6; }
@@ -102,6 +109,28 @@
 .replay-context details { margin-top: 12px; }
 .replay-context details summary { cursor: pointer; color: var(--navy); font-size: 12px; font-weight: 650; }
 .replay-annual li { font-size: 12px; }
+@media (min-width: 1100px) {
+  .replay-with-money { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+  .replay-with-money > .section-heading { grid-column: 1 / -1; }
+  .replay-with-money > .replay-financial-headline { grid-column: 1; grid-row: 2; margin: 0; }
+  .replay-with-money > .replay-settings { grid-column: 1 / -1; grid-row: 3; margin: 0; }
+  .replay-with-money > .replay-context { grid-column: 1 / -1; margin: 0; }
+  .replay-with-money > .replay-results { display: contents; }
+  .replay-with-money > .replay-results > * { grid-column: 1 / -1; }
+  .replay-with-money > .replay-results > .replay-chart-panel { grid-column: 2; grid-row: 2; }
+  .replay-with-money .replay-financial-main { flex-wrap: wrap; gap: 12px; }
+  .replay-with-money .replay-financial-main > p { flex-basis: 100%; margin: 0; padding: 8px 0 0; border-left: 0; border-top: 1px solid #d3e7df; }
+  .replay-with-money .replay-financial-main > p br { display: none; }
+  .replay-with-money .replay-financial-main > p strong { display: inline; font-size: 18px; margin-left: 8px; }
+  .replay-with-money .replay-financial-main > div > strong { font-size: 34px; }
+  .replay-with-money .replay-financial-steps { gap: 8px; }
+  .replay-with-money .replay-financial-steps strong { font-size: 18px; }
+  .replay-with-money .replay-financial-headline > .replay-result-heading { flex-wrap: wrap; gap: 3px; }
+  .replay-with-money .replay-summary-caption { font-size: 11px; line-height: 1.6; }
+  .replay-with-money .replay-chart-panel { display: flex; flex-direction: column; }
+  .replay-with-money .replay-chart-panel .replay-chart { margin-top: auto; }
+  .replay-with-money .replay-metric-switch button { font-size: 11px; padding-inline: 9px; }
+}
 @media (max-width: 650px) {
   .replay-benchmark-note { flex-direction: column; align-items: flex-start; gap: 8px; }
   .replay-capacity-mode { flex-direction: column; gap: 8px; }

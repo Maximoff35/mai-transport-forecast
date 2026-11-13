@@ -26,9 +26,9 @@ export function ReplayFinancialHeadline({result}: {result: ReplayResult}) {
   const fixed = result.strategies.find(row => row.id === 'fixed');
   if (!economics || !after || after.contribution === null || !result.windows.length) return null;
   return <section className="panel replay-financial-headline">
-    <div className="replay-result-heading"><div><h3>{result.capacityMode === 'published' ? 'Денежный результат реконструкции мощности' : 'Сценарный денежный результат'}</h3><p>{result.basin} · {result.windows.length} проверенных окон в диапазоне {periodLabel(result.first)} — {periodLabel(result.last)}</p></div><span>Дополнительный результат к исходному плану</span></div>
+    <div className="replay-result-heading"><div><h3>{result.capacityMode === 'published' ? 'Денежный результат реконструкции мощности' : 'Дополнительный результат после затрат'}</h3><p>{result.basin} · {periodLabel(result.first)} — {periodLabel(result.last)} · все {result.windows.length} проверенных периодов</p></div><span>Сценарная оценка к исходному плану</span></div>
     <div className="replay-financial-main">
-      <div><span>Исходный план</span><strong>0 ₽</strong></div><ArrowRight size={26}/><div><span>Решения с прогнозом</span><strong className={after.contribution >= 0 ? 'replay-positive' : 'replay-negative'}>{after.contribution > 0 ? '+' : ''}{shortMoney(after.contribution)}</strong></div>
+      <div><span>Без дополнительных мер · прирост</span><strong>0 ₽</strong></div><ArrowRight size={26}/><div><span>С решениями по прогнозу · прирост</span><strong className={after.contribution >= 0 ? 'replay-positive' : 'replay-negative'}>{after.contribution > 0 ? '+' : ''}{shortMoney(after.contribution)}</strong></div>
       <p>Дополнительно обслуженный объём в денежном сценарии<br/><strong>{volume((after.recoverableTons ?? 0) / 1e6)}</strong></p>
     </div>
     <div className="replay-financial-steps">
@@ -36,8 +36,8 @@ export function ReplayFinancialHeadline({result}: {result: ReplayResult}) {
       <div><span>Затраты на обработку</span><strong>{shortMoney(after.processingCost ?? 0)}</strong></div><b>−</b>
       <div><span>Дополнительная мощность и переносы</span><strong>{shortMoney(after.measureCost ?? 0)}</strong></div>
     </div>
-    <p className="replay-summary-caption"><strong>Условия сценария.</strong> Цена обработки {currency(economics.tariff)} за тонну, затраты {currency(economics.variableCost)} за тонну, дополнительный объём составляет {number(economics.recoverablePercent, 0)}% сокращённого превышения. Один резерв стоит {shortMoney(economics.reserveCost)}, перенос — {shortMoney(economics.moveCost)}.</p>
-    <p className="replay-summary-caption">Тариф по умолчанию взят из публикации 2025 года для отдельной услуги. Затраты и доля дополнительного объёма — допущения примера. При других вводных меняются выбор мер и денежный результат. Все суммы в одинаковых ценах примера без НДС, до прочих расходов и налогов.</p>
+    <p className="replay-summary-caption"><strong>Пример условий:</strong> {result.capacityMode === 'scenario' ? `мощность ${number(result.scenario.capacity)} млн т/кв., ремонт −${number(result.scenario.repairLoss)}, резерв +${number(result.scenario.reserve)} млн т. ` : 'Годовая мощность из источника / 4. '}В деньги включено {number(economics.recoverablePercent, 0)}% сокращённого превышения. Тариф {currency(economics.tariff)} и обработка {currency(economics.variableCost)} за тонну. Резерв {shortMoney(economics.reserveCost)} за назначение.</p>
+    <p className="replay-summary-caption">История перевалки реальная. Мощность и затраты заданы для сценария; тариф по умолчанию — ориентир из публикации 2025 года для отдельной услуги. Сумма накоплена за указанный период, до прочих расходов и налогов. Это оценка возможного эффекта, не подтверждённая прибыль порта.</p>
     {result.capacityMode === 'published' && <p className="replay-summary-caption"><strong>Покрытие мощности: {result.coverage.evaluatedWindows} из {result.coverage.requestedWindows} окон.</strong> Остальные периоды не включены в денежный итог. Годовая мощность делится на четыре, ремонт и затраты остаются условными.</p>}
     {result.capacityMode === 'published' && fixed && result.comparison.forecastContributionOverFixed !== null && <div className="replay-benchmark-note"><strong className={result.comparison.forecastContributionOverFixed >= 0 ? 'replay-positive' : 'replay-negative'}>{result.comparison.forecastContributionOverFixed > 0 ? '+' : ''}{shortMoney(result.comparison.forecastContributionOverFixed)}</strong><p>Результат относительно правила «резерв при каждом ремонте» при тех же условных ценах. Это сравнение моделей планирования. Стоимость мер: {shortMoney(fixed.measureCost ?? 0)} при постоянном резерве и {shortMoney(after.measureCost ?? 0)} по прогнозу.</p></div>}
   </section>;
@@ -60,7 +60,7 @@ function initialExample(windows: Window[]) {
 
 export function ReplayResults({result}: {result: ReplayResult}) {
   const [active, setActive] = useState(() => initialExample(result.windows));
-  const [effectMetric, setEffectMetric] = useState<'volume' | 'vsFixed'>(() => result.capacityMode === 'published' && result.economics ? 'vsFixed' : 'volume');
+  const [effectMetric, setEffectMetric] = useState<'contribution' | 'volume' | 'vsFixed'>(() => result.economics ? 'contribution' : 'volume');
   const before = result.strategies.find(row => row.id === 'base')!;
   const after = result.strategies.find(row => row.id === 'forecast')!;
   const fixed = result.strategies.find(row => row.id === 'fixed')!;
@@ -76,7 +76,7 @@ export function ReplayResults({result}: {result: ReplayResult}) {
       const lastPeriod = `${Math.floor((q + 1) / 4)}-Q${(q + 1) % 4 + 1}`;
       const item = result.windows.find(point => point.periods[0] === firstPeriod);
       if (!item) return {period: lastPeriod, value: null};
-      avoided += effectMetric === 'vsFixed'
+      avoided += effectMetric === 'contribution' ? (item.strategies.forecast.contribution ?? 0) / 1e6 : effectMetric === 'vsFixed'
         ? ((item.strategies.forecast.contribution ?? 0) - (item.strategies.fixed.contribution ?? 0)) / 1e6
         : item.strategies.base.totalGap - item.strategies.forecast.totalGap;
       return {period: item.periods[1], value: Number(avoided.toFixed(6))};
@@ -87,7 +87,8 @@ export function ReplayResults({result}: {result: ReplayResult}) {
     window.strategies.forecast.totalGap < window.strategies.base.totalGap - EPSILON;
 
   return <div className="replay-results" aria-live="polite">
-    <section className="panel replay-summary">
+    <details className="panel replay-analysis-details"><summary>Подробный расчёт объёма и результаты всех периодов</summary>
+    <section className="replay-summary">
       <h3>{result.capacityMode === 'published' ? 'Откуда взялась мощность каждого периода' : 'Условия мощности в этом сценарии'}</h3>
       {result.capacityMode === 'published' ? <>
         <p className="replay-summary-caption">Для расчёта есть срезы мощности на годы {result.coverage.availableCapacityYears.join(', ')}. Проверено {result.coverage.evaluatedWindows} из {result.coverage.requestedWindows} запрошенных окон. Годы без подтверждённых значений: {result.coverage.missingCapacityYears.join(', ') || 'нет'}.</p>
@@ -95,7 +96,7 @@ export function ReplayResults({result}: {result: ReplayResult}) {
         <details className="replay-money-assumptions"><summary>Источники мощностей по всем годам</summary><CapacityEvidence/></details>
       </> : <p className="replay-summary-caption">Одна мощность {number(result.scenario.capacity)} млн т за квартал применяется ко всей истории. Это проверка выбранных условий, а не реконструкция реальных мощностей прошлых лет. В старые годы поток мог быть меньше заданной мощности. Поэтому отсутствие дополнительного объёма само по себе не оценивает пользу прогнозирования в те годы.</p>}
     </section>
-    <section className="panel replay-summary">
+    <section className="replay-summary">
       <div className="replay-result-heading"><div><h3>{result.basin}</h3><p>{periodLabel(result.first)} — {periodLabel(result.last)} · {result.windows.length} проверенных окон по два квартала</p></div>
         <button className="button" onClick={() => download('retrospective.json', JSON.stringify(result, null, 2), 'application/json;charset=utf-8')}><ArrowDownToLine size={15}/> Скачать расчёт</button></div>
       {!result.windows.length ? <div className="replay-empty"><TriangleAlert size={24}/><p>В этом диапазоне нет окон с достаточной историей для проверки. Расширьте период или добавьте факты.</p></div> : <>
@@ -121,17 +122,18 @@ export function ReplayResults({result}: {result: ReplayResult}) {
       </>}
       {(result.skipped.length > 0 || result.trailingQuarter) && <details className="replay-skipped"><summary>Что не вошло в сравнение</summary><p>Пропущено {result.skipped.length} окон.{result.trailingQuarter && ` Последний квартал ${periodLabel(result.trailingQuarter)} остался без пары.`}</p><ul>{result.skipped.map(item => <li key={item.first}>{periodLabel(item.first)}. {item.reason}</li>)}</ul></details>}
     </section>
+    </details>
     {result.windows.length > 0 && <>
       <section className="panel replay-chart-panel">
-        <div className="replay-result-heading"><div><h3>{effectMetric === 'vsFixed' ? 'Результат относительно постоянного резерва' : 'Дополнительный объём по всей истории'}</h3><p>{effectMetric === 'vsFixed' ? 'Сравниваем вклад после затрат: решения по прогнозу минус резерв при каждом ремонте. Цены мер заданы в условиях.' : 'Накопленное снижение превышения относительно исходного плана.'} Пропущенные периоды показаны разрывами линии.</p></div><span>{effectMetric === 'vsFixed' ? 'млн ₽' : 'млн т'} за проверенные окна</span></div>
-        <div className="segmented replay-metric-switch" aria-label="Показатель исторического результата"><button aria-pressed={effectMetric === 'volume'} onClick={() => setEffectMetric('volume')}>Дополнительный объём</button>{result.economics && <button aria-pressed={effectMetric === 'vsFixed'} onClick={() => setEffectMetric('vsFixed')}>Сравнение с постоянным резервом</button>}</div>
+        <div className="replay-result-heading"><div><h3>{effectMetric === 'contribution' ? 'Как накапливается дополнительный результат' : effectMetric === 'vsFixed' ? 'Результат относительно постоянного резерва' : 'Дополнительный объём по всей истории'}</h3><p>{effectMetric === 'contribution' ? 'Сумма после расходов на обработку и назначенные меры. Каждый период включён в расчёт.' : effectMetric === 'vsFixed' ? 'Сравниваем вклад после затрат: решения по прогнозу минус резерв при каждом ремонте. Цены мер заданы в условиях.' : 'Накопленное снижение превышения относительно исходного плана.'}</p></div><span>{effectMetric === 'volume' ? 'млн т' : 'млн ₽'} за выбранный период</span></div>
+        <div className="segmented replay-metric-switch" aria-label="Показатель исторического результата">{result.economics && <button aria-pressed={effectMetric === 'contribution'} onClick={() => setEffectMetric('contribution')}>Деньги после затрат</button>}<button aria-pressed={effectMetric === 'volume'} onClick={() => setEffectMetric('volume')}>Дополнительный груз</button>{result.economics && <button aria-pressed={effectMetric === 'vsFixed'} onClick={() => setEffectMetric('vsFixed')}>Постоянный резерв</button>}</div>
         {effectMetric === 'volume' && Math.abs(after.avoidedGap) < EPSILON && <p className="replay-summary-caption"><strong>{before.gap === 0 ? 'В проверенных окнах мощности хватало без дополнительных мер.' : 'В проверенных окнах выбранные меры не уменьшили превышение.'}</strong> {after.reserves + after.moves === 0 ? 'В этих окнах приложение сохранило исходный план без платных мер.' : 'Стоимость назначенных мер включена в денежный итог, даже когда они не дали прироста.'}</p>}
         <div className="replay-chart"><ResponsiveContainer width="100%" height={245}>
           <LineChart data={cumulative} margin={{top: 15, right: 24, bottom: 4, left: 0}} accessibilityLayer>
             <CartesianGrid strokeDasharray="3 4" vertical={false}/><XAxis dataKey="period" tickFormatter={periodLabel} minTickGap={35} tick={{fontSize: 11}}/>
-            <YAxis domain={['auto', 'auto']} tick={{fontSize: 11}} width={50}/><ReferenceLine y={0} stroke="#99adb9"/>
-            <Tooltip labelFormatter={label => periodLabel(String(label))} formatter={value => [effectMetric === 'vsFixed' ? `${number(Number(value), 2)} млн ₽` : volume(Number(value)), 'Накопленный результат']}/>
-            <Line dataKey="value" name={effectMetric === 'vsFixed' ? 'Вклад относительно постоянного резерва' : 'Дополнительный обслуживаемый объём'} stroke="#12796c" strokeWidth={3} dot={{r: 3}} connectNulls={false} activeDot={{r: 5}} isAnimationActive={false}/>
+            <YAxis domain={[Math.min(0, ...cumulative.map(row => row.value ?? 0)), 'auto']} tick={{fontSize: 11}} width={50}/><ReferenceLine y={0} stroke="#99adb9"/>
+            <Tooltip labelFormatter={label => periodLabel(String(label))} formatter={value => [effectMetric !== 'volume' ? `${number(Number(value), 2)} млн ₽` : volume(Number(value)), 'Накопленный результат']}/>
+            <Line dataKey="value" name={effectMetric === 'contribution' ? 'Дополнительный вклад после затрат' : effectMetric === 'vsFixed' ? 'Вклад относительно постоянного резерва' : 'Дополнительный обслуживаемый объём'} stroke="#12796c" strokeWidth={3.5} dot={{r: 4}} connectNulls={false} activeDot={{r: 6}} isAnimationActive={false}/>
           </LineChart>
         </ResponsiveContainer></div>
         <p className="replay-summary-caption">Ровный участок означает отсутствие изменения выбранного показателя. Разрыв означает, что окно не оценено из-за отсутствия данных. Сумма учитывает все проверенные окна, включая неудачные.{effectMetric === 'vsFixed' && ' Положительный результат означает преимущество перед платным резервом в каждом окне, а не доказанную экономию относительно реальной политики оператора.'}</p>
