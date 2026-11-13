@@ -141,28 +141,28 @@
   },
   {
     "file": "02 Защита/Защита.pptx",
-    "bytes": 54967,
-    "sha256": "e6ca919423acaa2fc634fb59c783ff1e5c83f9b3467ed2f014995d4a27223fa6"
+    "bytes": 134952,
+    "sha256": "5d39aac8e65873fe7a2a9e47c9ceaf7cc6ff743299ca6252d6c6f353269fa431"
   },
   {
     "file": "02 Защита/Карточка защиты.md",
-    "bytes": 8111,
-    "sha256": "8c252c7e06c5c15bcc88a11dbd46ed12fee81260096183e7c81609e42363f46f"
+    "bytes": 6535,
+    "sha256": "3ec9e5caf188788777009df84e12e84191f984fd74f5e755d2f3f5e752685a15"
   },
   {
     "file": "02 Защита/Короткая защита.md",
     "bytes": 2518,
-    "sha256": "f96a32e1597a40e3294b4b0436a33574e858d6e6f4e724c56d17e0662d95b787"
+    "sha256": "4cd1c8951b12542ffbe01bd225beae9e3d041bfc851ddd0591bdb063d7ccc6a2"
   },
   {
     "file": "02 Защита/Подготовка команды.md",
-    "bytes": 5234,
-    "sha256": "a7902684c2bfff399addd86f07c3890614abfb7077ee6e46afbd7875bb0b0f8e"
+    "bytes": 5671,
+    "sha256": "c42a1edd0b9a28caf7e097ef7760852f3bbfceccf7f5d152b2eec0714ac1c8a7"
   },
   {
     "file": "02 Защита/Сценарий защиты.md",
-    "bytes": 22998,
-    "sha256": "17b2e09b896b78d35eefb8067ddb2e4a505aa673eec9d4788df161292d6faec1"
+    "bytes": 25181,
+    "sha256": "38edecf089b0b226824a9ea2e5415dd0522feb3263456fd791e78dc841fb848f"
   },
   {
     "file": "03 Инструмент/README.md",
@@ -561,8 +561,8 @@
   },
   {
     "file": "04 Проверка/Проверка веб-приложения.md",
-    "bytes": 8415,
-    "sha256": "1241d7b1464fee3863fb762026c3203d669428fe9053aa36c9ab1c96975ca84c"
+    "bytes": 8581,
+    "sha256": "4fece0f9a9b135f6a5b6e75fb779c0ae769af1b75037cca29693fb1c6f32b39e"
   },
   {
     "file": "04 Проверка/Проверка качества.md",
