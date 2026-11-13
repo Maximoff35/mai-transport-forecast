@@ -179,17 +179,25 @@ export default function PortPlanner() {
     <header className="topbar">
       <div className="topbar-inner">
         <Brand/>
-        <nav aria-label="Разделы"><a href="#planner">Сценарий</a><a href="#history">История и прогноз</a><a href="#replay">Ретроспектива</a><a href="#data">Данные</a></nav>
+        <nav aria-label="Разделы"><a href="#replay">Результат в деньгах</a><a href="#planner">Планирование</a><a href="#history">История</a><a href="#data">Данные</a></nav>
         <details className="export-menu"><summary className="button" aria-disabled={!result}><ArrowDownToLine size={15}/> Экспорт</summary>
           <div><button disabled={!result} onClick={() => exportResult('memo')}>Записка с выводами</button><button disabled={!result} onClick={() => exportResult('csv')}>Таблица расчёта · CSV</button><button disabled={!result} onClick={() => exportResult('json')}>Полный расчёт · JSON</button></div>
         </details>
       </div>
     </header>
-    <main id="planner">
+    <main id="overview">
       <div className="intro">
-        <div><h1>Хватит ли мощности для ожидаемого груза?</h1><p>Сравните прогноз перевалки с мощностью после ремонта. Проверьте, помогут ли резерв или перенос работ.</p></div>
+        <div><h1>Больше обработанного груза. Меньше лишних затрат.</h1><p>Планируем ремонт и резерв заранее. Проверяем решения на прошлых данных и считаем экономический результат.</p></div>
         <span className="case-label">Планирование ресурсов<br/><strong>Морские бассейны России</strong></span>
       </div>
+      <section className="plain-context" aria-label="Как возникает экономический эффект">
+        <div><span>1</span><h2>Порт получает деньги за обработку груза</h2><p>Груз привозят поезда и вывозят суда. Перевалка — это перегрузка между ними, иногда через склад.</p></div>
+        <div><span>2</span><h2>Ремонт и поток нужно согласовать</h2><p>Во время ремонта порт может обработать меньше. Запоздалый резерв стоит денег, а лишний резерв тоже нужно оплатить.</p></div>
+        <div><span>3</span><h2>Прогноз помогает выбрать действие заранее</h2><p>Сравниваем ожидаемый доход с затратами и сроками. В истории проверяем, что получилось бы при тех же условиях.</p></div>
+      </section>
+      <details className="context-evidence"><summary>Проблема существует в отрасли? Источники и границы расчёта</summary><p>АМТП 9 декабря 2025 года сообщила: невыполнение согласованных планов перевозок мешало полностью использовать портовые мощности. Это проблема согласования потоков и ресурсов. Наш сценарий проверяет её часть: выбор резерва и времени ремонта. <a href="https://www.morport.com/rus/news/zasedanie-soveta-direktorov-associacii-morskih-torgovyh-portov-5" target="_blank" rel="noreferrer">Публикация АМТП ↗</a></p><p>Историческая перевалка — реальный опубликованный объём. Мощности, ремонт и экономические условия — параметры сценария. Расчёт показывает возможный эффект при этих условиях, а подтверждение на конкретном терминале требует его заявок и затрат.</p></details>
+      <ReplayPanel key={dataset?.snapshot.version ?? 'seed'} dataset={dataset}/>
+      <div className="section-heading planning-heading" id="planner"><div><h2>Как принять решение на следующие кварталы</h2><p>Измените ползунки. Сравним прогноз с доступной мощностью и объясним, какие меры ещё можно согласовать.</p></div></div>
       <div className="workspace">
         <aside className="panel settings-panel" aria-label="Условия сценария">
           <div className="panel-heading"><h2><Settings2 size={17}/> Условия сценария</h2><button className="icon-button" aria-label="Сбросить весь пример" title="Сбросить весь пример" onClick={() => preset(0)}><RotateCcw size={16}/></button></div>
@@ -254,7 +262,6 @@ export default function PortPlanner() {
       <DataPanel dataset={dataset} onApply={applyDataset} onReset={() => applyDataset(null)}/>
       {storageMessage && <p className="input-error" role="status">{storageMessage}</p>}
       <ScenarioDetails result={result ?? null} visibleHorizon={visibleHorizon} onVisibleHorizon={setVisibleHorizon}/>
-      <ReplayPanel key={dataset?.snapshot.version ?? 'seed'} dataset={dataset}/>
       <footer><Brand/><a href="#planner">К сценарию ↑</a></footer>
     </main>
   </>;

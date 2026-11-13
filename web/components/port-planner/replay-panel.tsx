@@ -1,153 +1,164 @@
 'use client';
 
-import { useMemo, useState, type FormEvent } from 'react';
-import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { BASINS, type ApiError, type BasinId, type HistoricalDataset } from '../../lib/contracts';
-import { STRATEGIES, type ReplayResult } from '../../lib/replay';
-import { VERIFIED_DATASET } from '../../lib/seed';
-import annual from '../../data/national-annual.json';
-import { dateLabel, download, number, periodLabel } from './data-panel';
+import {useEffect, useMemo, useRef, useState, type FormEvent} from 'react';
+import {Calculator, ChevronDown, Info} from 'lucide-react';
+import {BASINS, type ApiError, type BasinId, type HistoricalDataset} from '../../lib/contracts';
+import type {ReplayResult} from '../../lib/replay';
+import {VERIFIED_DATASET} from '../../lib/seed';
+import {periodLabel} from './data-panel';
+import {ReplayFinancialHeadline, ReplayResults, AnnualHistory} from './replay-results';
+import './replay.css';
 
-const prices = [
-  ['recoverablePercent', 'Доля дефицита, соответствующая дополнительным заявкам, %'],
-  ['tariff', 'Тариф за обработанную тонну, ₽'],
-  ['variableCost', 'Переменные затраты на тонну, ₽'],
-  ['reserveCost', 'Стоимость одного назначения резерва, ₽'],
-  ['moveCost', 'Дополнительные затраты на один перенос, ₽'],
+const economicsFields = [
+  {key: 'tariff', label: 'Цена обработки тонны', unit: '₽/т', maximum: 1e6, hint: 'Сколько оператор получает за обработанную тонну.'},
+  {key: 'variableCost', label: 'Затраты на обработку тонны', unit: '₽/т', maximum: 1e6, hint: 'Расходы, которые возникают при обработке дополнительной тонны.'},
+  {key: 'recoverablePercent', label: 'Какая доля превышения даёт дополнительный груз', unit: '%', maximum: 100, hint: 'Какую часть расчётного превышения можно превратить в оплаченные заявки.'},
+  {key: 'reserveCost', label: 'Цена дополнительной мощности за квартал', unit: '₽', maximum: 1e12, hint: 'Полная цена одного подключения заданного резерва.'},
+  {key: 'moveCost', label: 'Цена одного переноса ремонта', unit: '₽', maximum: 1e12, hint: 'Дополнительные расходы на изменение графика работ.'},
 ] as const;
-const actions = { base: 'Исходный план', reserve: 'Резерв', move: 'Перенос' };
-const rubles = (value: number | null) => value === null ? '—' : `${number(value, 0)} ₽`;
-const datasets = [
-  ['1991–1999: стратегия Росморпорта', annual[0].sourceUrl],
-  ['2000–2024: статистика АСОП', annual[9].sourceUrl],
-  ['2025: годовой выпуск АСОП', annual.at(-1)!.sourceUrl],
-];
+const EXAMPLE_ECONOMICS = {
+  tariff: 1391,
+  variableCost: 1000,
+  recoverablePercent: 25,
+  reserveCost: 100000000,
+  moveCost: 50000000,
+};
 
-export function ReplayPanel({ dataset }: { dataset: HistoricalDataset | null }) {
+export function ReplayPanel({dataset}: {dataset: HistoricalDataset | null}) {
+  const data = dataset ?? VERIFIED_DATASET;
+  const initial = data.basins.baltic;
   const [basin, setBasin] = useState<BasinId>('baltic');
-  const initialQuarters = (dataset ?? VERIFIED_DATASET).basins.baltic;
-  const [first, setFirst] = useState(initialQuarters.at(-2)!.period);
-  const [last, setLast] = useState(initialQuarters.at(-1)!.period);
+  const [first, setFirst] = useState(initial[0].period);
+  const [last, setLast] = useState(initial.at(-1)!.period);
   const [result, setResult] = useState<ReplayResult | null>(null);
-  const [active, setActive] = useState(0);
   const [working, setWorking] = useState(false);
   const [error, setError] = useState('');
-  const [economy, setEconomy] = useState(false);
-  const quarters = useMemo(() => (dataset ?? VERIFIED_DATASET).basins[basin].map(row => row.period), [basin, dataset]);
-  const window = result?.windows[active];
-  const chart = window?.periods.map((period, i) => ({
-    period: periodLabel(period), forecast: window.references[i].value, actual: window.actual[i].value,
-    base: window.strategies.base.capacities[i], selected: window.strategies.forecast.capacities[i],
-  }));
+  const [economics, setEconomics] = useState(true);
+  const [automaticRun, setAutomaticRun] = useState(0);
+  const formElement = useRef<HTMLFormElement | null>(null);
+  const request = useRef<AbortController | null>(null);
+  const quarters = useMemo(() => data.basins[basin].map(row => row.period), [basin, data]);
+  useEffect(() => {
+    const timer = window.setTimeout(() => formElement.current?.requestSubmit(), 0);
+    return () => { window.clearTimeout(timer); request.current?.abort(); };
+  }, [automaticRun]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    request.current?.abort();
+    const controller = new AbortController();
+    request.current = controller;
     const form = new FormData(event.currentTarget);
-    const numeric = ['capacity', 'repairLoss', 'reserve', 'reserveLeadDays', 'repairLeadDays'];
+    const scenarioFields = ['capacity', 'repairLoss', 'reserve', 'reserveLeadDays', 'repairLeadDays'];
     const body = {
       basin, first, last, allowMove: form.has('allowMove'), dataset: dataset ?? undefined,
-      ...Object.fromEntries(numeric.map(key => [key, Number(form.get(key))])),
-      ...Object.fromEntries(prices.map(([key]) => [key, economy ? Number(form.get(key)) : null])),
+      ...Object.fromEntries(scenarioFields.map(key => [key, Number(form.get(key))])),
+      ...Object.fromEntries(economicsFields.map(({key}) => [key, economics ? Number(form.get(key)) : null])),
     };
     setWorking(true);
     setError('');
     setResult(null);
     try {
       const response = await fetch('/api/replay', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body), signal: controller.signal,
       });
       const payload = await response.json() as ReplayResult | ApiError;
       if ('error' in payload) throw new Error(payload.error.message);
-      if (!response.ok) throw new Error('Сервер не вернул расчёт.');
-      setActive(payload.windows.length - 1);
-      setResult(payload);
+      if (!response.ok) throw new Error('Сервер не вернул расчёт. Повторите запрос.');
+      if (!controller.signal.aborted) setResult(payload);
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : 'Повторите запрос.');
+      if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : 'Не удалось выполнить расчёт.');
     } finally {
-      setWorking(false);
+      if (!controller.signal.aborted) setWorking(false);
     }
   }
 
+  function chooseRange(years: number | null) {
+    const end = quarters.at(-1)!;
+    const minimumYear = years === null ? null : Number(end.slice(0, 4)) - years + 1;
+    setFirst(minimumYear === null ? quarters[0] : quarters.find(quarter => quarter >= `${minimumYear}-Q1`) ?? quarters[0]);
+    setLast(end);
+    setResult(null);
+  }
+
+  function resetExample() {
+    formElement.current?.reset();
+    setBasin('baltic');
+    setFirst(data.basins.baltic[0].period);
+    setLast(data.basins.baltic.at(-1)!.period);
+    setEconomics(true);
+    setError('');
+    setResult(null);
+    setAutomaticRun(value => value + 1);
+  }
+
   return <section id="replay" className="replay-section">
-    <h2>Ретроспектива решений</h2>
-    <p>Выберите прошлый период. Для каждого двухквартального окна приложение сначала принимает решение по доступному тогда прогнозу, затем подставляет опубликованный факт.</p>
-    <form className="panel replay-form" onSubmit={submit} onChange={() => setResult(null)}>
+    <div className="section-heading">
+      <div><h2>Что изменилось бы с нашим прогнозом</h2><p>Проверяем прошлый период. Решение принимается по данным, известным в тот момент, затем результат сравнивается с опубликованным фактом.</p></div>
+      <button className="button" type="button" disabled={working} onClick={resetExample}>Сбросить пример</button>
+    </div>
+    {working && <p className="replay-loading" role="status">Считаем результат на всей доступной истории при выбранных условиях…</p>}
+    {result && <ReplayFinancialHeadline result={result}/>}
+    <form ref={formElement} className="panel replay-form" onSubmit={submit} onChange={() => {setResult(null); setError('');}}>
       <fieldset disabled={working}>
         <div className="replay-fields">
-          <label>Бассейн<select value={basin} onChange={e => setBasin(e.target.value as BasinId)}>{Object.entries(BASINS).map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select></label>
-          <label>Первый квартал<select value={first} onChange={e => setFirst(e.target.value)}>{quarters.map(q => <option key={q} value={q}>{periodLabel(q)}</option>)}</select></label>
-          <label>Последний квартал<select value={last} onChange={e => setLast(e.target.value)}>{quarters.map(q => <option key={q} value={q}>{periodLabel(q)}</option>)}</select></label>
+          <label>Бассейн<select value={basin} onChange={event => {
+            const id = event.currentTarget.value as BasinId;
+            const available = data.basins[id];
+            setBasin(id);
+            if (!available.some(row => row.period === first)) setFirst(available[0].period);
+            if (!available.some(row => row.period === last)) setLast(available.at(-1)!.period);
+          }}>{Object.entries(BASINS).map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select></label>
+          <label>Начало периода<select value={first} onChange={event => setFirst(event.currentTarget.value)}>{quarters.map(quarter => <option key={quarter} value={quarter}>{periodLabel(quarter)}</option>)}</select></label>
+          <label>Конец периода<select value={last} onChange={event => setLast(event.currentTarget.value)}>{quarters.map(quarter => <option key={quarter} value={quarter}>{periodLabel(quarter)}</option>)}</select></label>
         </div>
-        <div className="button-group" aria-label="Быстрый выбор диапазона">
-          {[3, 5, 10].map(years => <button key={years} type="button" className="button" onClick={() => {
-            const end = quarters.at(-1)!;
-            const minYear = Number(end.slice(0, 4)) - years + 1;
-            const start = quarters.find(q => q >= `${minYear}-Q1`) ?? quarters[0];
-            setFirst(start); setLast(end); setResult(null);
-          }}>Последние {years} г.</button>)}
-          <button type="button" className="button" onClick={() => {setFirst(quarters[0]);setLast(quarters.at(-1)!);setResult(null);}}>Весь архив</button>
+        <div className="replay-range-buttons">
+          <span>Быстрый выбор</span>
+          {[3, 5, 10].map(years => <button key={years} type="button" className="button" onClick={() => chooseRange(years)}>Последние {years} г.</button>)}
+          <button type="button" className="button" onClick={() => chooseRange(null)}>Весь архив</button>
         </div>
-        <details>
-          <summary>Мощность, ремонт и сроки</summary>
-          <p>Во всех окнах используется одинаковая сценарная мощность. Ремонт запланирован на второй квартал каждого окна.</p>
+        <details className="replay-assumptions">
+          <summary>Условия мощности и ремонта <ChevronDown size={15}/></summary>
+          <p><strong>Мощность</strong> — сколько груза можно обработать за квартал. <strong>Превышение</strong> — объём сверх этой мощности. Во всех прошлых окнах применяются одни и те же заданные условия.</p>
           <div className="replay-fields">
-            <label>Мощность, млн т/кв.<input name="capacity" type="number" required min="0.01" max="1000" step="any" defaultValue={68}/></label>
-            <label>Потеря при ремонте, млн т<input name="repairLoss" type="number" required min="0" max="1000" step="any" defaultValue={4}/></label>
-            <label>Резерв, млн т<input name="reserve" type="number" required min="0" max="1000" step="any" defaultValue={3}/></label>
-            <label>Срок заказа резерва, дней<input name="reserveLeadDays" type="number" required min="0" max="3650" defaultValue={45}/></label>
-            <label>Срок согласования переноса, дней<input name="repairLeadDays" type="number" required min="0" max="3650" defaultValue={90}/></label>
-            <label className="replay-check"><input name="allowMove" type="checkbox" defaultChecked/> Разрешить перенос при соблюдении срока</label>
+            <label>Мощность без ремонта, млн т/кв.<input name="capacity" type="number" required min="0.01" max="1000" step="any" defaultValue={68}/></label>
+            <label>Снижение мощности при ремонте, млн т<input name="repairLoss" type="number" required min="0" max="1000" step="any" defaultValue={4}/></label>
+            <label>Дополнительная мощность, млн т<input name="reserve" type="number" required min="0" max="1000" step="any" defaultValue={3}/></label>
           </div>
+          <details className="replay-calendar">
+            <summary>Сроки согласования</summary>
+            <p>Ремонт изначально запланирован на второй квартал каждого окна. Прогноз помогает решить, заказать ли дополнительную мощность или перенести ремонт на первый квартал.</p>
+            <div className="replay-fields">
+              <label>Заказ дополнительной мощности, дней<input name="reserveLeadDays" type="number" required min="0" max="3650" defaultValue={45}/></label>
+              <label>Согласование переноса ремонта, дней<input name="repairLeadDays" type="number" required min="0" max="3650" defaultValue={90}/></label>
+            </div>
+            <label className="replay-check"><input name="allowMove" type="checkbox" defaultChecked/> Рассматривать перенос ремонта при соблюдении срока</label>
+          </details>
         </details>
-        <details>
-          <summary>Экономика и окупаемость</summary>
-          <p>Используйте параметры одного оператора и груза в сопоставимых ценах. Доля относится к объёму, который действительно не был бы обработан без меры. Все денежные результаты — оценка при ваших вводных.</p>
-          <label className="replay-check"><input type="checkbox" checked={economy} onChange={e => setEconomy(e.target.checked)}/> Ввести экономические параметры</label>
-          {economy && <div className="replay-fields">{prices.map(([key, title]) => <label key={key}>{title}<input name={key} type="number" required min="0" max={key === 'recoverablePercent' ? 100 : ['tariff', 'variableCost'].includes(key) ? 1e6 : 1e12} step="any"/></label>)}</div>}
-          <p>Источники для сверки: <a href="https://www.globalports.com/ru/terminals/ust-luga-container-terminal/information-disclosure/" target="_blank" rel="noreferrer">раскрытие УЛКТ</a> и <a href="https://www.globalports.com/upload/iblock/b67/hvq174d2r1e2zqo2mjx61kyc414v369i/Prilozhenie-k-Uvedoml-1261_UK_2025_Tarify-na-perevalku-i-khranenie-gen.-gruzov-_KE_-_1_.pdf" target="_blank" rel="noreferrer">прейскурант «Глобал Портс»</a>. Например, в таблице 1 ставка для удобрений по схеме «вагон — специализированный контейнер клиента — судно» составляет 1 391 ₽/т без НДС. Она относится только к этой услуге и не подставляется в расчёт бассейна.</p>
-        </details>
-        <button className="button primary" type="submit">{working ? 'Считаем…' : 'Сравнить решения'}</button>
+        <div className="replay-economics-entry">
+          <label className="replay-check"><input type="checkbox" checked={economics} onChange={event => setEconomics(event.currentTarget.checked)}/><strong>Добавить денежную оценку и выбирать меры по ожидаемому вкладу</strong></label>
+          <p>Заполнен пример с тарифом 1 391 ₽/т и условными затратами. Мера выбирается по ожидаемому дополнительному вкладу после затрат.</p>
+        </div>
+        {economics && <details className="replay-economics">
+          <summary>Параметры примера экономики · изменить</summary>
+          <p><strong>Пример экономики</strong> — тариф из публикации 2025 года, затраты и сохраняемая доля — допущения. В примере 25% сокращённого превышения превращается в оплаченные тонны. Вклад с такой тонны до оплаты мер составляет 391 ₽.</p>
+          <div className="replay-fields">{economicsFields.map(({key, label, unit, maximum, hint}) => <label key={key}>
+            {label}, {unit}<input name={key} type="number" required min="0" max={maximum} step="any" defaultValue={EXAMPLE_ECONOMICS[key]}/><small>{hint}</small>
+          </label>)}</div>
+          <div className="replay-formula"><Calculator size={18}/><p>Дополнительный вклад = дополнительный оплаченный груз × (цена обработки − затраты на тонну) − затраты на меры.</p></div>
+          <p>Для всего диапазона используются одинаковые цены. Заполните все поля, включая нулевые затраты, если они подтверждены.</p>
+          <p><a href="https://www.globalports.com/upload/iblock/b67/hvq174d2r1e2zqo2mjx61kyc414v369i/Prilozhenie-k-Uvedoml-1261_UK_2025_Tarify-na-perevalku-i-khranenie-gen.-gruzov-_KE_-_1_.pdf" target="_blank" rel="noreferrer">Тарифная публикация «Глобал Портс», 2025</a>. Ставка 1 391 ₽/т без НДС относится к удобрениям по схеме «вагон — специализированный контейнер клиента — судно».</p>
+        </details>}
+        <div className="replay-submit"><button className="button primary" type="submit">{working ? 'Проверяем прошлые решения…' : 'Сравнить до и после'}</button><span>{economics ? 'Выбираем меру по ожидаемому дополнительному вкладу' : 'Выбираем меру с наименьшим ожидаемым превышением'}</span></div>
       </fieldset>
     </form>
     {error && <p className="import-error" role="alert">{error}</p>}
-    {result && <div className="panel replay-output" aria-live="polite">
-      <div className="data-panel-heading"><h3>{result.basin} · {periodLabel(result.first)} — {periodLabel(result.last)}</h3>
-        <button type="button" className="button" onClick={() => download('retrospective.json', JSON.stringify(result, null, 2), 'application/json')}>Выгрузить расчёт</button>
-      </div>
-      <p>Проверено окон без пересечений: <strong>{result.windows.length}</strong>. Пропущено: <strong>{result.skipped.length}</strong>. {result.trailingQuarter && `Последний квартал ${periodLabel(result.trailingQuarter)} остался без пары.`}</p>
-      {result.skipped.length > 0 && <details><summary>Почему пропущены окна</summary><ul>{result.skipped.map(row => <li key={row.first}>{periodLabel(row.first)}. {row.reason}</li>)}</ul></details>}
-      {window && <>
-        <label className="replay-window">Показать окно<select value={active} onChange={e => setActive(Number(e.target.value))}>{result.windows.map((item, i) => <option key={item.periods[0]} value={i}>{item.periods.map(periodLabel).join(' — ')}</option>)}</select></label>
-        <p>Решение на <strong>{dateLabel(window.asOf)}</strong> · {actions[window.strategies.forecast.action]}. Расчётный дефицит <strong>{number(window.strategies.base.totalGap)} → {number(window.strategies.forecast.totalGap)} млн т</strong>.</p>
-        <p>Данные на дату решения: <a href={window.origin.sourceUrl || undefined} target="_blank" rel="noreferrer">{periodLabel(window.origin.period)}</a>. {window.actions.filter(action => !action.available && action.reason).map(action => action.reason).join(' ')}</p>
-        <div className="replay-chart"><ResponsiveContainer width="100%" height={270}><BarChart data={chart} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-          <CartesianGrid strokeDasharray="3 4" vertical={false}/><XAxis dataKey="period"/><YAxis unit=" млн т" width={78}/><Tooltip/><Legend/>
-          <Bar dataKey="forecast" name="Прогноз на дату решения" fill="#92a8b8"/>
-          <Bar dataKey="actual" name="Фактическая перевалка" fill="#238778"/>
-          <Bar dataKey="base" name="Исходная мощность" fill="#d8b278"/>
-          <Bar dataKey="selected" name="Мощность после выбранной меры" fill="#274c65"/>
-        </BarChart></ResponsiveContainer></div>
-        <div className="table-scroll"><table><thead><tr><th>Квартал</th><th>Прогноз, млн т</th><th>Факт, млн т</th><th>Источники</th></tr></thead><tbody>{window.periods.map((period, i) => <tr key={period}><td>{periodLabel(period)}</td><td>{number(window.references[i].value)}</td><td>{number(window.actual[i].value)}</td><td>{window.references[i].sourceUrl && <a href={window.references[i].sourceUrl} target="_blank" rel="noreferrer">Опора прогноза</a>}{' · '}{window.actual[i].sourceUrl && <a href={window.actual[i].sourceUrl} target="_blank" rel="noreferrer">Публикация факта</a>}{window.actual[i].previousSourceUrl && <> · <a href={window.actual[i].previousSourceUrl} target="_blank" rel="noreferrer">Предыдущий накопленный итог</a></>}</td></tr>)}</tbody></table></div>
-        <h4>Итоги выбранного диапазона</h4>
-        {result.windows.length > 1 && <div className="replay-chart"><ResponsiveContainer width="100%" height={230}><LineChart data={result.windows.map(item => ({ period: item.periods[0], ...Object.fromEntries(Object.entries(item.strategies).map(([key, value]) => [key, value.totalGap])) }))}>
-          <CartesianGrid strokeDasharray="3 4" vertical={false}/><XAxis dataKey="period" minTickGap={35}/><YAxis unit=" млн т" width={78}/><Tooltip/><Legend/>
-          <Line dataKey="base" name={STRATEGIES.base} stroke="#9a5b15" strokeWidth={2}/>
-          <Line dataKey="forecast" name={STRATEGIES.forecast} stroke="#12796c" strokeWidth={2}/>
-          <Line dataKey="fixed" name={STRATEGIES.fixed} stroke="#274c65" strokeWidth={2}/>
-        </LineChart></ResponsiveContainer></div>}
-        <div className="table-scroll"><table><thead><tr><th>Правило</th><th>Дефицит, млн т</th><th>Снижение дефицита, млн т</th><th>Резервов</th><th>Переносов</th></tr></thead><tbody>{result.strategies.map(row => <tr key={row.id}><td>{STRATEGIES[row.id]}</td><td>{number(row.gap, 2)}</td><td>{number(row.avoidedGap, 2)}</td><td>{row.reserves}</td><td>{row.moves}</td></tr>)}</tbody></table></div>
-        {result.comparison.extraFixedReserves > 0 && result.comparison.extraFixedAvoidedGap > 0 && <p>Резерв в каждом квартале ремонта сокращает дефицит ещё на <strong>{number(result.comparison.extraFixedAvoidedGap, 2)} млн т</strong> относительно выбора по прогнозу. Для этого требуется ещё <strong>{result.comparison.extraFixedReserves}</strong> назначений.</p>}
-        {result.comparison.fixedReserveThresholdTons !== null && <p>Порог сравнения: дополнительное назначение окупится, если его цена ниже маржи с <strong>{number(result.comparison.fixedReserveThresholdTons, 0)} т</strong>, умноженной на подтверждённую долю дополнительно обслуживаемых заявок.</p>}
-        {result.strategies[1].revenue !== null ? <div className="table-scroll"><table><thead><tr><th>Правило</th><th>Δ выручка</th><th>Δ переменные затраты</th><th>Затраты на меры</th><th>Δ операционный вклад</th><th>Порог, тонн</th></tr></thead><tbody>{result.strategies.map(row => <tr key={row.id}><td>{STRATEGIES[row.id]}</td><td>{rubles(row.revenue)}</td><td>{rubles(row.processingCost)}</td><td>{rubles(row.measureCost)}</td><td>{rubles(row.contribution)}</td><td>{row.breakEvenTons === null ? '—' : number(row.breakEvenTons, 0)}</td></tr>)}</tbody></table></div> : <p>Чтобы оценить выручку и операционный вклад, заполните блок «Экономика и окупаемость».</p>}
-        <p>Факт показывает уже обработанный груз. Дефицит рассчитан по заданным мощностям. Для подтверждения денежного эффекта нужны заявки, фактические затраты и ограничения оператора. Порог окупаемости — затраты на меры, делённые на маржу с дополнительной тонны. Для всего диапазона используются одинаковые цены и мощности.</p>
-        {result.comparison.forecastContributionOverFixed !== null && <p>Разница операционного вклада между выбором по прогнозу и резервом в квартале ремонта: <strong>{rubles(result.comparison.forecastContributionOverFixed)}</strong>.</p>}
-      </>}
-    </div>}
-    <details className="panel replay-output">
-      <summary>Годовая история России · 1991–2025</summary>
-      <p>Перевалка всех морских портов России, млн т за год. Этот ряд показывает динамику отрасли. Квартальный прогноз и ретроспектива используют отдельный ряд по бассейнам.</p>
-      <div className="replay-chart"><ResponsiveContainer width="100%" height={250}><LineChart data={annual}><CartesianGrid strokeDasharray="3 4" vertical={false}/><XAxis dataKey="year" minTickGap={35}/><YAxis width={78} unit=" млн т"/><Tooltip formatter={value => [`${value} млн т`, 'Перевалка']}/><Line dataKey="value" stroke="#12796c" strokeWidth={2} dot={false}/></LineChart></ResponsiveContainer></div>
-      <ul>{datasets.map(([name, url]) => <li key={url}><a href={url} target="_blank" rel="noreferrer">{name}</a></li>)}</ul>
-    </details>
+    {result && <ReplayResults key={`${result.first}-${result.last}-${result.basin}-${result.chosenObjective}`} result={result}/>}
+    <details className="panel replay-context"><summary><Info size={15}/> Источники, допущения и история отрасли</summary><div>
+      <p>Опубликованная перевалка используется как одинаковая нагрузка в двух вариантах. Обработанный объём рассчитывается при заданной мощности. Для подтверждения эффекта в работе оператора нужны его заявки, мощности и фактические затраты.</p>
+      <details><summary>Где проверить цены на отдельную услугу</summary><p><a href="https://www.globalports.com/ru/terminals/ust-luga-container-terminal/information-disclosure/" target="_blank" rel="noreferrer">Раскрытие информации УЛКТ</a> содержит тарифные документы. Ставку нужно выбрать для своего груза и схемы обработки. Затраты на тонну и цены дополнительных мер подтверждает оператор.</p></details>
+      <AnnualHistory/>
+    </div></details>
   </section>;
 }

@@ -1,0 +1,114 @@
+.replay-section .replay-form { padding: 18px 20px; }
+.replay-loading { color: var(--muted); padding: 12px 0; font-size: 13px; }
+.replay-financial-headline { padding: 18px 20px; margin: 14px 0; background: #f6fcf9; border-color: #bdddcf; }
+.replay-financial-main { display: flex; align-items: center; gap: 22px; padding: 14px 0; }
+.replay-financial-main > div > span { display: block; font-size: 12px; color: var(--muted); }
+.replay-financial-main > div > strong { display: block; font-size: clamp(28px, 3vw, 40px); line-height: 1.2; letter-spacing: -.04em; }
+.replay-financial-main > svg { color: #8bb3a4; }
+.replay-financial-main > p { margin-left: auto; padding-left: 20px; border-left: 1px solid #d3e7df; font-size: 12px; color: var(--muted); }
+.replay-financial-main > p strong { color: var(--navy); font-size: 24px; display: block; }
+.replay-financial-steps { display: flex; gap: 14px; align-items: center; padding: 10px 0; border-block: 1px solid #d3e7df; }
+.replay-financial-steps > div { flex: 1; }
+.replay-financial-steps span { display: block; color: var(--muted); font-size: 11px; }
+.replay-financial-steps strong { display: block; color: var(--navy); font-size: 20px; }
+.replay-financial-steps > b { color: #819e91; font-size: 20px; }
+.replay-section .replay-fields { margin: 12px 0; }
+.replay-range-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
+.replay-range-buttons > span { font-size: 11px; color: var(--muted); margin-right: 4px; }
+.replay-section .replay-assumptions { margin-top: 13px; border-top: 1px solid var(--line); }
+.replay-assumptions > summary { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-top: 3px; }
+.replay-assumptions > p { font-size: 12px; line-height: 1.7; max-width: 950px; margin-top: 6px; }
+.replay-calendar p { font-size: 12px; line-height: 1.7; margin-top: 5px; }
+.replay-section .replay-calendar { padding: 4px 0; }
+.replay-economics-entry { padding: 13px 0 6px; border-top: 1px solid var(--line); margin-top: 7px; }
+.replay-economics-entry > p { padding-left: 21px; margin-top: 4px; font-size: 12px; }
+.replay-section .replay-economics { padding: 10px 13px; border: 1px solid #dce8e8; background: #f4faf8; border-radius: 7px; margin: 7px 0 12px; }
+.replay-economics .replay-fields label small { font-size: 11px; color: var(--muted); font-weight: 400; line-height: 1.5; }
+.replay-economics > p { font-size: 12px; margin-top: 8px; }
+.replay-formula { display: flex; gap: 8px; align-items: flex-start; color: var(--teal); border-top: 1px solid #dce8e8; padding-top: 10px; }
+.replay-formula p { font-size: 12px; font-weight: 650; }
+.replay-submit { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-top: 10px; }
+.replay-submit > span { font-size: 11px; color: var(--muted); }
+.replay-results { display: grid; gap: 14px; margin-top: 16px; }
+.replay-summary, .replay-chart-panel, .replay-example, .replay-alternatives, .replay-money { padding: 18px 20px; min-width: 0; }
+.replay-result-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.replay-result-heading p, .replay-result-heading > span { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.replay-result-heading h3 { font-size: 17px; }
+.replay-model-label { display: inline-block; color: #4b7282; background: #edf4f7; font-size: 11px; margin: 15px 0 10px; padding: 4px 8px; border-radius: 5px; }
+.replay-before-after { display: grid; grid-template-columns: minmax(0, 1fr) 35px minmax(0, 1fr); align-items: center; gap: 18px; }
+.replay-before-after > div { padding: 13px 15px; border: 1px solid var(--line); border-radius: 8px; background: #f7fafb; }
+.replay-before-after > div:last-child { background: #edf8f4; border-color: #c7e6dc; }
+.replay-before-after span { font-size: 11px; font-weight: 650; color: var(--muted); }
+.replay-before-after strong { display: block; font-size: clamp(24px, 3vw, 36px); letter-spacing: -.04em; font-weight: 740; color: var(--navy); line-height: 1.3; margin-top: 3px; }
+.replay-before-after p { font-size: 12px; color: var(--muted); }
+.replay-before-after b { display: block; color: #5a7484; font-size: 12px; margin-top: 9px; font-weight: 550; }
+.replay-before-after > svg { color: #78a99c; }
+.replay-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; padding: 14px 0; margin-top: 9px; border-bottom: 1px solid var(--line); }
+.replay-kpis strong { display: block; font-size: 25px; color: var(--navy); line-height: 1.4; letter-spacing: -.03em; }
+.replay-kpis span { display: block; font-size: 12px; color: var(--ink); }
+.replay-kpis small { display: block; font-size: 11px; color: var(--muted); margin-top: 3px; }
+.replay-positive { color: #12796c !important; }
+.replay-negative { color: #a33a30 !important; }
+.replay-summary-caption { margin-top: 10px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+.replay-classifications { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 13px; }
+.replay-classifications > div { display: flex; flex: 1 1 180px; align-items: center; gap: 9px; background: #f0f4f7; border-radius: 7px; padding: 9px 11px; color: var(--muted); }
+.replay-classifications strong { font-size: 23px; line-height: 1.2; }
+.replay-classifications span { font-size: 11px; line-height: 1.4; }
+.replay-classifications .replay-helpful { background: #e8f5ed; color: #26775f; }
+.replay-classifications .replay-missed { background: #fff3e1; color: #9b6727; }
+.replay-skipped { font-size: 12px; color: var(--muted); margin-top: 12px; }
+.replay-skipped ul { padding-left: 20px; }
+.replay-empty { padding: 24px 10px; display: flex; align-items: center; gap: 10px; color: var(--muted); }
+.replay-chart-panel .replay-chart { margin-bottom: 0; }
+.replay-example .replay-window { margin: 13px 0; max-width: 620px; font-size: 12px; }
+.replay-decision { display: flex; gap: 15px; margin: 14px 0; background: #f1f7fa; border-radius: 7px; padding: 12px; }
+.replay-decision-date { flex: 0 0 132px; border-right: 1px solid #d4e3ec; padding-right: 13px; }
+.replay-decision-date span { display: block; color: var(--muted); font-size: 10px; }
+.replay-decision-date strong { display: block; color: var(--navy); font-size: 17px; margin-top: 4px; }
+.replay-decision > div:last-child > strong { color: var(--navy); font-size: 14px; }
+.replay-decision p { color: var(--muted); font-size: 12px; line-height: 1.65; margin-top: 5px; }
+.replay-window-outcome { display: flex; align-items: flex-start; gap: 8px; padding: 11px 0; color: var(--teal); }
+.replay-window-outcome p { font-size: 12px; color: var(--muted); line-height: 1.7; }
+.replay-window-outcome strong { color: var(--navy); }
+.replay-window-content details, .replay-all-windows { margin-top: 7px; font-size: 12px; }
+.replay-window-content details > summary, .replay-all-windows > summary { cursor: pointer; font-weight: 650; color: var(--navy); padding: 6px 0; }
+.replay-window-content details p, .replay-window-content li { margin-top: 5px; color: var(--muted); }
+.replay-window-content ul { padding-left: 20px; }
+.replay-results table { font-size: 12px; }
+.replay-results th { white-space: normal; }
+.replay-results td:first-child { min-width: 150px; }
+.replay-results a, .replay-economics a, .replay-context a { color: var(--teal); text-decoration: underline; }
+.replay-alternatives > p, .replay-money > p { margin-top: 8px; font-size: 12px; color: var(--muted); line-height: 1.7; }
+.replay-alternatives .table-scroll, .replay-money .table-scroll { margin-top: 10px; }
+.replay-money { border-color: #cde4da; }
+.replay-money-assumptions { margin-top: 10px; font-size: 12px; color: var(--muted); }
+.replay-money-assumptions summary { cursor: pointer; color: var(--navy); font-weight: 650; }
+.replay-money-assumptions ul { padding-left: 20px; }
+.replay-money-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding: 15px 0; margin: 8px 0; border-block: 1px solid var(--line); }
+.replay-money-kpis span { display: block; font-size: 11px; color: var(--muted); }
+.replay-money-kpis strong { display: block; font-size: clamp(16px, 2vw, 26px); letter-spacing: -.02em; color: var(--navy); margin-top: 3px; overflow-wrap: anywhere; }
+.replay-context { margin-top: 13px; padding: 13px 17px; }
+.replay-context > summary { display: flex; align-items: center; gap: 7px; cursor: pointer; font-size: 12px; font-weight: 650; }
+.replay-context p { color: var(--muted); font-size: 12px; margin-top: 9px; line-height: 1.7; }
+.replay-context details { margin-top: 12px; }
+.replay-context details summary { cursor: pointer; color: var(--navy); font-size: 12px; font-weight: 650; }
+.replay-annual li { font-size: 12px; }
+@media (max-width: 650px) {
+  .replay-financial-headline { padding: 13px; }
+  .replay-financial-main { flex-wrap: wrap; gap: 12px; }
+  .replay-financial-main > p { flex-basis: 100%; margin: 0; padding: 8px 0 0; border-left: 0; border-top: 1px solid #d3e7df; }
+  .replay-financial-steps { gap: 7px; }
+  .replay-financial-steps strong { font-size: 16px; }
+  .replay-section .replay-form, .replay-summary, .replay-chart-panel, .replay-example, .replay-alternatives, .replay-money { padding: 13px; }
+  .replay-result-heading { flex-wrap: wrap; }
+  .replay-before-after { grid-template-columns: 1fr; gap: 7px; }
+  .replay-before-after > svg { transform: rotate(90deg); margin-inline: auto; }
+  .replay-before-after strong { font-size: 28px; }
+  .replay-kpis { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .replay-kpis strong { font-size: 23px; }
+  .replay-kpis > div:last-child { grid-column: 1 / -1; }
+  .replay-decision { flex-direction: column; gap: 10px; }
+  .replay-decision-date { flex-basis: auto; border-right: 0; padding-bottom: 8px; border-bottom: 1px solid #d4e3ec; }
+  .replay-money-kpis { grid-template-columns: 1fr; padding: 9px 0; gap: 9px; }
+  .replay-money-kpis strong { font-size: 25px; }
+}

@@ -101,13 +101,13 @@
   },
   {
     "file": "01 Паспорт/Паспорт проекта.pdf",
-    "bytes": 92961,
-    "sha256": "adde82fadfcdb496158902bf878e18dd7ccdcdb74f63725c0746f0eb3c83bd72"
+    "bytes": 93258,
+    "sha256": "01960fbe2e49ed17df269558ad7aa40cf1697c378f47ff40ffeab64867dce5b9"
   },
   {
     "file": "01 Паспорт/Паспорт — текст для правок.md",
-    "bytes": 7075,
-    "sha256": "86e48d873c6c560314e297aeb687139ca57b4ce108c0c6ae118be162369a3393"
+    "bytes": 8124,
+    "sha256": "48ec63e5ee9b9e5f069dd7eab1c9ae0883365dea2a633f07f5fb3d0a1a278ca5"
   },
   {
     "file": "02 Защита/Демо — базовый сценарий.jpg",
@@ -126,18 +126,18 @@
   },
   {
     "file": "02 Защита/Защита.pptx",
-    "bytes": 50555,
-    "sha256": "d2690e0c9aef484963d9b200aec26167f0aa1ad873ba551a55c3dc12bc8390f8"
+    "bytes": 54865,
+    "sha256": "3fe6786bc1bb29ae1dd2f6290130237b84b2c5f1450247e2455654420436f5d2"
   },
   {
     "file": "02 Защита/Карточка защиты.md",
-    "bytes": 18377,
-    "sha256": "2ddab46c79bf34841ffa46a48d380ef2c4066d06006369d2b2de901264cb5d66"
+    "bytes": 6335,
+    "sha256": "3ade1b215254891089b495c70f38b5089ee305c2329020be0ccd894d5014ae69"
   },
   {
     "file": "02 Защита/Сценарий защиты.md",
-    "bytes": 15564,
-    "sha256": "097c0f27f7aa46309a8ada0630399f7ae2dee2526fcf819185335626cc959a53"
+    "bytes": 20576,
+    "sha256": "05de1cf8a94f9cdf6cb68411adf8c073a2e1359cb6d17d9699a2464dc8df20c3"
   },
   {
     "file": "03 Инструмент/README.md",
@@ -546,8 +546,8 @@
   },
   {
     "file": "04 Проверка/Ретроспектива.md",
-    "bytes": 4682,
-    "sha256": "e2af700b84d6cce853e7d7a622626a79b35c432171c47447ca0061b0fcb18bf6"
+    "bytes": 10082,
+    "sha256": "67ab951a24855b058595e393af526b5105edddb45c3523dec13eadd3de6db757"
   },
   {
     "file": "04 Проверка/Сдача 10 ноября.md",
@@ -555,9 +555,14 @@
     "sha256": "be2d39a0a2fd0e3f85b6920545043e9052b3e55c0b60b137495c3030a51368d0"
   },
   {
+    "file": "04 Проверка/Экономика сценария.md",
+    "bytes": 12789,
+    "sha256": "f84d05788401eb8720b104fbc270c82b3cd9721313ce5fe8d25339af7de095c8"
+  },
+  {
     "file": "README.md",
-    "bytes": 10174,
-    "sha256": "f88d865cd418c082d1e3efdcf00ba155d0526dad9f674d14c3f194452013a9ec"
+    "bytes": 12774,
+    "sha256": "427afd6a90480da48756c6c23e936e2c9f0aa914edea8119f021f277b92b1461"
   },
   {
     "file": "web/.gitignore",
@@ -571,8 +576,8 @@
   },
   {
     "file": "web/README.md",
-    "bytes": 6094,
-    "sha256": "23856697715a7565677a3fc4fc886a87ecb813ca3607897b5e4ea2c4a7c39800"
+    "bytes": 7444,
+    "sha256": "c7e839c960a46646135afa5975e5eefe29e5f6ccdad07ae5805b089aa7391cba"
   },
   {
     "file": "web/app/api/catalog/route.ts",
@@ -611,8 +616,8 @@
   },
   {
     "file": "web/app/globals.css",
-    "bytes": 20994,
-    "sha256": "88e3e0d8d6b99ea2414fd8937d9c1c4be5b946761cd2a99245f6dbce37e9edd8"
+    "bytes": 22059,
+    "sha256": "49b4719dc028f6824402f25bb5e8aab07e1ec8f7f328b9d944f7081b0b0488af"
   },
   {
     "file": "web/app/layout.tsx",
@@ -631,13 +636,23 @@
   },
   {
     "file": "web/components/port-planner/port-planner.tsx",
-    "bytes": 22460,
-    "sha256": "6c6455dcadcb29b3c12ba41295fcc7b562dfe724f4f7e66e71475688cddbf762"
+    "bytes": 25198,
+    "sha256": "76a68a5c0c3de75734a6a5918bbbde5252fa3a1ca2f462150d22dbe1a3c1f227"
   },
   {
     "file": "web/components/port-planner/replay-panel.tsx",
-    "bytes": 17552,
-    "sha256": "a57911a7d0748d6a7074f59c8cd24dab3edd74d15853c37608e0e04e82a17cf0"
+    "bytes": 14112,
+    "sha256": "d18cf2aab2b4d4ce384b521d33c5ba8767a5f178f8f977e752de041b839c4ae5"
+  },
+  {
+    "file": "web/components/port-planner/replay-results.tsx",
+    "bytes": 24021,
+    "sha256": "b97fb7244c9733fbc78d9761d1213ff9db3881175141cf362e0ccee36cf152c1"
+  },
+  {
+    "file": "web/components/port-planner/replay.css",
+    "bytes": 9895,
+    "sha256": "f4f5890e138dad9763e66bc7a74e264d0bad8bc9b4ff6334226d5a0bd8c29689"
   },
   {
     "file": "web/components/port-planner/results.tsx",
@@ -651,8 +666,8 @@
   },
   {
     "file": "web/data/README.md",
-    "bytes": 5861,
-    "sha256": "ff2c070bf7c9bf377ad2aaddba64b397f6e0f4458730489acf32d0d850b13c84"
+    "bytes": 8354,
+    "sha256": "f1fc1598f16ad5bc4673a5240ef897fd43710d0e4faef5730d0f127ec8b3faef"
   },
   {
     "file": "web/data/ampt-2026-04.html",
@@ -716,8 +731,8 @@
   },
   {
     "file": "web/lib/replay.ts",
-    "bytes": 7583,
-    "sha256": "7376c00bf536306cc0c3dc64e1c5890f9fde2dce44c934cba8fa803748f61dfb"
+    "bytes": 14412,
+    "sha256": "f7f4b0e641b2660b6d68fd01f0cdc1507973eaf28f4c066724ac5fba34cf0ff8"
   },
   {
     "file": "web/lib/seed.ts",
@@ -776,8 +791,8 @@
   },
   {
     "file": "web/tests/replay.test.ts",
-    "bytes": 3989,
-    "sha256": "59201bc4325015dfca3411ff895676623dc5dbb0bc7e90d157c87cb7e3eb0702"
+    "bytes": 10336,
+    "sha256": "a57cb6c7b271aa25dff7682e7aa7a0bb94a8c693a5389dc3bbffd716b88565df"
   },
   {
     "file": "web/tests/sources.test.ts",
